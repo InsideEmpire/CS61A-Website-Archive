@@ -1,0 +1,1081 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../../../assets/js/hl.js"></script>
+    <script src="../../../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../../../assets/css/style.css">
+    <link rel="stylesheet" href="../../../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../../../assets/images/favicon.ico">
+
+    
+
+    <title>
+Midterm 1 Walkthrough | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../../../index.html">Lectures</a></li>
+            
+            <li><a href="../../../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>Midterm 1 Walkthrough</h1>
+    </header>
+     <h2 id="what-would-python-dip">What Would Python Dip?</h2>
+
+
+
+<h3 id="question">Question</h3>
+
+
+<p>Assume the following code has been executed.</p>
+
+<pre><code class="python">def dipping(dots):
+    if print(&quot;you dip&quot;):
+        return print(&quot;i dip&quot;)
+    else:
+        return print(dots) or dots or print(&quot;we dip&quot;)</code></pre>
+
+
+
+<p>What would the Python interpreter display? If the interpreter would include a new line, please enter a new line
+in your answer.</p>
+
+
+<h3 id="walkthrough">Walkthrough</h3>
+
+
+<p>These questions usually aim to test our ability to understand the program execution and knowledge about the order of evaluating different expressions. It is a skill that is developed with practice and comes super handy when debugging your code. WWPD questions explore what happens when you launch the python code in interactive mode (e.g. by running <code>python &#x2d;i dipping.py</code>) and start executing the lines from different parts of the question. What gets displayed back by the interpreter should go as your answers.</p>
+
+<p>Glancing through the skeleton, I see that the whole body of the function is a single if-else statement, where <code>print(&quot;you dip&quot;)</code> is used as the condition. We know that <code>print</code> is a <em>non-pure</em> function, which always returns (its call expression evaluates to) <code>None</code>. However, its argument will always be printed (as long as it is valid). I can assume that <code>&quot;you dip&quot;</code> will always be printed when <code>dipping</code> is called, since <code>print(”you dip”)</code> is the first thing Python evaluates in the code. So as long as I keep that in mind, I can view the original code as:</p>
+
+<pre><code class="python">def dipping(dots):
+    if None: # print displays &quot;you dip&quot; and evaluates to None 
+        return print(&quot;i dip&quot;)
+    else:
+        return print(dots) or dots or print(&quot;we dip&quot;)</code></pre>
+
+
+
+<p>The value <code>None</code> is considered a "falsey" value in Python, which means that Python won't execute the code inside the <code>if</code> and will instead execute the code in the <code>else</code>.</p>
+
+<p>To reiterate our findings (which will be useful further):</p>
+
+<p>1) <code>print</code> prints the text and evaluates to <code>None</code></p>
+
+<p>2) <code>None</code> is considered falsey in Boolean expressions</p>
+
+<p>This simple analysis (even without considering the value of <code>dots</code> argument) already made the future code execution much simpler. Let’s start with part (a):</p>
+
+<p><code>&gt;&gt;&gt; dipping(0)</code></p>
+
+<p>We now know the program always starts off by printing "you dip". Now we have to understand what is going on here:</p>
+
+<pre><code class="python">return print(dots) or dots or print(&quot;we dip&quot;)</code></pre>
+
+
+
+<p>We can break down the execution of this line as 1) evaluate <code>print(dots) or dots or print(&quot;we dip&quot;)</code> 2) return the result of that evaluation.</p>
+
+<p><code>print(dots)</code> evaluates to <code>None</code> (falsey value) and as a <em>side-effect</em> prints <code>0</code>. So we’ve got <code>None or dots or print(&quot;we dip&quot;)</code>. There is <code>or</code> right after, so Python continues the evaluation further (Python cannot short-circuit because <code>None</code> is considered falsy).
+<br/>
+
+<code>dots</code> is 0 (also a Falsy value) and <code>print(&quot;we dip&quot;)</code> will also evaluate to <code>None</code>, while printing <code>&quot;we dip&quot;</code>. So our expression looks like <code>None or 0 or None</code>, which evaluates to a single <code>None</code> (when all values are falsy, the <code>or</code> operator evaluates to the last value in the chain). Thus, the return value is <code>None</code>. The interpreter doesn't display <code>None</code> return values, so no return value will be displayed at all.</p>
+
+<p>Collecting everything printed so far, we have our answer:</p>
+
+<pre><code class="python">you dip # from evaluating if&#x2d;statement&#x27;s condition
+0 # from evaluating print(dots)
+we dip # from evaluating the last print call</code></pre>
+
+
+
+<p>Part (b) undergoes a similar analysis. We keep in mind that the interpreter has printed <code>&quot;you dip&quot;</code> already and similar to part (a), focus on this line:</p>
+
+<pre><code class="python">return print(dots) or dots or print(&quot;we dip&quot;)</code></pre>
+
+
+<p><code>print(dots)</code> evaluates to <code>None</code> and prints <code>555</code>. In contrast to the previous part, <code>dots</code> is a positive value now, which is truthy. So the expression looks like <code>None or 555 or ...</code> — Python actually doesn’t look further since it short-circuits right here. It means that it never even gets a chance to evaluate <code>print(&quot;we dip&quot;)</code> and display its text. Reminding ourselves that <code>or</code> takes the last value, the return line looks like <code>return 555</code>, which actually gets displayed. The answer then is:</p>
+
+<pre><code class="python">you dip # from evaluating if&#x2d;statement&#x27;s condition
+555 # from evaluating print(dots)
+555 # the return value, result of evaluating dipping(555)</code></pre>
+
+
+
+<p>Remember that <code>dipping(0)</code> got evaluated to <code>None</code>, which did not get displayed? Thus, the answer for part (c) is <code>None</code>.</p>
+
+<p>Part (d) is also only concerned about the return value, not what gets displayed. Therefore, we only want to know the value of <code>print(&#x2d;666) or &#x2d;666</code> — the interpreter also short-circuits since negative values are truthy. Ignoring the printed values, the expression goes from <code>None or &#x2d;666</code> to <code>&#x2d;666</code>, which is the answer.</p>
+
+<p>Part (e) asks us to write the same functionality of <code>dipping</code> function using a single-line. The original code is a simple if-statement, which only has a single <code>return</code> in both cases. Looks like a perfect candidate to be rewritten using a conditional expression:</p>
+
+<pre><code class="python">if condition:
+    return first_value
+else:
+    return second_value
+# is equivalent to 
+return first_value if condition else second_value</code></pre>
+
+
+
+<p>We can do the same with the <code>dipping</code> function:</p>
+
+<pre><code class="python">def dipping(dots):
+    return print(&quot;i dip&quot;) if print(&quot;you dip&quot;) else (print(dots) or dots or print(&quot;we dip&quot;))</code></pre>
+
+
+
+
+<h2 id="ring-my-bell-tower">Ring My Bell Tower</h2>
+
+
+
+<h3 id="question-2">Question</h3>
+
+
+<p>The following code was used to generate the environment diagram below:</p>
+
+<pre><code class="python">floor = 30
+def bell(tower, ring):
+    ring += tower(ring)(floor)
+
+    def tower(steps):
+        return lambda steps: floor + steps
+
+    return tower(ring+1)
+
+my = bell(lambda x: lambda y: x * y, floor)
+my(38)</code></pre>
+
+
+
+<p>The environment diagram below represents the final state of the environment. The code is also provided to the
+right of the diagram, for convenience. Line numbers have been omitted intentionally.</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/Y7zpOyl.png" alt="" width="" height=""></p>
+
+
+<h3 id="walkthrough-2">Walkthrough</h3>
+
+
+<p>Doing well on environment diagram questions usually require a ton of practice and paying rigorous attention to all of the details. When you are given the environment that represents the final state, it is helpful to look at it for some hints, but it is better to just draw your own diagram and follow the code execution line-by-line. At the end, if your diagram arrived to the same state as the one in the question, you are likely to be correct. If not, mostly it is much easier to quickly start from scratch, instead of attempting to “fix” your current diagram.</p>
+
+<p><a href="https://pythontutor.com/composingprograms.html#code=floor%20%3D%2030%0Adef%20bell%28tower,%20ring%29%3A%0A%20%20%20%20ring%20%2B%3D%20tower%28ring%29%28floor%29%0A%20%20%20%20def%20tower%28steps%29%3A%0A%20%20%20%20%20%20%20%20return%20lambda%20steps%3A%20floor%20%2B%20steps%0A%20%20%20%20return%20tower%28ring%2B1%29%0A%20%20%20%20%0Amy%20%3D%20bell%28lambda%20x%3A%20lambda%20y%3A%20x%20*%20y,%20floor%29%0Amy%2838%29&cumulative=true&mode=edit&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">This link</a> will take you to the Python Tutor with the code. You can launch it and follow the comments below that describe what happens on each line. Each bullet point represents one step in the environment diagram (there should be 21 total). Follow the red arrow in Python Tutor and the respective comment should tell what that line will do after it is executed.</p>
+
+<ul>
+  <li><strong>Step 1, Line 1:</strong> define a variable <code>floor</code> with value <code>30</code>.</li>
+  <li><strong>Step 2, Line 2:</strong> define a variable <code>bell</code> that refers to a function <code>bell</code> defined in the global frame. Skip the function body since the function is not being called.</li>
+  <li><strong>Step 3, Line 8:</strong> make a call to <code>bell</code> with arguments <code>lambda x: lambda y: x * y</code> and <code>floor</code>. We notice that the first argument is a lambda function that returns another lambda function. In order to not overcomplicate things, for now I can look at it as <code>lambda x: &lt;something&gt;</code>, because we will only care about that <code>&lt;something&gt;</code> when this lambda function gets called.</li>
+  <li><strong>Step 4, Line 2:</strong> create a frame for <code>bell</code> and assign <code>tower</code> to be a lambda function. Since lambda functions are expressions, it was evaluated in the global frame, before Python opened a frame for <code>bell</code>. Therefore, its parent is a Global frame. <code>ring</code> gets a value of <code>floor</code>, which was evaluated to <code>30</code>.</li>
+  <li><strong>Step 5, Line 3:</strong> we are going add something to <code>ring</code> (it better be a number, since <code>ring</code> is equal to <code>30</code> for now). The expression to be added is <code>tower(ring)(floor)</code>. According to the call expression rules, Python firstly evaluates what <code>tower(ring)</code> is, before it can call its result on the value of <code>floor</code>. The <code>tower</code> is a lambda function, so the frame that opens is going to be for lambda.</li>
+  <li><strong>Steps 6-8, Line 8:</strong> Python goes to line 8 because this is where the body of the lambda function is. It takes one argument <code>x</code>, which got the value of <code>ring</code> from Frame 1 — <code>30</code>. Its return value is a function that takes argument <code>y</code> and also does “something” (we will only care about it when we execute it). We only have to know that this lambda function was defined in the body of outer lambda, so it has <code>f2</code> as a parent frame.</li>
+  <li><strong>Steps 9-11, Line 8:</strong> the evaluation of <code>tower(ring)</code> is completed — we have figured it is a lambda function defined in <code>f2</code>. You can imagine that Python quickly goes back to line 3 and immediately calls the lambda with argument <code>floor</code>, which has the value of <code>30</code>. The frame <code>f3</code> gets created and <code>y</code> gets mapped to <code>30</code>. The return value is the result <code>x*y</code>, where <code>x</code> and <code>y</code> are both <code>30</code>, resulting in <code>900</code>. The variable <code>x</code> is not in <code>f3</code>, so it was looked up from its parent — <code>f2</code>.</li>
+  <li><strong>Step 12, Line 4:</strong> Python comes back from lambdas and updates the <code>ring</code> to be <code>930</code> (it was <code>30</code> and the result of the expression was added, <code>900</code>). Now the code defines <code>tower(steps)</code> with parent <code>f1</code> (because its body is in <code>f1</code>). Observe that the argument variable <code>tower</code> gets reassigned to this function, dropping a reference to a lambda function it had before.</li>
+  <li><strong>Step 13, Line 6:</strong> before returning, Python has to evaluate <code>tower(ring + 1)</code>. <code>ring + 1</code> would be <code>931</code> and <code>tower</code> is a function defined in the previous step.</li>
+  <li><strong>Step 14, Line 4:</strong> open a frame <code>f4</code> for <code>tower</code>, where <code>steps</code> takes up the value of <code>931</code>.</li>
+  <li><strong>Step 15, Line 5:</strong> similarly to step 13, Python firstly evaluates the result of <code>lambda steps: floor + steps</code> before it returns.</li>
+  <li><strong>Step 16, Line 5:</strong> evaluate the previous expression as a lambda function that takes argument <code>steps</code> and does something. It was defined in the body of <code>tower(steps)</code>, so it takes <code>f4</code> as its parent. This is our return value.</li>
+  <li><strong>Step 17, Line 6:</strong> come back to the line that called <code>tower</code> and bring the evaluated result. It is also going to be a return value.</li>
+  <li><strong>Step 18, Line 9:</strong> completed the execution of line 17 and assigned <code>my</code> to be a lambda function defined on line 5, with parent <code>f4</code>. Now we would like to call it with argument <code>38</code>.</li>
+  <li><strong>Steps 19-21, Line 5:</strong> open a frame for this lambda function and <code>steps</code> gets assigned to <code>38</code>. The return value of this function is <code>floor + steps</code>. Since <code>floor</code> is not in this newborn frame <code>f5</code>, Python looks it up from its parent <code>f4</code>, which does another lookup to its own parent <code>Global</code> to find the value <code>30</code>. The return value is <code>30 + 38</code>, resulting in <code>68</code>.</li>
+</ul>
+
+<p>The diagram we got so far should be consistent with the reference diagram and we can fill in the blanks (a) - (h).</p>
+
+
+<h2 id="doctor-octalpus-reborn">Doctor Octalpus, Reborn</h2>
+
+
+
+<h3 id="question-3">Question</h3>
+
+
+<p>The standard number representation system is the decimal system, where each digit in a number represents a
+power of ten. The right-most digit is the ones’ place, the next digit is the tens’ place, etc.
+In the octal system, each digit in a number represents a power of eight. The right-most digit is still the 1’s
+place, but the next digit is the 8’s place, the next digit is the 64’s place, etc. Each digit ranges from 0-7, so
+octal numbers will never contain the digits 8 or 9.
+To convert a number represented in octal to a number represented in decimal, each digit must be multipled by
+the appropriate power of eight. For example, <code>123</code> is actually <code>(1 * 64) + (2 * 8) + (3 * 1)</code>, resulting in a
+decimal representation of 83.
+The diagram visualizes the equivalence between the octal and decimal numbers:</p>
+
+<p>Implement <code>convert_to_decimal</code>, which takes an octal number and returns the decimal equivalent. The octal
+number will always start with a non-0 digit, and the number will always be positive.</p>
+
+<pre><code class="python">def convert_to_decimal(octal):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; convert_to_decimal(3) # (8^0 * 3)
+    3
+    &gt;&gt;&gt; convert_to_decimal(23) # (8^1 * 2) + (8^0 * 3)
+    19
+    &gt;&gt;&gt; convert_to_decimal(123) # (8^2 * 1) + (8^1 * 2) + (8^0 * 3)
+    83
+    &quot;&quot;&quot;
+    decimal = 0
+    curr_place = _________ # (a)
+    _________: # (b)
+        curr_digit = _________ # (c)
+        decimal = _________ # (d)
+        curr_place = _________ # (e)
+        octal = _________ # (f)
+    return decimal</code></pre>
+
+
+
+
+<h3 id="walkthrough-3">Walkthrough</h3>
+
+
+<p>If you didn't know that we typically use the decimal system and that there are other representation systems, now you know :D! Here is what we have learned from the prompt:</p>
+
+<ul>
+  <li>In decimal, a number like 83 is constructed like <code>83 = 8 * 10^1 + 3 * 10^0 = 80 + 3</code></li>
+  <li>The same 83, but in the octal system would look like 123. Because <code>123 = 1 * 8^2 + 2 * 8^1 + 3 * 8^0 = 64 + 16 + 3 = 83</code></li>
+  <li>Observe that in any number representation system, the ones’ place (the rightmost digit) is always multiplied by 1.</li>
+</ul>
+
+<p>Doctests are self-explanatory here, but it always pays off to test our understanding with them. 
+Now we can get started with the problem-solving!</p>
+
+<ul>
+  <li>This is a problem about digit manipulation, so we use our best friends <code>n % 10</code> and <code>n // 10</code>  to deal with it.</li>
+</ul>
+
+<p>The code starts with defining <code>decimal</code>, which looks to be our final answer. Then we meet blank (a) that sets a value to <code>curr_place</code> variable. No idea what to do with it, so let’s move on.</p>
+
+<p>For blank (b), it is a while-loop, since a single execution of the if-statement (from what we know so far, nothing else in Python could be ended with <code>:</code>) can’t process all digits from the <code>octal</code>. Since we use <code>octal // 10</code> to “move” along the digits of the number, we will stay in the while-loop until there are digits in <code>octal</code>. In other words:</p>
+
+<pre><code class="python">while octal &gt; 0: </code></pre>
+
+
+<p>To make sure we don’t enter an infinite loop, we can put <code>octal // 10</code> into blank (f) to advance through the digits and eventually trim <code>octal</code> down to <code>0</code>.</p>
+
+<p>Blank (c) is less mysterious than its “curr” sibling from blank (a). It asks for a current digit in octal (which we will definitely use to convert the number back to decimal), so <code>current_digit = octal % 10</code> . Observe that on every iteration, <code>current_digit</code> will be equal to the rightmost digit.</p>
+
+<p>Now we have to update the decimal. According to the formula, we multiply the rightmost digit by the appropriate power of 8. Every time we advance to the next digit (which means for every iteration in the while-loop), the power of 8 increases by 1. Do we have a variable to keep track of the power of 8? Yes — <code>curr_place</code>! On the first iteration, the rightmost digit should be multiplied by <code>8^0 = 1</code>, so our initial value of <code>curr_place</code> on the blank (a) will look like:</p>
+
+<pre><code class="python">curr_place = 1</code></pre>
+
+
+<p>and accordingly, the blank (d) will be:</p>
+
+<pre><code class="python">decimal = decimal + (curr_digit * curr_place) 
+# compute the product of the rightmost digit with the appropriate power of 8
+# and add that to our result so far (decimal)</code></pre>
+
+
+
+<p>Finally, update the <code>curr_place</code> to increase its power of 8 in the blank (e). We can achieve that with:</p>
+
+<pre><code class="python">curr_place = curr_place * 8</code></pre>
+
+
+
+<p>Our final solution looks like:</p>
+
+<pre><code class="python">def convert_to_decimal(octal):
+    decimal = 0
+    curr_place = 1
+    while octal &gt; 0:
+        curr_digit = octal % 10
+        decimal = decimal + (curr_digit * curr_place)
+        curr_place = curr_place * 8
+        octal = octal // 10
+    return decimal</code></pre>
+
+
+
+<p>Here is a couple of alternative solutions:</p>
+
+<pre><code class="python">def convert_to_decimal(octal):
+    decimal = 0
+    curr_place = 0
+    while octal &gt; 0:
+        curr_digit = octal % 10
+        decimal = decimal + (curr_digit * (8**curr_place))
+        curr_place = curr_place + 1
+        octal = octal // 10
+    return decimal
+
+def convert_to_decimal(octal):
+    decimal = 0
+    curr_place = 1
+    while octal &gt; 0:
+        curr_digit = (octal % 10) * curr_place
+        decimal = decimal + curr_digit
+        curr_place = curr_place * 8
+        octal = octal // 10
+    return decimal</code></pre>
+
+
+
+
+<h2 id="forbidden-digits">Forbidden Digits</h2>
+
+
+
+<h3 id="question-4">Question</h3>
+
+
+<p>Implement <code>forbid_digit</code>, a higher-order function which takes two arguments, a function <code>f</code> and a digit
+<code>forbidden</code>, and returns another function. If the returned function is passed a number where the digit in the 1s
+place is equal to the forbidden digit, it should return the result of calling the given function on the number
+without that final digit. Otherwise, it should return the result of calling the given function on the number.</p>
+
+<pre><code class="python">def forbid_digit(f, forbidden):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; g = forbid_digit(lambda y: 200 // (y % 10), 0)
+    &gt;&gt;&gt; g(11)
+    200
+    &gt;&gt;&gt; g(10)
+    200
+    &gt;&gt;&gt; g = forbid_digit(lambda x: f&#x27;{x}a&#x27;, 6)
+    &gt;&gt;&gt; g(61)
+    &#x27;61a&#x27;
+    &gt;&gt;&gt; g(66)
+    &#x27;6a&#x27;
+    &gt;&gt;&gt; g = forbid_digit(g, 3)
+    &gt;&gt;&gt; g(43)
+    &#x27;4a&#x27;
+    &gt;&gt;&gt; g(63)
+    &#x27;0a&#x27;
+    &gt;&gt;&gt; g(44)
+    &#x27;44a&#x27;
+    &quot;&quot;&quot;
+    def forbid_wrapper(n):
+        if ________: # (a)
+            ________ # (b)
+        else:
+            ________ # (c)
+    ________ # (d)</code></pre>
+
+
+
+
+<h3 id="walkthrough-4">Walkthrough</h3>
+
+
+<p>Let’s make a summary of the problem statement:</p>
+
+<p>1) <code>forbid_digit</code> is a HOF and its return value is a function that accepts a single number. Skeleton confirms that there is another function <code>forbid_wrapper</code> in <code>forbid_digit</code> and it takes one argument — an ideal candidate for our return value.</p>
+
+<p>2) With regards to that returned function, if it gets a number <code>n</code> where the rightmost digit is equal to <code>forbidden</code>, it should return the result of calling <code>f</code> on <code>n</code>, but with the rightmost digit removed)</p>
+
+<p>3) Otherwise (if the rightmost digit is not <code>forbidden</code>), just call return <code>f(n)</code> (don’t change/remove any digits)</p>
+
+<p>It is always useful to confirm our understanding against the doctests:</p>
+
+<pre><code class="python">&gt;&gt;&gt; g = forbid_digit(lambda y: 200 // (y % 10), 0) # g is a function now
+&gt;&gt;&gt; g(11) # the rightmost digit is 1, 1 != 0, so just apply lambda on 11 
+200 # 200 // (11 % 10) = 200 // 1 = 200
+&gt;&gt;&gt; g(10) # the rightmost digit is 0, so apply lambda on 1, not 10
+200 # 200 // (1 % 10) = 200 // 1 = 200</code></pre>
+
+
+
+<pre><code class="python">&gt;&gt;&gt; g = forbid_digit(lambda x: f&#x27;{x}a&#x27;, 6)
+&gt;&gt;&gt; g(61) # the rightmost digit is 1, 1 != 0, apply lambda on 61
+&#x27;61a&#x27; # format string simply puts 61 instead of x, resulting in 61a
+&gt;&gt;&gt; g(66) # the rightmost digit is 6, apply lambda on just 6
+&#x27;6a&#x27;</code></pre>
+
+
+
+<pre><code class="python">&gt;&gt;&gt; g = forbid_digit(g, 3) # argument g here is a function from the previous set of doctests
+&gt;&gt;&gt; g(43) # the rightmost digit is 3, so remove it and return g(4)
+&#x27;4a&#x27;
+&gt;&gt;&gt; g(63) # remove 3 just like previous doctest, and return g(6)
+&#x27;0a&#x27;
+&gt;&gt;&gt; g(44) # simply return g(44)
+&#x27;44a&#x27;</code></pre>
+
+
+
+<ul>
+  <li>This doctest might have been tricky, because we use <code>g</code> from the previous call to <code>forbid_digit</code>. We should remember that it was a function that removed the rightmost digit of the argument if it was equal to <code>6</code> and attached <code>a</code> to the result.</li>
+  <li>Alternatively, you can look at the first line <code>g = forbid_digit(g, 3)</code> as <code>g = forbid_digit(forbid_digit(lambda x: f&#x27;{x}a&#x27;, 6), 3)</code>. Now you know that <code>f</code> is something more complicated than a simple lambda function.</li>
+  <li>Particularly, when <code>g(63)</code> is called, we firstly get rid of <code>3</code> and call <code>f</code> function on <code>6</code>. In this case, <code>f</code> is a function from the previous set of doctests, the result of <code>forbid_digit(lambda x: f&#x27;{x}a&#x27;, 6)</code>. In this case, the rightmost digit of <code>6</code> is equivalent to <code>forbidden</code>, which results in calling lambda on <code>0</code>, hence the final answer is <code>0a</code>.</li>
+</ul>
+
+<p>Now we are ready to get started. Per point (1) from our prompt summary, go ahead and put <code>return forbid_wrapper</code> into blank (d).</p>
+
+<p>The body of <code>forbid_wrapper</code> is a single if-statement and our summary points (2) and (3) actually read like a if-else logic: “if it gets a number <code>n</code>...”, “otherwise (if the...”.</p>
+
+<p>Let’s use blank (a) to compare the rightmost digit of <code>n</code> with forbidden, so we can put something like:</p>
+
+<pre><code class="python">n % 10 == forbidden # n % 10 is equal ot the rightmost digit</code></pre>
+
+
+
+<ul>
+  <li>Note that since <code>forbid_wrapper</code> is defined inside <code>forbid_digit</code>, it has access to <code>f</code> and <code>forbidden</code> values. For example, if we define <code>g = forbid_digit(lambda x: f&#x27;{x}a&#x27;, 6)</code>, all future calls of <code>g</code> will use <code>6</code> as <code>forbidden</code> value.</li>
+</ul>
+
+<p>If our condition is true, in blank (b) we should apply the <code>f</code> function on the <code>n</code> with its rightmost digit removed. Floor dividing <code>n</code> by 10 achieves the “removal” effect:</p>
+
+<pre><code class="python">return f(n // 10)</code></pre>
+
+
+
+<p>If the condition happened to be False, we simply apply <code>f</code> on <code>n</code> on the blank (c) and we are done!</p>
+
+<pre><code class="python">return f(n)</code></pre>
+
+
+
+<p>Our complete solution looks like:</p>
+
+<pre><code class="python">def forbid_digit(f, forbidden):
+    def forbid_wrapper(n);
+        if n % 10 == forbidden: 
+            return f(n // 10)
+        else:
+            return f(n)
+    return forbid_wrapper
+
+# you could also flip the condition and the return values
+def forbid_digit(f, forbidden):
+    def forbid_wrapper(n);
+        if n % 10 != forbidden: 
+            return f(n)
+        else:
+            return f(n // 10)
+    return forbid_wrapper</code></pre>
+
+
+
+<p>Part (e) is similar to part (e) of the Question 1. Actually, the structure of our code is also similar to <code>dipping</code> — it is a single if-statement. So we once again can utilize the conditional expression:</p>
+
+<pre><code class="python">if condition:
+    return first_value
+else:
+    return second_value
+
+# is equivalent to 
+return first_value if condition else second_value</code></pre>
+
+
+
+<p>Then the answer for part (e) is:</p>
+
+<pre><code class="python">def forbid_digit(f, forbidden):
+    return lambda n: f(n // 10) if n % 10 == forbidden else f(n)</code></pre>
+
+
+
+<ul>
+  <li>See that the return value is also a function (lambda) that accepts a single argument <code>n</code>. In general, whenever we need to define a function and have only a single line to do it — we use lambda. If-else logic can also fit-in with the help of conditional expression.</li>
+</ul>
+
+
+<h2 id="the-floor-is-lava">The Floor is Lava</h2>
+
+
+
+<h3 id="question-5">Question</h3>
+
+
+<p>Implement <code>lava_hopper</code>, a function that “hops” from one number to the next computed number and tries to
+avoid any number detected as “lava”. When it does land on “lava”, it steps backwards by one number until it
+finds a non-lava number and then keeps hopping.
+The function takes four arguments: <code>start_number</code> (the initial number), <code>goal_number</code> (the target number),
+<code>next_hop</code> (a function that computes the next number based on the current), and <code>is_lava</code> (a function that
+returns a boolean indicating if a number is lava), and it returns the minimum number of hops required to get
+from <code>start_number</code> to at least <code>goal_number</code>. The number of hops does not include steps backwards. If either
+the <code>start_number</code> or <code>goal_number</code> spots are lava, it returns the string "No lava allowed there!".</p>
+
+<p>For example, consider this call:</p>
+
+<p><code>lava_hopper(1, 8, lambda x: x * 2, lambda x: x == 4)</code></p>
+
+<p>The function starts from the number 1 and then hops to the numbers 2, 4, realizes that’s lava, steps back to 3,
+hops to 6, hops to 12, and returns 4 (the number of hops required to get to/past 8).
+Notice that depending on the functions passed in for <code>next_hop</code> and <code>is_lava</code>, it is possible for a correct <code>lava_hopper</code>
+implementation to result in an infinite loop.</p>
+
+<pre><code class="python">def lava_hopper(start_number, goal_number, next_hop, is_lava):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; # hops from 1&#x2d;&gt;2, 2&#x2d;&gt;4, 4&#x2d;&gt;8
+    &gt;&gt;&gt; lava_hopper(1, 8, lambda x: x * 2, lambda x: False)
+    3
+    &gt;&gt;&gt; # hops from 1&#x2d;&gt;2, 2&#x2d;&gt;4, steps to 3, hops 3&#x2d;&gt;6, hops 6&#x2d;&gt;12
+    &gt;&gt;&gt; lava_hopper(1, 8, lambda x: x * 2, lambda x: x == 4)
+    4
+    &gt;&gt;&gt; # hops from 1&#x2d;&gt;2, 2&#x2d;&gt;4, 4&#x2d;&gt;8, steps to 7, then 6, then 5, hops to 10
+    &gt;&gt;&gt; lava_hopper(1, 10, lambda x: x * 2, lambda x: 6 &lt;= x &lt;= 8)
+    4
+    &gt;&gt;&gt; # hops from 3&#x2d;&gt;6, 6&#x2d;&gt;12, steps to 11, hops 11&#x2d;&gt;22
+    &gt;&gt;&gt; lava_hopper(3, 20, lambda x: x * 2, lambda x: x % 10 == 2)
+    3
+    &gt;&gt;&gt; lava_hopper(1, 8, lambda x: x * 2, lambda x: x == 1)
+    &#x27;No lava allowed there!&#x27;
+    &gt;&gt;&gt; lava_hopper(1, 8, lambda x: x * 2, lambda x: x == 8)
+    &#x27;No lava allowed there!&#x27;
+    &quot;&quot;&quot;
+    if __________: # (a)
+        return &#x27;No lava allowed there!&#x27;
+    num_hops = 0
+    while __________: # (b)
+        _________________: # (c)
+            __________ # (d)
+        start_number = __________ # (e)
+        __________ # (f)
+    return num_hops</code></pre>
+
+
+
+
+<h3 id="walkthrough-5">Walkthrough</h3>
+
+
+<p>Even though there is quite a lot to digest in the problem description, what is actually happening while (pun intended) we hop is pretty manageable. After carefully reading over the prompt for at least two times, what we have learned is:</p>
+
+<ol>
+  <li>We start at <code>start_number</code> and “hop” until we reach or <strong>exceed</strong> the <code>goal_number</code>.</li>
+  <li>The return value is the number of hopes we made. We calculate the number we are going to hop to using the <code>next_hop</code> function.</li>
+  <li>If during the hop, we step on “lava” number (checked using <code>is_lava</code> function), then we step back by 1 until we get to a number that is not lava. From there, we continue our hops as usual. Steps back are NOT considered as hops.</li>
+  <li>If either start or goal is already “lava”, we return "No lava allowed there!"</li>
+</ol>
+
+<p>The doctests here are provided with explanations and we can just confirm our understanding with them.</p>
+
+<p>So the problem seems “mechanical”, where you just have to do the hops as described, while taking care of conditions about <code>goal_number</code> or “lava”. Quick scan of the skeleton shows us that we will use a while-loop to go over the hops and use <code>num_hops</code> variable to accumulate the result.</p>
+
+<p>Blank (a) asks for a condition that we use to return ‘No lava allowed there!’. As we know from our prompt notes, we do that if either <code>start_number</code> or <code>goal_number</code> is “lava”:</p>
+
+<pre><code class="python">if is_lava(start_number) or is_lava(goal_number):
+    return &quot;No lava allowed there!&quot;</code></pre>
+
+
+
+<ul>
+  <li>Some students tried using <code>is_lava == start_number or is_lava == goal_number</code> as the condition, but we have learned both from the statement and doctests that <em><code>is_lava</code></em> is a function returning True/False, therefore it has to be called on numbers and its result checked for True value. Checking function against an integer for equality would never work.</li>
+</ul>
+
+<p>Moving on, we need a while-loop condition now. We know that we use loops to perform the same operation multiple times, so probably it will be used to handle each “hop”. Do we know until when we hop? From our notes, until we hit or go beyond <code>goal_number</code>. So we can put something like:</p>
+
+<pre><code class="python">while start_number &lt; goal_number: </code></pre>
+
+
+
+<ul>
+  <li>You might be tempted to use <code>&lt;=</code> here, but if you consider a test like <code>lava_hopper(1, 1, lambda x: x + 1, lambda x: False)</code>, where start and goal are already equal, you see that you don't need to do any hops here (the answer is 0). However, using <code>&lt;=</code> will launch the while loop iteration anyway, and it is likely that you will increase your number of hops there (since there is no other space for that). You could also catch this issue after finishing your solution and testing it (you would see that you overcount).</li>
+</ul>
+
+<p>Whenever I write a while loop, I really like making sure it won't become an infinite loop (can be a good habit!). Instead of going to blank (c), let’s focus on line (e), since it affects the variable that we use in the while-loop’s condition (<code>start_number</code>). From the prompt, we know that <code>next_hop</code> is what we use to advance forward to the <code>goal_number</code> . So <code>start_number = next_hop(start_number)</code> looks to be a reasonable candidate. Defaulting to good old <code>start_number += 1</code> would not work here, since we utilize a custom lambda function to iterate forward rather than usual incrementing we use in assignments. That is why it is crucial to carefully read over the prompt first!</p>
+
+<p>For blank (c), we see that it ends with <code>:</code> and is followed up by indented blank (d). From what we have learned so far in Python, what usually ends with <code>:</code>? While loops and if statements. The former is used to repeatedly perform some operations while the condition is true, when the latter also does something if the condition is true, but only once. Maybe this is where we can handle the logic of stepping into the lava. We know that if we are on the number that is “lava”, we have to take a step backwards on our counter variable (<code>start_number</code>). So for blanks (c) and (d), something like this might work out:</p>
+
+<pre><code>if is_lava(start_number):
+    start_number &#x2d;= 1</code></pre>
+
+
+
+<ul>
+  <li>Looks good! However, if we are more careful, we notice that making a step back once does not necessarily put us outside of the lava right away. We might have to take more steps backwards, until we are not on the “lava” number. Single execution of the if-statement does not do that, but we can use the while-loop:</li>
+</ul>
+
+<pre><code class="python">while is_lava(start_number):
+    start_number &#x2d;= 1 # we will keep decrementing start_number until we are in the lava</code></pre>
+
+
+
+<p>Finally, we have an empty line, blank (f). In the heat of solving the problem, it is common to forget about actually counting the answer! Every iteration in the outer while-loop embodies a single hop (note that the second while-loop does not touch the number of hops since step backs do not count as hops per the prompt), so we can put <code>num_hops += 1</code> on the blank (f). Here is our complete solution just for reference:</p>
+
+<pre><code class="python">def lava_hopper(start_number, goal_number, next_hop, is_lava):
+    if is_lava(start_number) or is_lava(goal_number)&gt;: # (a)
+        return &#x27;No lava allowed there!&#x27;
+    num_hops = 0
+    while start_number &lt; goal_number: # (b)
+        while is_lava(start_number): # (c)
+            start_number &#x2d;= 1 # (d)
+        start_number = next_hop(start_number) # (e)
+        num_hops += 1 # (f)
+    return num_hops</code></pre>
+
+
+
+<p>Part (g) asks us to come up with arguments that result in an infinite-loop. With such input, we would get stuck forever iterating in the while-loop. When does that happen? If we keep satisfying the loop condition every time. So <code>start_number</code> should never reach the <code>goal_number</code>. We unfortunately can’t make <code>goal_number</code> a “lava” number, since it would return “No lava allowed there!”, before going to the while oop. But we can come up with a <code>next_hop</code> function that never lets us move:</p>
+
+<pre><code class="python">lava_hopper(1, 2, lambda x: 1, lambda x: False) # no &quot;lava&quot; numbers, but we will always stay at 1</code></pre>
+
+
+
+<ul>
+  <li><p>Or you can simply put a “lava” barrier in front of the goal:</p>
+
+<pre><code class="python">lava_hopper(1, 5, lambda x: x + 1, lambda x: x == 3) # We can never go past 3 to reach 5</code></pre></li>
+  <li><p>Or make your hopper hop backwards:</p>
+
+<pre><code class="python">lava_hopper(1, 2, lambda x: x &#x2d; 1, lambda x: False)</code></pre></li>
+</ul>
+
+
+<h2 id="curry-up-now">Curry Up Now</h2>
+
+
+
+<h3 id="question-6">Question</h3>
+
+
+<p>The function <code>order_meal</code> takes three arguments, <code>item_price</code>, <code>item_quantity</code>, and <code>ordered_at</code>, and either 
+returns the total cost of the meal or returns “Wait!” if the meal was not ordered between business hours. Only the
+doctests are shown below, as the implementation is not necessary for completing the question.</p>
+
+<pre><code class="python">def order_meal(item_price, item_quantity, ordered_at):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; order_meal(5.99, 5, 11)
+    29.95
+    &gt;&gt;&gt; order_meal(9.99, 5, 20)
+    49.95
+    &gt;&gt;&gt; order_meal(8.99, 5, 7)
+    &#x27;Wait!&#x27;
+    &quot;&quot;&quot;
+    # Code intentionally omitted</code></pre>
+
+
+
+<p>Implement <code>curry_up_now</code>, a function that curries <code>order_meal</code> into a chain of three functions that each take a
+single argument. Once the third function is called, it should attempt to order the meal and print out the result.
+If the meal was successfully ordered during business hours, it should then return another curried function that
+can re-order the same item with a 50% discount.</p>
+
+<pre><code class="python">def curry_up_now(item_price):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; curry_up_now(2.99)(2)(15)
+    5.98
+    &lt;function &lt;lambda&gt;&gt;
+    &gt;&gt;&gt; lunch_special = curry_up_now(8.99)
+    &gt;&gt;&gt; lunch_special(5)(11)
+    44.95
+    &lt;function &lt;lambda&gt;&gt;
+    &gt;&gt;&gt; lunch_special(3)(13)(2)(14)
+    26.97
+    8.99
+    &gt;&gt;&gt; no_discount = curry_up_now(10.99)(4)(7)
+    Wait!
+    &gt;&gt;&gt; print(no_discount)
+    None
+    &quot;&quot;&quot;
+    def order_quantity(item_quantity):
+        def by(ordered_at):
+            result = ________ # (a)
+            ________ # (b)
+            ________: # (c)
+                return ________ # (d)
+        return by
+    return order_quantity</code></pre>
+
+
+
+
+<h3 id="walkthrough-6">Walkthrough</h3>
+
+
+<p>The problem statement was corrected according to the clarification given during the exam.</p>
+
+<p>First of all, we have to understand the possible return values of the <code>order_meal</code> function. Here is the summary you might have come up with:</p>
+
+<ul>
+  <li>If it returns the total cost, it seems to be just multiplying <code>item_price</code> with <code>item_quantity</code>, which conceptually makes perfect sense as the total cost of the order</li>
+  <li>If it returns “Wait!”, it is likely that <code>ordered_at</code> was the time during “business hours”. We do not know what exactly these “business hours” are.</li>
+  <li>The implementation is omitted, so we will only rely on the connection between arguments and return value. Conceptually, we can assume that only <code>ordered_at</code> should impact on whether the return value is the total cost or “Wait!”.</li>
+</ul>
+
+<p>Now, what about <code>curry_up_now</code>?</p>
+
+<ul>
+  <li>It curries <code>order_meal</code> into a chain of three functions, which means it will wrap a call to <code>order_meal</code> into three function, nested into each other. Essentially, we aim to transform the three-argument function <code>order_meal</code> into a chain of three functions, where each one accepts a single argument. It allows for code like this: <code>curry_up_now(2.99)(2)(15)</code>.</li>
+  <li>After the third argument (<code>ordered_at</code>) is fed in, it attempts to order the meal and print the result (calls <code>order_meal</code> and prints its return value). If the order was successful (got total cost as a result of calling <code>order_meal</code>), the function should return <em>another</em> chain of <strong>two</strong> functions that allows to order the same item (means the <code>item_price</code> from the original call was "saved", that is why the return value is a chain of two functions, since it only needs <code>item_quantity</code> and <code>ordered_at</code>) for 50% discount.</li>
+</ul>
+
+<p>Doctests help a lot here to clarify what is going on:</p>
+
+<pre><code class="python">&gt;&gt;&gt; curry_up_now(2.99)(2)(15) 
+5.98 # order was between &quot;business hours&quot;, so we get 2.99 * 2 = 5.98 printed 
+&lt;function &lt;lambda&gt;&gt; # returned lambda function that allows for a discounted order
+# sadly we cannot call this lambda since the original curry_up_now result was
+# not assigned to any variable to capture the lambda
+
+&gt;&gt;&gt; lunch_special = curry_up_now(8.99) # we &quot;set&quot; 8.99 to be the item price 
+# lunch_special is now a function that can curry&#x2d;in two arguments
+&gt;&gt;&gt; lunch_special(5)(11) # we feed in the item_quantity of 5 and ordered_at of 11
+44.95 # 8.99 * 5 = 44.95 &#x2d;&#x2d; the order is successful
+&lt;function &lt;lambda&gt;&gt; # function that allows discounted order that was not captured again</code></pre>
+
+
+
+<ul>
+  <li>These doctests showcase how currying happens and also show that <code>curry_up_now</code> <em>prints</em> the total cost, but <em>returns</em> the lambda function.</li>
+</ul>
+
+<pre><code class="python">&gt;&gt;&gt; lunch_special(3)(13)(2)(14)
+26.97
+8.99</code></pre>
+
+
+
+<ul>
+  <li>This one is tricky. First of all, remember that the value of <code>lunch_special</code> is still <code>curry_up_now(8.99)</code>, where we fixed the item price to be <code>8.99</code>. So it remains to be a chain of two functions, each accepting <code>item_quantity</code> and <code>ordered_at</code>.</li>
+  <li><code>lunch_special(3)(13)</code> is a single order, made for item with <code>item_price</code> = <code>8.99</code>, <code>item_quantity</code> = <code>3</code>, <code>ordered_at</code> = <code>13</code>. The order was successful since we printed <code>26.97</code> on the next line (<code>26.97 = 8.99 * 3</code>).</li>
+  <li>We can see that the expression <code>lunch_special(3)(13)</code> is followed up by two calls <code>(2)(14)</code>, which reaffirms us that the order was successful and the expression was evaluated to be a chain of two functions, allowing for a discounted order. Indeed, <code>8.99 * 2 = 17.98</code>, but instead there is <code>8.99</code> on the next line, which is exactly 50% discount for <code>17.98</code>.</li>
+</ul>
+
+<pre><code class="python">&gt;&gt;&gt; no_discount = curry_up_now(10.99)(4)(7) # make a new call with three arguments
+Wait! # the order was not during business hours, so &quot;Wait!&quot; is printed instead of the total cost
+&gt;&gt;&gt; print(no_discount)
+None 
+# it is None because the order was unsuccessful, 
+# we did not get a function for making a discounted order :(</code></pre>
+
+
+
+<p>After a long journey with doctests, we are fortunate that the skeleton already has the currying structure of three functions, where:</p>
+
+<ul>
+  <li>the <code>curry_up_now</code> takes argument <code>item_price</code> and returns <code>order_quantity</code> function,</li>
+  <li>the <code>order_quantity</code> function takes <code>item_quantity</code> as argument and returns <code>by</code></li>
+  <li>the <code>by</code> function has <code>ordered_at</code> as argument and returns what we are going put in blank (d). But let’s start from blank (a).</li>
+</ul>
+
+<p>We know that <code>order_now</code> (for a regular price, not discounted) must be called somewhere in <code>curry_up_now</code> . Any blank from (a) - (c) can achieve that.</p>
+
+<p>We also know that the result of <code>order_now</code> will be checked for whether it equals a total cost (in which case we return a lambda that for a discounted order) or a string "Wait!" (in that case, return <code>None</code>). This conditional logic might incline us to put the <code>order_now</code> call into blank (c). Something like:</p>
+
+<pre><code class="python">if order_now(item_price, item_quantity, ordered_at) != &quot;Wait!&quot;: # blank (c)
+	 return _________ # blank (d), curried function
+# this is the end of function by, which means otherwise it returns None</code></pre>
+
+
+
+<p>However, the result of <code>order_now</code> must also be printed. We need to store its result somewhere to both print it and compare against <code>&quot;Wait!&quot;</code>. There is already a variable given to us — <code>result</code>! Let’s use blank (a) for <code>order_now</code> call:</p>
+
+<pre><code class="python">result = order_now(item_price, item_quantity, ordered_at)</code></pre>
+
+
+
+<p>As mentioned above, the result should be printed. Blank (b)?</p>
+
+<pre><code class="python">print(result)</code></pre>
+
+
+
+<p>Our previous if-statement in blank (c) changes into:</p>
+
+<pre><code class="python">if result != &quot;Wait!&quot;:</code></pre>
+
+
+
+<p>The moment of truth! We need to come up with a function (also using only a single line, hi lambda!) that calls <code>order_meal</code> with discounted price and also prints its result 😱</p>
+
+<p>Let’s figure it out step-by-step. A call to <code>order_meal</code> for half a price should be something like:</p>
+
+<pre><code class="python">order_meal(item_price * 0.5, item_quantity, ordered_at)</code></pre>
+
+
+
+<p>Now we need to ensure that the <code>item_price</code> used above is from the original call to <code>curry_up_now</code> (i.e. in the environment diagram, <code>item_price</code> value should come from the frame of <code>curry_up_now</code>). The remaining two arguments must be curried-in, so we need to chain two lambdas together:</p>
+
+<pre><code class="python">lambda item_quantity: lambda ordered_at: order_meal(item_price * 0.5, item_quantity, ordered_at)</code></pre>
+
+
+
+<p>Cool! The only problem is where to print the result of <code>order_meal</code>. Well, what if...</p>
+
+<pre><code class="python">lambda item_quantity: lambda ordered_at: print(order_meal(item_price * 0.5, item_quantity, ordered_at))</code></pre>
+
+
+
+<ul>
+  <li>To reiterate, this expression is a chain of two functions which calls <code>order_meal</code> with a discounted price, prints its result (either the total cost or “Wait!”) and returns <code>None</code> (what a call to <code>print</code> evaluates to).</li>
+</ul>
+
+<p>Here is the full solution for reference:</p>
+
+<pre><code class="python">def curry_up_now(item_price):
+    def order_quantity(item_quantity):
+        def by(ordered_at):
+            result = order_now(item_price, item_quantity, ordered_at)
+            print(result)
+            if result != &quot;Wait!&quot;:
+                return lambda item_quantity: lambda ordered_at: order_meal(item_price * 0.5, item_quantity, ordered_at)
+                # otherwise return None
+        return by
+    return order_quantity</code></pre>
+
+
+
+<p>Part (e) asks us to condense this tongue-twister into a single line. It means we need to perform all of the following in the single line of code:</p>
+
+<pre><code class="python">result = order_now(item_price, item_quantity, ordered_at)
+print(result)
+if result != &quot;Wait!&quot;:
+    return lambda item_quantity: lambda ordered_at: order_meal(item_price * 0.5, item_quantity, ordered_at)</code></pre>
+
+
+
+<p>First of all, we can try replacing <code>result</code> on lines 2 and 3 above with a call to <code>order_now</code>, so there is no need to have a variable <code>result</code>. Something like:</p>
+
+<pre><code class="python">print(order_now(item_price, item_quantity, ordered_at))
+if order_now(item_price, item_quantity, ordered_at) != &quot;Wait!&quot;:
+    return lambda item_quantity: lambda ordered_at: order_meal(item_price * 0.5, item_quantity, ordered_at)</code></pre>
+
+
+
+<p>Okay, one line is gone. The conditional expression always rescued us in previous problems, when we needed a one-liner, so let’s try utilize it here as well:</p>
+
+<pre><code class="python">print(order_now(item_price, item_quantity, ordered_at))
+return lambda q: lambda h: order_meal(item_price * 0.5, q, h) if order_now(item_price, item_quantity, ordered_at) != &quot;Wait!&quot; else None</code></pre>
+
+
+
+<ul>
+  <li>The arguments of the lambda functino that we return were changed to <code>q</code> and <code>h</code> to not get confused with the call that happens in the condition.</li>
+</ul>
+
+<p>Finally, we need a way for both of these lines to execute in a single line and the last expression (conditional one) should be returned. Since a call to <code>print</code> returns <code>None</code>, which is considered falsey value, we can put <code>or</code> between a call to <code>print</code> and the conditional expression:</p>
+
+<pre><code class="python">return print(order_now(item_price, item_quantity, ordered_at)) or ( (lambda q: lambda h: order_meal(item_price * 0.5, q, h)) if order_now(item_price, item_quantity, ordered_at) != &quot;Wait!&quot; else None)</code></pre>
+
+
+
+<p>A call to <code>print</code> will display the result of <code>order_now</code> call and then will be evaluated to <code>None</code> . The return expression will look like:</p>
+
+<pre><code class="python">return None or ( (lambda q: lambda h: order_meal(item_price * 0.5, q, h)) if order_now(item_price, item_quantity, ordered_at) != &quot;Wait!&quot; else None)</code></pre>
+
+
+
+<p>Such expression will inevitably return the result of evaluating the conditional expression, which is either <code>None</code> (if our second call to <code>order_now</code> resulted in “Wait!”) or the chain of two functions that make a discounted order.</p>
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#what-would-python-dip">What Would Python Dip?</a></li>
+  <ul>
+    <li><a href="index.html#question">Question</a></li>
+    <li><a href="index.html#walkthrough">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#ring-my-bell-tower">Ring My Bell Tower</a></li>
+  <ul>
+    <li><a href="index.html#question-2">Question</a></li>
+    <li><a href="index.html#walkthrough-2">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#doctor-octalpus-reborn">Doctor Octalpus, Reborn</a></li>
+  <ul>
+    <li><a href="index.html#question-3">Question</a></li>
+    <li><a href="index.html#walkthrough-3">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#forbidden-digits">Forbidden Digits</a></li>
+  <ul>
+    <li><a href="index.html#question-4">Question</a></li>
+    <li><a href="index.html#walkthrough-4">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#the-floor-is-lava">The Floor is Lava</a></li>
+  <ul>
+    <li><a href="index.html#question-5">Question</a></li>
+    <li><a href="index.html#walkthrough-5">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#curry-up-now">Curry Up Now</a></li>
+  <ul>
+    <li><a href="index.html#question-6">Question</a></li>
+    <li><a href="index.html#walkthrough-6">Walkthrough</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../../../assets/js/network_storage.js"></script>
+    <script src="../../../../assets/js/code_tabindex.js"></script>
+    <script src="../../../../assets/js/storable.js"></script>
+    <script src="../../../../assets/js/editor.js"></script>
+    <script src="../../../../assets/js/copy-button.js"></script>
+    <script src="../../../../assets/js/env-diagram.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+<script src="../../../../assets/js/storable.js"></script>
+<script src="../../../../assets/js/env-diagram.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+</script>
+
+  </body>
+</html>

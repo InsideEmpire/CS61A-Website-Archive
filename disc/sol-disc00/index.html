@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/disc.css">
+
+
+    <title>
+Discussion 0 | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Discussion 0: Getting Started
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="disc00.pdf" class="label label-outline">disc00.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<!-- <div class="alert storable-login-status"></div> -->
+
+
+    
+<p>Congratulations, you found the Discussion 0 worksheet!</p>
+
+<p>To find your discussion room, check your email. Unless you opted for the mega section, you should have received an email with your discussion group number, location, and time. All discussion groups meet in person. There are multiple groups at a time in each discussion room, so when you arrive, find your group.</p>
+
+<p>Please start on Berkeley time, 10 minutes after the scheduled start time (12:40, 2:10, or 3:40). Feel free to introduce yourself to the rest of your group while you wait (and check that they really have the same group number as you do).</p>
+
+<p>If you need help at any time and there's no TA in the room, join this <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom</a> and talk to the TA there. If you're in the waiting room, that means they are talking to another group, and they'll let you in once that's done.</p>
+
+
+<h2 id="part-0-meet-your-group-and-learn-their-names-5-minutes">Part 0: Meet your group and learn their names [5 minutes]</h2>
+
+
+<p>Order yourselves by birthday: January 1 at the start and December 31 at the end. Then, on your turn, say your name and where you're from, then say the same information for each person who had a turn already, starting from the most recent turn. For example, the intros might go:</p>
+
+<ul>
+  <li><strong>Eva</strong>: I'm Eva from Minneapolis</li>
+  <li><strong>Lem</strong>: I'm Lem from San Diego, and [turning to Eva] you're Eva from Minneapolis</li>
+  <li><strong>Alyssa</strong>: I'm Alyssa from Sacramento, [turning to Lem] you're Lem from San Diego, and [turning to Eva] you're Eva from Minneapolis.</li>
+</ul>
+
+<p>If you forget someone's name or where they're from, that's fine; everybody is here to learn. When it's someone's turn, give them time to try themselves, but if they need help, offer it.</p>
+
+<p><em>Tip</em>: Now is a great time to write down the names of the people in your group so that you can look them up later.</p>
+
+
+<h2 id="part-1-learn-about-each-other-30-minutes">Part 1: Learn about each other [30 minutes]</h2>
+
+
+<p>Here's a game called partitions. Each round, you will split your group into two halves with equal numbers of people (or differing by 1 if there are an odd number of people). The goal is for both groups to find a rare fact that all of their members have in common, that no one in the other group also has in common. For example, Group A may find that they are all left-handed, while Group B may find that they all collect Pokémon cards. For each round follow these steps:</p>
+
+<ul>
+  <li>Step 1: Split into two equal halves (or differing by 1).</li>
+  <li>Step 2: The two groups separate for 10 minutes to talk and find some rare fact about them that they all share.</li>
+  <li>Step 3: After 10 minutes, regroup and have each group give their shared fact. If no one in the opposing group has that fact in common as well, then everyone in your group scores a point. (So in the above example, if Group A’s fact is that they’re all left-handed, and no one in Group B is left-handed, everyone in Group A scores a point.)</li>
+</ul>
+
+<p>Play for 2 rounds using 2 different ways of splitting your group into halves.</p>
+
+<p><strong>Important</strong>: The facts you choose <em>cannot</em> be determined by sight (such as height or hair color). They also <em>cannot</em> be based on preferences (such as favorite TV show). Some ideas:</p>
+
+<ul>
+  <li>Places you've been: Paris, Disneyland, In-N-Out</li>
+  <li>Things you've tried: zip-lining, meditation, fishing</li>
+  <li>Stuff you can do: ski, crochet, juggle, recite digits of pi</li>
+</ul>
+
+<p>When you're done, it's time for the final challenge! Find a fact that's true about all of you but you don't think is true of your TA. When you're ready, check with your TA (in person or on <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom</a>) to see if you succeeded.</p>
+
+
+<h2 id="part-2-solve-a-problem-together-30-minutes">Part 2: Solve a problem together [30 minutes]</h2>
+
+
+<p>Imagine you can call only the following three functions:</p>
+
+<ul>
+  <li><code>f(x)</code>: Subtracts one from an integer <code>x</code></li>
+  <li><code>g(x)</code>: Doubles an integer <code>x</code></li>
+  <li><code>h(x, y)</code>: Concatenates the digits of two different positive integers <code>x</code> and <code>y</code>. For example, <code>h(789, 12)</code> evaluates to <code>78912</code> and <code>h(12, 789)</code> evaluates to <code>12789</code>.</li>
+</ul>
+
+<p><strong>Definition</strong>: A <em>small expression</em> is a call expression that contains only <code>f</code>, <code>g</code>, <code>h</code>, the number 5, and parentheses. All of these can be repeated. For example, <code>h(g(5), f(f(5)))</code> is a small expression that evaluates to 103.</p>
+
+<p>What's the shortest <em>small expression</em> you can find that evaluates to 2024?</p>
+
+
+<h2 id="part-3-document-the-occasion-5-minutes">Part 3: Document the occasion [5 minutes]</h2>
+
+
+<p>Take a group selfie and share it around. You'll be glad you did at the end of the semester.</p>
+
+<p>Then, please all fill out the <a href="https://forms.gle/UCYakosihNmKSuZE9">attendance form</a> (one submission per person per week).</p>
+
+<p>You're done! If you have extra time, discuss how you might use a computer to find the shortest possible <em>small expression</em> that evaluates to 2024. We'll talk about this in Lecture 2.</p>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#part-0-meet-your-group-and-learn-their-names-5-minutes">Part 0: Meet your group and learn their names [5 minutes]</a></li>
+  <li><a href="index.html#part-1-learn-about-each-other-30-minutes">Part 1: Learn about each other [30 minutes]</a></li>
+  <li><a href="index.html#part-2-solve-a-problem-together-30-minutes">Part 2: Solve a problem together [30 minutes]</a></li>
+  <li><a href="index.html#part-3-document-the-occasion-5-minutes">Part 3: Document the occasion [5 minutes]</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

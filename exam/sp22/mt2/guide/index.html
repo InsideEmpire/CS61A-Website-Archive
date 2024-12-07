@@ -1,0 +1,1956 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../../../assets/js/hl.js"></script>
+    <script src="../../../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../../../assets/css/style.css">
+    <link rel="stylesheet" href="../../../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../../../assets/images/favicon.ico">
+
+    
+
+    <title>
+Midterm 2 Walkthrough | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../../../index.html">Lectures</a></li>
+            
+            <li><a href="../../../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>Midterm 2 Walkthrough</h1>
+    </header>
+     <h1 id="1-a-bug-s-life">1. A Bug’s Life</h1>
+
+
+
+<h2 id="wasp">Wasp</h2>
+
+
+<p>Richard is trying to write a generator function that maps a given iterable using a one-argument function. Here’s what he comes up with:</p>
+
+<pre><code class="python">def map_gen(fn, iterable):
+    for it in iterable:
+        yield from fn(it)</code></pre>
+
+
+
+<p>i. (0.5 pt) Richard tests out his function by running the code below. He expected to see <code>[2, 4, 6, 8]</code>
+but instead gets an error when he runs these lines in an interpreter:</p>
+
+<pre><code class="python">&gt;&gt;&gt; data = [1, 2, 3, 4]
+&gt;&gt;&gt; fn = lambda x: x * 2
+&gt;&gt;&gt; list(map_gen(fn, data))</code></pre>
+
+
+
+<p>Which line of code in the function caused the code to break?</p>
+
+<p>ii. (0.5 pt) Rewrite the buggy line of code you identified above to fix the error.</p>
+
+<p><!--</p>
+
+<blockquote><p>This question was intended to test students' understanding of <code>yield from</code> as
+opposed to <code>yield</code> -- specifically, to recognize that one needs to use <code>yield</code>
+in order to yield a single value instead of <code>yield from</code>. The rubric for part
+(ii) gave credit for <code>yield fn(it)</code>, or the equivalent <code>yield from [fn(it)]</code>.
+As this was a debugging question, any code that resulted in the same or a
+different bug was not given credit.
+--></p></blockquote>
+
+
+<h2 id="walkthrough">Walkthrough</h2>
+
+
+<p>Remember that <code>yield from</code> keyword <strong>only</strong> expects an iterable expression next to it. The other way to think about it:</p>
+
+<pre><code class="python">yield from itr 
+
+# code above is equivalent to the code below
+
+for e in itr:
+    yield e</code></pre>
+
+
+
+<p>This means that we can rewrite Richard’s function as:</p>
+
+<pre><code class="python">def map_gen(fn, iterable):
+    for it in iterable:
+        for e in fn(it): 
+            yield e</code></pre>
+
+
+
+<p>From this, we can conclude that <code>fn(it)</code> has to be an iterable. However, the test code that Richard is using defines <code>fn</code> as lambda function that multiplies the argument by 2, which is unlikely to produce an iterable.  In <code>map_gen</code>, the function <code>fn</code> is used with <code>it</code>, which represents the contents of <code>iterable</code> argument. In the test code, <code>iterable</code> is a list <code>data</code>, so <code>it</code> is just a number that gets fed into <code>fn</code> function. Therefore, <code>fn(it)</code> would never result in an iterable, causing an error for <code>yield from</code> that actually expects an iterable.</p>
+
+<p>A quick fix would be to not use <code>yield from</code> at all and yield the elements of <code>iterable</code> after applying <code>fn</code> on them:</p>
+
+<pre><code class="python">def map_gen(fn, iterable):
+    for it in iterable:
+        yield fn(it)</code></pre>
+
+
+
+
+<h2 id="moth">Moth</h2>
+
+
+<p>Melanie is trying to write some code to represent a cylinder in Python. This is her code:</p>
+
+<pre><code class="python">class Cylinder:
+    def __init__(self, radius, height):
+        self.radius = radius
+        self.height = height
+
+    def volume(self):
+        volume = 3.14 * self.radius ** 2 * self.height
+        return volume
+
+    def percent_filled(self, volume_of_water):
+        return (volume_of_water / self.volume) * 100</code></pre>
+
+
+
+<p>i. (0.5 pt) Melanie runs the following code expecting to see it return 50.0, since 392.5 is a half-empty cyl (or is it half-full?).</p>
+
+<pre><code class="python">&gt;&gt;&gt; cyl = Cylinder(5, 10)
+&gt;&gt;&gt; cyl.percent_filled(392.5)</code></pre>
+
+
+
+<p>Unfortunately, the code results in this error instead:</p>
+
+<pre><code class="python">Traceback (most recent call last):
+	File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+	File &quot;/Users/melanie/cylinder.py&quot;, line 11, in percent_filled
+		return (volume_of_water / self.volume) * 100
+TypeError: unsupported operand type(s) for /: &#x27;int&#x27; and &#x27;method&#x27;</code></pre>
+
+
+
+<p>According to this traceback, which method contains an error?</p>
+
+<p>ii. (1.0 pt) Rewrite the buggy line of code from the method that you identified above to fix the error.</p>
+
+<p><!--</p>
+
+<blockquote><p>This question was intended to test students' understanding of the difference
+between referring to a function object and actually calling a function (or, in
+this case, a method). The intended solution was to add parentheses after
+<code>self.volume</code> in order to call the method, but the rubric gave credit for any
+code that reimplemented the <code>Cylinder.volume</code> method as well, as testing
+correct use of existing methods was not the intention of the question. As this
+was a debugging question, any code that resulted in the same or a different
+bug was not given credit.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-2">Walkthrough</h2>
+
+
+<p>Reading through the traceback, we could see that we got the <code>TypeError</code> on the line 11, which corresponds to the method <code>percent_filled</code>.</p>
+
+<p>Continuing to read the error message closely, we see that the code attempted to divide the argument <code>volume_of_water</code> (which is a number) by <code>self.volume</code> (which has a function type, since <code>volume</code> is defined as a method of <code>Cylinder</code> class). We can fix this code by actually <strong>using</strong> the result of <code>volume</code> method, which means we would have to <strong>call</strong> it.</p>
+
+<pre><code class="python">def percent_filled(self, volume_of_water):
+    return (volume_of_water / self.volume()) * 100
+
+# Now volume_of_water is divided by the result of self.volume(), which is also a number</code></pre>
+
+
+
+
+<h2 id="bumblebee">Bumblebee</h2>
+
+
+<p>Amritansh steps up with a challenge of his own. He’s writing some code to flatten lists, but he seems to be running into some errors. Here’s his code:</p>
+
+<pre><code class="python">def flatten(lst):
+    res = []
+    for el in lst:
+        if isinstance(el, list):
+            res += [res.extend(flatten(el))]   
+        else:
+            res += [el]
+    return res</code></pre>
+
+
+
+<p>i. (1.0 pt) He runs this on a nested list, as below:</p>
+
+<pre><code class="python">&gt;&gt;&gt; my_data = [&quot;Mialy&quot;, [&quot;Daphne&quot;, &quot;Jordan&quot;]]
+&gt;&gt;&gt; flatten(my_data)</code></pre>
+
+
+
+<p>The result he expects is <code>[&quot;Mialy&quot;, &quot;Daphne&quot;, &quot;Jordan&quot;]</code>. What is the actual result?</p>
+
+<p>ii. (0.5 pt) What line number causes the unexpected output to appear?
+<br/>
+iii. (1.0 pt) Rewrite the buggy line you identified above so that Amritansh gets the expected output.</p>
+
+<p><!--</p>
+
+<blockquote><p>This question was intended to test students' understanding of list mutation
+methods and their return values. Specifically, <code>res.extend(flatten(el))</code>
+achieves the goal of flattening the list, and the extra <code>res += [...]</code> adds an
+unneeded <code>None</code> to the list. Any code that correctly extended the <code>res</code> list
+was given credit. As this was a debugging question, any code that resulted in
+the same or a different bug was not given credit.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-3">Walkthrough</h2>
+
+
+<p><code>my_data</code> is a list of two elements: <code>&quot;Mialy&quot;</code> and <code>[&quot;Daphne&quot;, &quot;Jordan&quot;]</code>. It means that the for-loop in the body of <code>flatten</code> (line 3) will perform 2 iterations. On the first iteration, <code>el</code> refers to a string <code>&quot;Mialy&quot;</code> . It is not an instance of a list, so it just gets added to <code>res</code>. For now, <code>res</code> looks like <code>[&quot;Mialy&quot;]</code>.</p>
+
+<p>However, on the next iteration, <code>el</code> refers to <code>[&quot;Daphne&quot;, &quot;Jordan&quot;]</code>, forcing the code to enter the if-condition body. There, we are executing the line <code>res += [res.extend(flatten(el))]</code>. Let’s break this line down:</p>
+
+<p>Before adding a list on the right hand side to <code>res</code> with <code>+=</code>, we have to know what that list is. It contains a single element, which is a result of evaluating <code>res.extend(flatten([&quot;Daphne&quot;, &quot;Jordan&quot;]))</code>.</p>
+
+<p>The argument of <code>extend</code> is a function call <code>flatten([&quot;Daphne&quot;, &quot;Jordan&quot;])</code> , which would return a list <code>[&quot;Daphne&quot;, &quot;Jordan&quot;]</code> back because there is nothing to flatten there (try executing Amritansh’s code to convince yourself).</p>
+
+<p>So now we are evaluating <code>res.extend([&quot;Daphne&quot;, &quot;Jordan&quot;])</code>. <code>extend</code> mutates the list by adding the contents of its argument. <code>res</code> that was <code>[&quot;Mialy&quot;]</code> turns into <code>[&quot;Mialy&quot;, &quot;Daphne&quot;, &quot;Jordan&quot;]</code>. However, after completing its job, a call to <code>extend</code> evaluates to <code>None</code>, turning the list on the right hand side into <code>[None]</code>. Here is a link to <a href="https://pythontutor.com/composingprograms.html#code=def%20flatten%28lst%29%3A%0A%20%20%20%20res%20%3D%20%5B%5D%0A%20%20%20%20for%20el%20in%20lst%3A%0A%20%20%20%20%20%20%20%20if%20isinstance%28el,%20list%29%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20res%20%2B%3D%20%5Bres.extend%28flatten%28el%29%29%5D%20%20%20%0A%20%20%20%20%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20res%20%2B%3D%20%5Bel%5D%0A%20%20%20%20return%20res%0A%20%20%20%20%0Amy_data%20%3D%20%5B%22Mialy%22,%20%5B%22Daphne%22,%20%22Jordan%22%5D%5D%0Aflatten%28my_data%29%0A&cumulative=true&mode=edit&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">PythonTutor</a> which can help you to visualize the changes.</p>
+
+<p>So even though we’ve added two elements to <code>res</code>, we still have to perform <code>+=</code> with the right hand side, adding an additional 4-th element to <code>res</code>.</p>
+
+<p>At the end, <code>res</code> looks like  <code>[&quot;Mialy&quot;, &quot;Daphne&quot;, &quot;Jordan&quot;, None]</code> because the evaluation result of <code>extend</code> was added to <code>res</code>.  Fixing the behavior should focus on line 5 because that is where we are calling <code>extend</code> but also using its evaluation result. Getting rid of <code>+=</code> like this: <code>res.extend(flatten(el))</code> or completely avoiding the use of <code>extend</code> like: <code>res += flatten(el)</code> will do the job.</p>
+
+
+<h1 id="2-what-would-python-display">2. What Would Python Display?</h1>
+
+
+
+<h2 id="question">Question</h2>
+
+
+<p>Assume the following code has been run (you may find a box-and-pointer diagram useful):</p>
+
+<pre><code class="python">&gt;&gt;&gt; lst1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+&gt;&gt;&gt; number_one = lst1.remove(1)
+&gt;&gt;&gt; some_number = lst1.pop()
+&gt;&gt;&gt; lst2 = lst1
+&gt;&gt;&gt; lst3 = lst2[:]
+&gt;&gt;&gt; lst1.insert(4, lst3)
+&gt;&gt;&gt; lst3.extend([lst1.pop() for _ in range(3)])
+&gt;&gt;&gt; lst2.append(lst1.remove(lst3))</code></pre>
+
+
+
+<p>For each part below, write the output of running the given code. Assume that none of the lines below will error.</p>
+
+<p>(a) <code>&gt;&gt;&gt; lst1[4:] + [number_one, some_number]</code></p>
+
+<p>(b) <code>&gt;&gt;&gt; lst3[5:9]</code></p>
+
+<p>(c) <code>&gt;&gt;&gt; next(reversed(lst3[:5]))</code></p>
+
+<p>(d) <code>&gt;&gt;&gt; lst1 is lst2</code></p>
+
+<p><!--</p>
+
+<blockquote><p>This question was intended to test students' ability to follow the lifecycle
+of lists in Python, including what actions mutate lists and what actions
+create new lists. Any indication of partial correctness was given partial
+credit (subject to some quantization decisions), and a fully correct solution
+was intended to require an environment diagram (though we did not look for one
+while grading, as it's totally possible to do this without one).
+--></p></blockquote>
+
+
+<h2 id="walkthrough-4">Walkthrough</h2>
+
+
+<p>This is a question which is much easier to answer if you draw out the state of the list at each stage, similar to the visualization offered by PythonTutor. Thus, for the walkthrough, we'll go through the steps shown in PythonTutor.</p>
+
+<p>Here is the link to <a href="https://pythontutor.com/composingprograms.html#code=lst1%20%3D%20%5B1,%202,%203,%204,%205,%206,%207,%208,%209,%2010%5D%0Anumber_one%20%3D%20lst1.remove%281%29%0Asome_number%20%3D%20lst1.pop%28%29%0Alst2%20%3D%20lst1%0Alst3%20%3D%20lst2%5B%3A%5D%0Alst1.insert%284,%20lst3%29%0Alst3.extend%28%5Blst1.pop%28%29%20for%20_%20in%20range%283%29%5D%29%0Alst2.append%28lst1.remove%28lst3%29%29&cumulative=true&mode=edit&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">Python tutor</a> with the code from this question. The bullet points below describe what happens <strong>after</strong> each step of the environment diagram. After reaching the final step, you will have the correct state of all variables and ready to answer the parts (a)-(d).</p>
+
+<p><strong>Environment diagram steps:</strong></p>
+
+<ul>
+  <li><em>Step 1:</em> Create a list <code>lst1</code> with numbers from 1-10.</li>
+  <li><em>Step 2:</em> <code>remove</code> method modifies the list by removing the first occurrence of the argument (<code>1</code> in this case), going left to right. So <code>1</code> gets removed from <code>lst1</code>. However, the call to <code>remove</code> will evaluate to <code>None</code> and that is the final value of <code>number_one</code> variable.</li>
+  <li><em>Step 3:</em> <code>pop</code> deletes the last element of the list and <strong>also returns</strong> that last element, setting <code>some_number</code> variable to <code>10</code>. After <code>remove(1)</code>, followed by <code>pop()</code>, <code>lst1</code> has numbers from 2 to 9.</li>
+  <li><em>Step 4:</em> we create variable <code>lst2</code> which just points to the same list object as <code>lst1</code>.</li>
+  <li><em>Step 5:</em> we are creating a copy of <code>lst2</code> with slicing and since <code>lst2</code> refers to <code>lst1</code>, we copy its contents to form a new list object. <code>lst3</code> will point to that object.</li>
+  <li><em>Step 6:</em> <code>insert</code> method sticks in the second argument as a new element into the position specified by the first argument. In this case, for the <code>4</code>-th index of the list, we add a box and add a pointer to the list <code>lst3</code>. When we add a list as a single object, we add a <strong>pointer</strong> to it.</li>
+  <li><em>Steps 7-13:</em> we are going to call <code>lst3.extend()</code> with list comprehension expression as an argument. Let’s evaluate it first. The list comprehension essentially “pop”-s 3 elements from <code>lst1</code> and populates the list with them. The last three elements (counting from backwards since <code>pop</code> deletes the last element every time it gets called) from <code>lst1</code>  form the list that looks like <code>[9, 8, 7]</code>. Now our original call looks like <code>lst3.extend([9, 8, 7])</code>. We extend the <code>lst3</code> (which still has its “own” 7, 8, 9 numbers, since it was copied from <code>lst1</code> in the past). Therefore, <code>lst1</code> loses three elements and looks like <code>[2, 3, 4, 5, lst3, 6]</code>, while <code>lst3</code> gains three elements and now is <code>[2, 3, 4, 5, 6, 7, 8, 9, 9, 8, 7]</code>.</li>
+  <li><em>Step 14:</em> <code>append</code> adds its argument as a <strong>single</strong> element into <code>lst2</code>. What is the argument? The result of evaluating <code>lst1.remove(lst3))</code>. From step 2, we know that <code>remove</code> will just delete the first occurrence of <code>lst3</code>, which is at index <code>4</code> of <code>lst1</code>. After deleting that element, the remove method returns <code>None</code>. So <code>lst1</code> loses one more element, but gains <code>None</code> since we are executing <code>lst2.append(None)</code> (<code>lst1</code> and <code>lst2</code> are referring to the same object).</li>
+</ul>
+
+<p>Congrats, you have the final state of the environment! Let’s answer the questions:</p>
+
+<p><strong>Blank (a)</strong></p>
+
+<p>The expression <code>lst1[4:] + [number_one, some_number]</code> first takes a slice of all elements of <code>lst1</code> starting from index <code>4</code>. This would be equal to <code>[6, None]</code> . The second operand in our expression is <code>[number_one, some_number]</code>, which would evaluate to <code>[None, 10]</code>. Adding these two lists forms a new one which looks like: <code>[6, None, None, 10]</code>.</p>
+
+<p><strong>Blank (b)</strong></p>
+
+<p>Slicing <code>lst3</code> from index <code>5</code> to <code>8</code> (recall that slicing excludes the upper-bound index), we will get <code>[7, 8, 9, 9]</code>.</p>
+
+<p><strong>Blank (c)</strong></p>
+
+<p>This might be a tough one. When we are working with heavily nested expression, we start by evaluating the deepest one — <code>lst3[:5]</code> in this case. A new copy of all elements from <code>0</code> to <code>4</code> would be equal to <code>[2, 3, 4, 5, 6]</code>. So now we are looking at <code>next(reversed([2, 3, 4, 5, 6]))</code>. Once more we pay close attention to the deepest expression — a call to <code>reversed</code>. It <strong>returns an iterator</strong> to the given sequence, which yields the elements in the <strong>reverse</strong> order. The first element starting from the back is <code>6</code>, which is what gets yielded when we call <code>next</code>.</p>
+
+<p><strong>Blank (d)</strong></p>
+
+<p>At step 4, we’ve created a label <code>lst2</code> that points to the same object as <code>lst1</code>. Since they are still pointing to the same object, <code>lst1 is lst2</code> evaluates to <code>True</code>.</p>
+
+
+<h1 id="3-a-different-kind-of-dictionary">3. A Different Kind of Dictionary</h1>
+
+
+
+<h2 id="question-2">Question</h2>
+
+
+<p>The <code>DictionaryEntry</code> class stores entries for an English dictionary, using
+instance variables for the <code>word</code> and its <code>definition</code>.</p>
+
+<pre><code class="python">class DictionaryEntry:
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; euph = DictionaryEntry(&quot;euphoric&quot;, &quot;intensely happy&quot;)
+    &gt;&gt;&gt; avid = DictionaryEntry(&quot;avid&quot;, &quot;enthusiastic&quot;)
+    &gt;&gt;&gt; [euph, avid]
+    [DictionaryEntry(&#x27;euphoric&#x27;, &#x27;intensely happy&#x27;), DictionaryEntry(&#x27;avid&#x27;, &#x27;enthusiastic&#x27;)]
+    &gt;&gt;&gt; f&#x27;Today we are learning {euph}&#x27;
+    &#x27;Today we are learning euphoric: &quot;intensely happy&quot;&#x27;
+    &quot;&quot;&quot;
+    def __init__(self, w, d):
+        self.word = w
+        self.definition = d
+
+    def __repr__(self):
+        __________
+           (a)
+
+    def __str__(self):
+        __________
+           (b)</code></pre>
+
+
+
+<p>Fill in blank (a).
+<br/>
+
+Fill in blank (b).</p>
+
+<p><!--</p>
+
+<blockquote><p>This question was intended to test students' understanding of the <code>__str__</code>
+and <code>__repr__</code> methods and their respective purposes, as well as the ability
+to read doctests and deduce information from them. Attempts to construct the
+right values for each were given partial credit (notably, <code>print</code>ing instead
+of <code>return</code>ing was given half credit, as this is a conceptual error). While
+correct quotation is important for these implementations to be usable, we
+chose not to penalize incorrect quotation over more important concepts, so
+we assigned 0.9999 points (out of 1) if everything except quotes was correct.
+This is equivalent to 1/1 from a grading perspective, but helped us make a
+point for students to note that there was something lacking in their answer.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-5">Walkthrough</h2>
+
+
+<p>Recall that <code>repr</code> is called when we ask Python interpreter to evaluate the object instance, while <code>str</code> is called when we would like to <code>print</code> the object or use it as part of the format string. Let’s run through a quick example with <code>Link</code> objects which will also help us while solving this problem:</p>
+
+<pre><code class="python">&gt;&gt;&gt; lnk = Link(1, Link(2, Link(3)))
+&gt;&gt;&gt; print(str(lnk))
+&lt;1 2 3&gt;
+&gt;&gt;&gt; print(repr(lnk))
+Link(1, Link(2, Link(3)))
+&gt;&gt;&gt; a = eval(repr(lnk))
+# a is now also a linked list that looks like 1 &#x2d;&gt; 2 &#x2d;&gt; 3</code></pre>
+
+
+
+<p>Recall that <code>repr</code> delivers the representation which could be used to re-create the same object using <code>eval()</code> (it is the same "text" we use to create <code>lnk</code> variable in the code).
+<br/>
+
+Now back to the problem. The doctest <code>&gt;&gt;&gt; [euph, avid]</code> creates a list with two <code>DictionaryEntry</code> type objects. To create the list, Python interpreter firstly has to evaluate each element (figure out how to <em>represent</em> it with <code>__repr__</code> function) and display the resulting list. We have to match the result that looks like: <code>[DictionaryEntry(&#x27;euphoric&#x27;, &#x27;intensely happy&#x27;), DictionaryEntry(&#x27;avid&#x27;, &#x27;enthusiastic&#x27;)]</code>.</p>
+
+<p>Seems that every element is represented as if we are using the initializer <code>DictionaryEntry</code> to create it. Our solution could look something like:</p>
+
+<pre><code class="python">def __repr__(self):
+    return f&quot;DictionaryEntry({self.word}, {self.definition})&quot;    </code></pre>
+
+
+
+<p>However, we will lose the quotes around the word and definition strings. From the <code>Link</code> example above, we've learned that <code>repr</code> outputs a string that can be used to re-create the same object if passed to <code>eval()</code> function. If attributes lose quotes, <code>eval</code> method would treat these attributes as variables and try to look them up (which would result in error since such variables are not defined). Consider this example:</p>
+
+<pre><code class="python">DictionaryEntry(avid, enthusiastic)</code></pre>
+
+
+
+<p>Here <code>avid</code> and <code>enthusiastic</code> are part of the syntax and interpreter will try to make sense of them. In contrast, if we preserve the quotes, two arguments of <code>DictionaryEntry</code> initializer will be treated as string objects (as originally defined).</p>
+
+<pre><code class="python">DictionaryEntry(&#x27;avid&#x27;, &#x27;enthusiastic&#x27;)</code></pre>
+
+
+
+<p>To achieve that, we can wrap string objects into their own <code>repr</code> calls, which would output them with quotes.
+Our solution for part (a) would look like:</p>
+
+<pre><code class="python">def __repr__(self):
+    return f&quot;DictionaryEntry({repr(self.word)}, {repr(self.definition)})&quot; </code></pre>
+
+
+
+<p>The second doctest <code>&gt;&gt;&gt; f&#x27;Today we are learning {euph}&#x27;</code> uses the format string, which relies on the implementation of <code>__str__</code> method of the object. The result we should strive for is <code>&#x27;Today we are learning euphoric: &quot;intensely happy&quot;&#x27;</code> (notice that <code>str</code> will be called only on for <code>{euph}</code> part of the format string and <code>&quot;Today we are learning &quot;</code> is actually part of the doctest, which should not be included in the implementation). So looks like we are just inserting the word, followed by colon and then the word’s definition (with quotes around it). Our code that reflects this logic:</p>
+
+<pre><code class="python">def __str__(self):
+    return f&quot;{self.word}: &quot;{self.definition}&quot;&quot;</code></pre>
+
+
+
+<p>However, we would not be able to execute this code since it has an error. Python interpreter treats anything between quotes <code>&quot;</code> as a string, so <code>__str__</code> would try to return <code>f&quot;{self.word}: &quot;</code>, since it is the first combination of symbols trapped between quotes. However, it would not be happy about remaining symbols <code>{self.definition}&quot;&quot;</code> since it does not know what to do with them.</p>
+
+<p>To work around this issue, we have to convey that quotes we use around <code>{self.definition}</code> are <strong>part</strong> of the result string and the interpreter should treat only the first and the last quotes for string-creation purposes. We achieve this by “escaping” the inner quotes and complete the solution for part (b):</p>
+
+<pre><code class="python">def __str__(self):
+    return f&quot;{self.word}: \&quot;{self.definition}\&quot;&quot; 
+
+# \&quot; is read by the interpreter as a single &quot; symbol that is part of the string, 
+# not as a symbol to start/end the string object</code></pre>
+
+
+
+<p>The alternative solution would be to just use single quotes without any escaping:</p>
+
+<pre><code class="python">def __str__(self):
+    return f&quot;{self.word}: &#x27;{self.definition}&#x27;&quot; </code></pre>
+
+
+
+
+<h1 id="4-beadazzled">4. Beadazzled</h1>
+
+
+
+<h2 id="question-3">Question</h2>
+
+
+<p>Implement <code>make_necklace</code>, a function that creates a linked list where each value comes from a given list of <code>beads</code>, and the beads are repeated in order to make a necklace of a given <code>length</code>.</p>
+
+<p>For example, if <code>make_necklace</code> is called with <code>[&quot;~&quot;, &quot;@&quot;]</code> and a <code>length</code> of 3, then the linked list will contain <code>&#x27;~&#x27;</code>, then <code>&#x27;@&#x27;</code>, then <code>&#x27;~&#x27;</code>. Here's a diagram of that list:</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/61nLPuf.png" alt="https://i.imgur.com/61nLPuf.png" width="" height=""></p>
+
+<p>See the docstring and doctests for further details on how the function should behave.</p>
+
+<pre><code class="python">def make_necklace(beads, length):
+    &quot;&quot;&quot;
+    Returns a linked list where each value is taken from the BEADS list,
+    repeating the values from the BEADS list until the linked list has reached
+    LENGTH. You can assume that LENGTH is greater than or equal to 1, there is
+    at least one bead in BEADS, and all beads are string values.
+
+    &gt;&gt;&gt; wavy_ats = make_necklace([&quot;~&quot;, &quot;@&quot;], 3)
+    &gt;&gt;&gt; wavy_ats
+    Link(&#x27;~&#x27;, Link(&#x27;@&#x27;, Link(&#x27;~&#x27;)))
+    &gt;&gt;&gt; print(wavy_ats)
+    &lt;~ @ ~&gt;
+    &gt;&gt;&gt; wavy_ats2 = make_necklace([&quot;~&quot;, &quot;@&quot;], 4)
+    &gt;&gt;&gt; print(wavy_ats2)
+    &lt;~ @ ~ @&gt;
+    &gt;&gt;&gt; curly_os = make_necklace([&quot;}&quot;, &quot;O&quot;, &quot;{&quot;], 9)
+    &gt;&gt;&gt; print(curly_os)
+    &lt;} O { } O { } O {&gt;
+    &quot;&quot;&quot;
+    if __________:
+           (a)
+        return __________
+                   (b)
+    return Link(__________, make_necklace(__________, __________))
+                   (c)                       (d)         (e)</code></pre>
+
+
+
+<p>Fill in blank (a).</p>
+
+<p>Fill in blank (b).</p>
+
+<p>Fill in blank (c).</p>
+
+<p>Fill in blank (d).</p>
+
+<p>Fill in blank (e).</p>
+
+<p><!--</p>
+
+<blockquote><p>This question was intended to be a standard linked list question, specifically
+testing the recursive creation of linked lists (not mutation/processing). It
+tested students' understanding of the <code>Link</code> class and its proper usage, as
+well as their ability to handle regular lists and linked lists at the same
+time. Mixing and matching these was given partial credit, but the rubric was
+mostly designed to be straightforward to award points for demonstrating the
+knowledge we were looking for.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-6">Walkthrough</h2>
+
+
+<p>For this question, we basically have to <strong>create</strong> <strong>a new</strong> linked list of given <code>length</code> using elements from the <code>beads</code> list. If we run out of elements from there, we circle back to its beginning and start over.</p>
+
+<p>Blanks (a) and (b) look like a spot to handle the base case, but we are not sure what it should be: <code>len(beads) == 0</code>? <code>length == 0</code>? or <code>length == 1</code>? Since we do not know yet how our recursion constructs the list and changes the input arguments, it might be tough to choose the correct base case from the start.
+<br/>
+
+Let’s tackle the recursive call. We see that the last line is creating a new instance of <code>Link</code> and calling <code>make_necklace</code> to use its result as the <code>rest</code> component of a newborn linked list. This call to <code>make_necklace</code> is inviting us to make a leap-of-faith!</p>
+
+<p>Let’s consider this doctest:</p>
+
+<pre><code class="python">&gt;&gt;&gt; curly_os = make_necklace([&quot;}&quot;, &quot;O&quot;, &quot;{&quot;], 9)
+&gt;&gt;&gt; print(curly_os)
+    &lt;} O { } O { } O {&gt;</code></pre>
+
+
+
+<p>We know that the first element of the linked list should be <code>&quot;}&quot;</code>, which is also the first element in the <code>beads</code> list. Well, we can move closer to the solution by putting <code>beads[0]</code> into blank (c):</p>
+
+<pre><code class="python">...
+return Link(beads[0], make_necklace(__________, __________))
+     #        (c)                       (d)         (e)</code></pre>
+
+
+
+<p>We’ve got the <code>first</code> element right! Now, we need to come up with the correct <code>rest</code> of the linked list: <code>&lt;O { } O { } O {&gt;</code>.</p>
+
+<p>Assuming that the function works correctly (leap-of-faith!), how could we use the result of <code>make_necklace</code> on smaller inputs to get the correct <code>rest</code> of the linked list? We’ve already used the first element of <code>beads</code> and the <code>rest</code> component is supposed to have a smaller length, so we could try changing the arguments the following way:</p>
+
+<pre><code class="python">make_necklace(beads[1:], length &#x2d; 1)
+
+# since initially beads = [&quot;}&quot;, &quot;O&quot;, &quot;{&quot;] and length = 9, this translates to
+
+make_necklace([&quot;0&quot;, &quot;{&quot;], 8)</code></pre>
+
+
+
+<p>If we assumed that the function was implemented correctly (taking a leap of faith), the function call above would end up creating a necklace that looks like <code>&lt;0 { 0 { 0 { 0 {&gt;</code>, which is not the <code>&lt;O { } O { } O {&gt;</code> that we wish to get. Moreover, this current implementation <code>Link(beads[0], make_necklace(beads[1:], length &#x2d; 1))</code> would likely result in an <code>IndexError</code> for <code>beads[0]</code>, since it will run out of <code>beads</code> elements before achieving the required <code>length</code>.</p>
+
+<p>In fact, this function call above would not even be “aware” of a symbol <code>&quot;}&quot;</code> (because its <code>beads</code> argument does not contain it)! What if we do not slice the <code>beads</code> list and only decrement the <code>length</code> argument?</p>
+
+<pre><code class="python">make_necklace(beads, length &#x2d; 1)
+
+# initially beads = [&quot;}&quot;, &quot;O&quot;, &quot;{&quot;] and length = 9, so this translates to
+
+make_necklace([&quot;}&quot;, &quot;0&quot;, &quot;{&quot;], 8)</code></pre>
+
+
+
+<p>This call is <strong>supposed to</strong> bring us <code>&lt;} 0 { } 0 { } 0&gt;</code>, which is again not the <code>&lt;O { } O { } O {&gt;</code> we are hoping for. 😕 If we do not slice the list, it would again start from <code>&quot;}&quot;</code> symbol.</p>
+
+<p>Okay, if we move away from slicing our given list for a moment, what is the correct <code>beads</code> content that would evaluate to <code>&lt;O { } O { } O {&gt;</code>?</p>
+
+<pre><code class="python">make_necklace([&quot;0&quot;, &quot;{&quot;, &quot;}&quot;], 8)</code></pre>
+
+
+
+<p>Alright, now lets try to use our <code>beads</code> (which is equal to <code>[&quot;}&quot;, &quot;0&quot;, &quot;{&quot;]</code>) to match this list.</p>
+
+<p>Everything except the last element is actually just the result of slice <code>beads[1:]</code>. Where do we take the last <code>&quot;}&quot;</code>? It is actually the first element of our <code>beads</code>!</p>
+
+<pre><code class="python"># if beads = [&quot;}&quot;, &quot;0&quot;, &quot;{&quot;], we can use create the circular version of it by
+beads[1:] + [beads[0]]
+# which evaluates to [&quot;0&quot;, &quot;{&quot;] + [&quot;}&quot;] = [&quot;0&quot;, &quot;{&quot;, &quot;}&quot;]</code></pre>
+
+
+
+<p>Woohoo! 🥳</p>
+
+<p>Turns out, slicing the list from the first element and attaching that first element to the end captures the list rotation logic of this question. Finally, our recursive call and blanks (c)-(e) look like:</p>
+
+<pre><code class="python">...
+return Link(beads[0], make_necklace(beads[1:] + [beads[0]], length &#x2d; 1))
+       #      (c)                            (d)                (e)</code></pre>
+
+
+
+<p>The easy way to figure out the base cases would be to consider the smallest instance of the problem or the inputs when our recursive calls would stop making sense. We can’t rely on the length of the <code>beads</code> list because it is now constant! (the recursive call just shifts the contents, but never decreases the size of the list). However, the answer to <code>make_necklace([&quot;anything&quot;, &quot;here&quot;], 0)</code> must be an empty linked list, irrespective of the <code>beads</code> content. Therefore, the base case (blanks (a) and (b)) is conditioned on the <code>length</code> argument, which steadily decreases as recursion progresses:</p>
+
+<pre><code class="python">if length == 0:
+    return Link.empty</code></pre>
+
+
+
+<p>Full solution code for reference:</p>
+
+<pre><code class="python">def make_necklace(beads, length):
+    if length == 0:
+        #  (a)
+        return Link.empty
+              #    (b)
+    return Link(beads[0], make_necklace(beads[1:] + [beads[0]], length &#x2d; 1))
+            #   (c)                       (d)                       (e)</code></pre>
+
+
+
+
+<h1 id="5-file-tree-tionaries">5. File Tree-tionaries</h1>
+
+
+
+<h2 id="question-4">Question</h2>
+
+
+<p>We can represent files and folders on a computer with Trees:</p>
+
+<pre><code class="python">Tree(&quot;C:&quot;, [Tree(&quot;Documents&quot;, [Tree(&quot;hw05.py&quot;)]), Tree(&quot;pwd.txt&quot;)])</code></pre>
+
+
+
+<p>We can also represent the same folder layout with dictionaries:</p>
+
+<pre><code class="python">{&quot;C:&quot;: {&quot;Documents&quot;: {&quot;hw05.py&quot;: &quot;FILE&quot;}, &quot;pwd.txt&quot;: &quot;FILE&quot;}}</code></pre>
+
+
+
+<p>Notice that in this model, we still treat files as dictionary keys, but with the value <code>&quot;FILE&quot;</code>.</p>
+
+<p>Complete the implementation of <code>filetree_to_dict</code> below, which takes in a Tree <code>t</code> representing files and folders, and converts it to the dictionary representation.</p>
+
+<pre><code class="python">def filetree_to_dict(t):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; filetree_to_dict(Tree(&quot;hw05.py&quot;))
+    {&quot;hw05.py&quot;: &quot;FILE&quot;}
+    &gt;&gt;&gt; filetree = Tree(&quot;C:&quot;, [Tree(&quot;Documents&quot;, [Tree(&quot;hw05.py&quot;)]), Tree(&quot;pwd.txt&quot;)])
+    &gt;&gt;&gt; filetree_to_dict(filetree)
+    {&quot;C:&quot;: {&quot;Documents&quot;: {&quot;hw05.py&quot;: &quot;FILE&quot;}, &quot;pwd.txt&quot;: &quot;FILE&quot;}}
+    &quot;&quot;&quot;
+    res = {}
+    if t.is_leaf():
+        res[t.label] = _____________
+                            (a)
+    else:
+        nested = {}
+        for branch in t.branches:
+            nested[branch.label] = _____________(branch)[_____________]
+                                        (b)                   (c)
+        _____________ = nested
+             (d)
+    return res</code></pre>
+
+
+
+<p>Fill in blank (a).</p>
+
+<p>Fill in blank (b).</p>
+
+<p>Fill in blank (c).</p>
+
+<p>Fill in blank (d).</p>
+
+<p><!--</p>
+
+<blockquote><p>This question served a dual purpose: to test recursive tree traversal, as well
+as to test dictionary mutation. Specifically, each part required an
+understanding of dictionaries, but the provided skeleton required an
+understanding of trees. Credit was awarded for demonstrating understanding of
+the conversion from a tree to a dictionary. Each part broke down the problem
+into atomic pieces, so no partial credit was awarded.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-7">Walkthrough</h2>
+
+
+<p>To reiterate the prompt, we are given a tree that resembles the filesystem structure and we have to build out a dictionary with the same structure. Let’s make a few notes before we start:</p>
+
+<ul>
+  <li>The function starts by creating an empty dictionary <code>res</code> and ends by returning it. This means that every recursive call to function <code>filetree_to_dict</code> will create its own dictionary and return it as a result. The correct combination of these dictionaries should result in the final answer for the entire tree <code>t</code>.</li>
+  <li>Notice that node labels always directly correspond to the dictionary <strong>keys</strong>. There are only two possibilities for the dictionary <strong>values</strong>: another nested dictionary or a string <code>&quot;FILE&quot;</code>. We use the latter only when we get to the files (bottom of the tree) and there are no folders to recurse further.</li>
+</ul>
+
+<p>With these in mind, let’s start playing with the skeleton!</p>
+
+<p>After declaring an empty dictionary <code>res</code>, we check if the node is a leaf. If that is the case, the skeleton asks us to assign some <strong>value</strong> (what goes to blank (a)) to the <strong>key</strong> <code>t.label</code> in the dictionary <code>res</code>. Looking at doctests, we see that for any leaf, we assign <code>&quot;FILE&quot;</code> string as a value (where the key is leaf’s label). Therefore, this line might look like:</p>
+
+<pre><code class="python">if t.is_leaf():
+    res[t.label] = &quot;FILE&quot;
+    # blank (a) </code></pre>
+
+
+
+<p>If node happened to not be a leaf, we enter the <code>else</code> case. This indicates that our tree has branches, which means that for the current tree <code>t</code>, the value of <code>res[t.label]</code> should be another dictionary that represents the structure of the branches of <code>t</code>.  The newborn dictionary <code>nested</code> looks to be a perfect candidate and on blank (d), we are already trying to assign it to something:</p>
+
+<pre><code class="python">...
+else:
+    nested = {}
+    for branch in t.branches:
+        nested[branch.label] = _____________(branch)[_____________]
+                     #              (b)                   (c)
+    res[t.label] = nested
+        # (d)
+return res</code></pre>
+
+
+
+<p>The final thing we have to do now is to populate the <code>nested</code> dictionary, which should happen in the for-loop with blanks (b) and (c). Let’s consider a doctest below:</p>
+
+<pre><code class="python">&gt;&gt;&gt; filetree = Tree(&quot;C:&quot;, [Tree(&quot;Documents&quot;, [Tree(&quot;hw05.py&quot;)]), Tree(&quot;pwd.txt&quot;)])
+&gt;&gt;&gt; filetree_to_dict(filetree)
+{&quot;C:&quot;: {&quot;Documents&quot;: {&quot;hw05.py&quot;: &quot;FILE&quot;}, &quot;pwd.txt&quot;: &quot;FILE&quot;}}</code></pre>
+
+
+
+<p>When we call the function, we start from the root node with label <code>&quot;C:&quot;</code>. It is not a leaf, so we go into the <code>else</code> case, create an empty dictionary and start going over the branches of <code>t</code>. In the for-loop, the <code>branch</code> will refer to one of the two subtrees of <code>t</code>. Let’s say it refers to one that starts from the node labeled <code>&quot;Documents&quot;</code>. So we are going to execute the line:</p>
+
+<pre><code class="python">nested[&quot;Documents&quot;] = _____________(branch)[_____________]
+	                #    (b)                     (c)
+# &#x27;branch&#x27; variable is referring to a subtree that starts with
+# a node with label &quot;Documents&quot;
+# Namely, branch variable refers to Tree(&quot;Documents&quot;, [Tree(&quot;hw05.py&quot;)])</code></pre>
+
+
+
+<p>The blank (b) is followed by <code>(branch)</code>, which strongly looks like a function call. Probably this is the place for our recursion, so we put <code>filetree_to_dict</code> for blank (b). What is it going to return? If we assume it works correctly (leap-of-faith here), for input <code>branch</code> , it should return <code>{&quot;Documents&quot;: {&quot;hw05.py&quot;: &quot;FILE&quot;}</code>. Observe that we come up with this result based on the prompt description, not executing our solution (it is not complete).</p>
+
+<p>So if we assume the expression <code>filetree_to_dict(branch)</code> evaluates to the above-mentioned dictionary, we need to extract <code>{&quot;hw05.py&quot;: &quot;FILE&quot;}</code> from it, which corresponds to the key <code>&quot;Documents&quot;</code>. To get the value, we can put <code>branch.label</code> into blank (c). To reiterate, a completed else-case (and the full solution) looks like the following:</p>
+
+<pre><code class="python">def filetree_to_dict(t):
+    res = {}
+    if t.is_leaf():
+        res[t.label] = &quot;FILE&quot;
+                     #  (a)
+    else:
+        nested = {}
+        for branch in t.branches:
+            nested[branch.label] = filetree_to_dict(branch)[branch.label]
+		                        # (b)                   # (c)
+            res[t.label] = nested
+                # (d)
+    return res</code></pre>
+
+
+
+
+<h1 id="6-mapping-time-and-space">6. Mapping Time and Space</h1>
+
+
+
+<h2 id="question-5">Question</h2>
+
+
+<p>(a) The goal of the <code>maplink_to_list</code> function below is to map a linked list <code>lnk</code> into a Python list, applying a provided function <code>f</code> to each value in the list along the way. The function is fully written and passes all its doctests.</p>
+
+<pre><code class="python">def maplink_to_list1(f, lnk):
+    &quot;&quot;&quot;Returns a Python list that contains f(x) for each x in Link LNK.
+    &gt;&gt;&gt; square = lambda x: x * x
+    &gt;&gt;&gt; maplink_to_list1(square, Link(3, Link(4, Link(5))))
+    [9, 16, 25]
+    &quot;&quot;&quot;
+    new_lst = []
+    while lnk is not Link.empty:
+        new_lst.append(f(lnk.first))
+        lnk = lnk.rest
+    return new_lst</code></pre>
+
+
+
+<ol>
+  <li>(1.0 pt) What is the order of growth of <code>maplink_to_list1</code> in respect to the size of the input linked list <code>lnk</code>?</li>
+</ol>
+
+<p>(b) The next function, <code>maplink_to_list2</code>, serves the same purpose but is implemented slightly differently. This alternative implementation also passes all the doctests.</p>
+
+<pre><code class="python">def maplink_to_list2(f, lnk):
+    &quot;&quot;&quot;Returns a Python list that contains f(x) for each x in Link LNK.
+    &gt;&gt;&gt; square = lambda x: x * x
+    &gt;&gt;&gt; maplink_to_list2(square, Link(3, Link(4, Link(5))))
+    [9, 16, 25]
+    &quot;&quot;&quot;
+    def map_link(f, lnk):
+        if lnk is Link.empty:
+            return Link.empty
+        return Link(f(lnk.first), map_link(f, lnk.rest))
+
+    mapped_lnk = map_link(f, lnk)
+    new_lst = []
+    while mapped_lnk is not Link.empty:
+        new_lst.append(mapped_lnk.first)
+        mapped_lnk = mapped_lnk.rest
+    return new_lst</code></pre>
+
+
+
+<ol>
+  <li>What is the order of growth of the alternative function, <code>maplink_to_list2</code>, in
+  respect to the size of the input linked list <code>lnk</code>?</li>
+</ol>
+
+<p>(c) Which of the functions requires more space to run?</p>
+
+<p><!--</p>
+
+<blockquote><p>This question was intended as a test of understanding of efficiency in both
+time and space, looking at both iterative approaches as well as recursive
+approaches and comparing the two. Credit was awarded for correctly identifying
+the efficiency of each function. No partial credit was awarded.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-8">Walkthrough</h2>
+
+
+
+<h3 id="part-a">Part (a)</h3>
+
+
+<p>Recall that the order of growth (efficiency of the function) is the relationship of <strong>the size of the input</strong> to <strong>the “time” it takes to compute the answer.</strong> Basically, we have to figure out if increasing the size of the input forces our code to do more operations and if yes, by how much. When considering the number of operations, we often are counting the number of iterations of a loop (in an iterative approach) or the number of recursive function calls (in a recursive approach). Notably, the number of lines of code do not necessarily correspond to the efficiency of a function.</p>
+
+<p>While executing <code>maplink_to_list1</code>, we have to see each element of the linked list <code>lnk</code>, so that we can modify and add it to the resulting list <code>new_lst</code>. If <code>lnk</code> had more elements, the number of iterations of the for-loop would increase proportionally (i.e. if <code>lnk</code> had 10 more elements, the for-loop would have to do 10 more iterations to see those elements, apply <code>f</code> to them and add the result to <code>new_lst</code>).
+<br/>
+
+Hence, the order of growth of the function <code>maplink_to_list1</code> is <strong>linear</strong>.</p>
+
+
+<h3 id="part-b">Part (b)</h3>
+
+
+<p>The function <code>maplink_to_list2</code> achieves the same goal as <code>maplink_to_list1</code>, but has a different implementation. Namely, it firstly creates a new linked list <code>mapped_lnk</code> (using <code>map_link</code> function), where each element is the result of applying <code>f</code> to each element of the original linked list <code>lnk</code>.  After building <code>mapped_lnk</code>, the function goes over it and copies its contents to <code>new_lst</code>.</p>
+
+<p>We have two components that might depend on the size of the input linked list <code>lnk</code>: a call to the inner function <code>map_link</code> (because it takes <code>lnk</code> as an argument) and the while-loop that comes right after the call. Let’s evaluate the efficiency of each component:</p>
+
+<p>First, if we look at the body of <code>map_link</code>, we see that it creates a linked list instance as its return value. In order to evaluate the rest of the linked list, it calls <code>map_link</code> again on the rest of the input. It means that for each element of the original <code>lnk</code> , we would have to make a new function call. In other words, the number of calls to <code>map_link</code> function is directly proportional to the number of elements in the <code>lnk</code>. This hints to us that the order of growth of <code>map_link</code> is <strong>linear</strong> (you could also reason about this from the fact that <code>map_link</code> has to “see” each element of the linked list in order to compute the modified linked list).</p>
+
+<p>Now, to the while-loop. It actually looks very similar to the loop from the previous part, since all we do on each iteration is to add the element to <code>new_lst</code> and move the pointer to the next element of the linked list. Therefore, the number of iterations directly depend on the number of elements (you have to see all elements before you stumble upon <code>Link.empty</code>).  This portion of the code has a <strong>linear</strong> order of growth.</p>
+
+<p>When there are multiple components that affect the final efficiency of the function, we take the one that is <strong>the slowest</strong>. The reason for that is in the worst case, the faster component’s compute time becomes negligible comparing to the slower component’s one. However, in this case, both components have equal efficiency, so we can take either of them as our answer.</p>
+
+<p>Hence, the order of growth of the function <code>maplink_to_list2</code> is <strong>linear</strong>.</p>
+
+
+<h3 id="part-c">Part (c)</h3>
+
+
+<p>The space efficiency is concerned by the amount of storage the function requires to compute the answer. To be precise, it is the relationship of <strong>the size of the input</strong> to <strong>the “space” it takes to compute the answer.</strong> As the input gets bigger, the amount of things we store should also grow according to some relationship (linear, exponential etc.)</p>
+
+<p>With that knowledge, let’s analyze both functions.</p>
+
+<p>The first function stores the “mapped” elements of <code>lnk</code> into <code>new_lst</code>, which size is the same as number of elements in <code>lnk</code>. This is all the function needs to compute the final answer.</p>
+
+<p>The second function firstly builds out a new linked list <code>mapped_lnk</code>, which size is equivalent to the size of the <code>lnk</code>. Then, it additionally creates <code>new_lst</code>, which also takes up the same amount of space. Moreover, the <code>mapped_lnk</code> is created recursively, so we have to store and keep track of all active environments (function frames) to create the linked list. All of that is required by the function to compute the final answer.</p>
+
+<p>Clearly, the first function takes much less space than the second one.</p>
+
+
+<h1 id="7-tulip-mania">7. Tulip Mania</h1>
+
+
+
+<h2 id="question-6">Question</h2>
+
+
+<p>Implement <code>flower_keeper</code>, a function that mutates a tree <code>t</code> so that the only paths that remain are ones which end in a leaf node with a Tulip flower ('V').</p>
+
+<p>For example, consider this tree where only one path ends in a flower. After calling <code>flower_keeper</code>, the tree has only three nodes left, the ones that lead to the flower.</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/dpgF8au.png" alt="https://i.imgur.com/dpgF8au.png" width="" height=""></p>
+
+<p>The shaded nodes in the diagram indicate paths that end in flowers.</p>
+
+<p>For this tree where two paths end in flowers, the tree keeps both paths that
+lead to flowers.</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/f79bJtP.png" alt="https://i.imgur.com/f79bJtP.png" width="" height=""></p>
+
+<p>For a tree where none of the nodes are flowers, the function removes every branch except the root node.</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/exNmhN4.png" alt="https://i.imgur.com/exNmhN4.png" width="" height=""></p>
+
+<p>For a tree with only a single node that is a flower, the function does not remove anything.</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/IlIuRXB.png" alt="https://i.imgur.com/IlIuRXB.png" width="" height=""></p>
+
+<p>Read through the docstring and doctests for additional guidance on completing the implementation of the function. The examples shown above are from the doctests.</p>
+
+<pre><code class="python">def flower_keeper(t):
+    &quot;&quot;&quot;
+    Mutates the tree T to keep only paths that end in flowers (&#x27;V&#x27;).
+    If a path consists entirely of stems (&#x27;|&#x27;), it must be pruned.
+    If T has no paths that end in flowers, the root node is still kept.
+    You can assume that a node with a flower will have no branches.
+
+    &gt;&gt;&gt; one_f = Tree(&#x27;|&#x27;, [Tree(&#x27;|&#x27;, [Tree(&#x27;|&#x27;), Tree(&#x27;|&#x27;)]), Tree(&#x27;|&#x27;, [Tree(&#x27;V&#x27;), Tree(&#x27;|&#x27;)])])
+    &gt;&gt;&gt; print(one_f)
+    |
+      |
+        |
+        |
+      |
+        V
+        |
+    &gt;&gt;&gt; flower_keeper(one_f)
+    &gt;&gt;&gt; one_f
+    Tree(&#x27;|&#x27;, [Tree(&#x27;|&#x27;, [Tree(&#x27;V&#x27;)])])
+    &gt;&gt;&gt; print(one_f)
+    |
+      |
+        V
+    &gt;&gt;&gt; no_f = Tree(&#x27;|&#x27;, [Tree(&#x27;|&#x27;, [Tree(&#x27;|&#x27;), Tree(&#x27;|&#x27;)]), Tree(&#x27;|&#x27;, [Tree(&#x27;|&#x27;), Tree(&#x27;|&#x27;)])])
+    &gt;&gt;&gt; flower_keeper(no_f)
+    &gt;&gt;&gt; no_f
+    Tree(&#x27;|&#x27;)
+    &gt;&gt;&gt; just_f = Tree(&#x27;V&#x27;)
+    &gt;&gt;&gt; flower_keeper(just_f)
+    &gt;&gt;&gt; just_f
+    Tree(&#x27;V&#x27;)
+    &gt;&gt;&gt; two_f = Tree(&#x27;|&#x27;, [Tree(&#x27;|&#x27;, [Tree(&#x27;V&#x27;)]), Tree(&#x27;|&#x27;, [Tree(&#x27;|&#x27;), Tree(&#x27;V&#x27;)])])
+    &gt;&gt;&gt; flower_keeper(two_f)
+    &gt;&gt;&gt; two_f
+    Tree(&#x27;|&#x27;, [Tree(&#x27;|&#x27;, [Tree(&#x27;V&#x27;)]), Tree(&#x27;|&#x27;, [Tree(&#x27;V&#x27;)])])
+    &quot;&quot;&quot;
+    for b in __________:
+                 (a)
+        __________
+            (b)
+    __________ = [__________ for b in __________ if __________]
+        (c)           (d)                 (e)           (f)</code></pre>
+
+
+
+<p>Fill in blank (a).</p>
+
+<p>Fill in blank (b).</p>
+
+<p>Fill in blank (c).</p>
+
+<p>Fill in blank (d).</p>
+
+<p>Fill in blank (e).</p>
+
+<p>Fill in blank (f).</p>
+
+<p><!--</p>
+
+<blockquote><p>This question was a slightly trickier tree mutation/tree recursion problem, as
+it relied on the idea that an explicit base case is not always needed in a
+trees problem. Parts (a), (c), (d), and (e) were atomic, so credit was awarded
+for getting them right, but no partial credit was awarded. Part (b) was
+intended to test students' ability to fill in a recursive call, so credit was
+awarded for doing so. Partial credit was deducted for <code>return</code>ing here. Part
+(f) was intended to test students' ability to design a condition to complete
+the third step of any recursion problem: combining the results of the
+recursive call(s) to yield a final result. Partial credit was awarded for each
+of the two conditions, but some credit was also deducted for incorrect use of
+any tree involved.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-9">Walkthrough</h2>
+
+
+<p>Observe that this is a <strong>mutation</strong> function, where we only have to prune the nodes, so it is very likely that our function will not <em>return</em> any explicit value (will return <code>None</code>). Also, it is guaranteed that flower nodes do not have any branches, which means only leaves will have the label <code>&quot;V&quot;</code>.</p>
+
+<p>Let’s try to reason from the leap-of-faith perspective: given a tree <code>t</code>, if we call <code>flower_keeper</code> on its branches <code>b</code>, what is <strong>supposed</strong> to happen? (if the function is working correctly)</p>
+
+<ul>
+  <li><strong>Case 1:</strong> If the branch is a leaf with <code>&quot;V&quot;</code> as a label, we should not mutate it anyhow.</li>
+  <li><strong>Case 2:</strong> if the branch is a leaf with <code>&quot;|&quot;</code> as a label, we also can’t mutate it because per spec: <em>for a tree where none of the nodes are flowers, the function removes every branch </em><em>except</em>* the root node.* Leaf is also considered to be a tree (where the leaf itself is a root).</li>
+  <li><strong>Case 3:</strong> if the branch is a subtree with its own branches, then our function should get rid of the paths that start from <code>b</code> and <strong>do not</strong> end with label <code>&quot;V&quot;</code>. Since only leaf nodes can end with <code>&quot;V&quot;</code>, we know that this subtree’s root <code>b</code> has a label <code>&quot;|&quot;</code>.</li>
+</ul>
+
+<p>Let’s move further with our leap-of-faith. Imagine that branches of <code>t</code> are mutated (we called <code>flower_keeper</code> on them and it worked correctly). It means that their subtrees are already taken care of (paths that do not end with <code>&quot;V&quot;</code> are pruned).</p>
+
+<p>Now, for all the paths that start at node <code>t</code>, we have to make sure that we only keep ones that end with <code>&quot;V&quot;</code>. This seems trivial because we already pruned branches of <code>t</code>, so by just adding an extra node on top of them, newly formed paths should only end with <code>&quot;V&quot;</code>, right? For <strong>cases 1 &amp; 3</strong> mentioned above, it is indeed correct. However, <strong>Case 2</strong> dealt with leaf nodes that have a “stem” label, which were not modified. By adding a root node <code>t</code> on top of them, we create a path that starts at <code>t</code> and ends with label <code>&quot;I&quot;</code>! We should filter out these branches by modifying <code>t.branches</code> to prune such paths.</p>
+
+<p>Let’s reiterate our game plan:</p>
+
+<p>1) Take a leap-of-faith and modify the branch subtrees of <code>t</code> (call <code>flower_keeper</code> on them)</p>
+
+<p>2) For mutated branches, only keep those branches that either have <code>&quot;V&quot;</code> as a label (which means they are leaf nodes) or they are subtrees with branches (start at <code>&quot;|&quot;</code> but have their own branches, which means they correspond to <strong>Case 3</strong>).</p>
+
+<p>Notice that we haven’t wrote a single line of code yet. Instead, we just wondered if our function would work correctly for subtrees of <code>t</code>, how could we use it to correctly modify <code>t</code> tree itself.</p>
+
+<p>Skeleton fits great for our logic. With blanks (a) and (b), we make sure to mutate our branches first:</p>
+
+<pre><code class="python"># step 1 of our plan
+for b in t.branches: # (a)
+    flower_keeper(b) # (b)</code></pre>
+
+
+
+<p>The last line filters our “non-flower” paths from the mutated branches:</p>
+
+<pre><code class="python"># step 2 of our plan
+t.branches = [b for b in t.branches if b.label == &#x27;V&#x27; or not b.is_leaf()]
+#   (c)      (d)            (e)                       (f)</code></pre>
+
+
+
+<p>Since this line comes after the for-loop, <code>t.branches</code> on blank (e) contain the <strong>modified</strong> branches.</p>
+
+<p>Predicate on blank (f) only keeps branches with label <code>&quot;V&quot;</code> or branches that are not leaves (their label is <code>&quot;|&quot;</code> but they have branches). This concludes our solution.</p>
+
+
+<h1 id="8-cs61a-presents-the-game-of-hoop">8. CS61A Presents the Game of Hoop</h1>
+
+
+<p>When we introduced the Hog project to you, we designed the rules of the game in a way that would make it possible to implement without using more advanced concepts like OOP and iterators/generators. Now that we've learned these concepts, you can rewrite parts of the game and expand it! The new version, called Hoop, will support <em>any</em> number of players greater than or equal to 2.</p>
+
+<p>Assume the following changes from Hog:</p>
+
+<ul>
+  <li>All rules have been taken out except for the Sow Sad rule, which is reiterated below.</li>
+  <li>Each player's <code>strategy</code> is a function <code>strategy(own_score, other_scores)</code> that takes in that player's score and a <em>list</em> of the other players' scores, and outputs the number of times that player wishes to roll the dice during their turn. Order doesn't matter for the list of other players' scores.</li>
+  <li>You don't have to keep track of the leader, and there is no commentary mechanism.</li>
+</ul>
+
+<p><strong>Sow Sad:</strong> If a player rolls any number of 1s in their turn, their score for that set of rolls is a 1 regardless of whatever else they rolled.</p>
+
+<p>To start, take a look at the <code>HoopPlayer</code> class, which represents one player in our game:</p>
+
+<pre><code class="python">class HoopPlayer:
+    def __init__(self, strategy):
+        &quot;&quot;&quot;Initialize a player with STRATEGY, and a starting SCORE of 0. The
+        STRATEGY should be a function that takes this player&#x27;s score and a list
+        of other players&#x27; scores.
+        &quot;&quot;&quot;
+        self.strategy = strategy
+        self.score = 0</code></pre>
+
+
+
+<p>Every game of Hoop will involve rolling a dice as well. Take a look at the<code>HoopDice</code> class, which represents a rollable dice that takes a set of values. You'll fill in the blanks in the first part of this question.</p>
+
+<pre><code class="python">class HoopDice:
+    def __init__(self, values):
+        &quot;&quot;&quot;Initialize a dice with possible values VALUES, and a starting INDEX
+        of 0. The INDEX indicates which value from VALUES to return when the
+        dice is rolled next.
+        &quot;&quot;&quot;
+        self.values = values
+        self.index = 0
+
+    def roll(self):
+        &quot;&quot;&quot;Roll this dice. Advance the index to the next step before returning.
+        &quot;&quot;&quot;
+        value = ______________
+        ______________ = (______________) % ______________
+        return value</code></pre>
+
+
+
+
+<h2 id="part-a-2">Part (a)</h2>
+
+
+<p>Begin by making the <code>HoopDice</code> rollable. Fill in the skeleton for the <code>HoopDice.roll</code> method below. See above for the rest of <code>HoopDice</code>.</p>
+
+<pre><code class="python">class HoopDice:
+    ...
+    def roll(self):
+        &quot;&quot;&quot;Roll this dice. Advance the index to the next step before
+        returning.
+        &gt;&gt;&gt; five_six = HoopDice([5, 6])
+        &gt;&gt;&gt; five_six.roll()
+        5
+        &gt;&gt;&gt; five_six.index
+        1
+        &gt;&gt;&gt; five_six.roll()
+        6
+        &gt;&gt;&gt; five_six.index
+        0
+        &quot;&quot;&quot;
+        value = ______________
+                    (1a)
+        ______________ = (______________) % ______________
+            (1b)              (1c)              (1d)
+        return value</code></pre>
+
+
+
+<ol>
+  <li>Fill in blank (1a)</li>
+  <li>Fill in blank (1b)</li>
+  <li>Fill in blank (1c)</li>
+  <li>Fill in blank (1d)</li>
+</ol>
+
+<p><!--</p>
+
+<blockquote><p>This part was intended to be a gentle setup for the rest of the question,
+which is why it preceded the rest of the introduction to the game. There was a
+three-part test here: picking out the correct <code>value</code> to be returned, properly
+advancing the dice forward (and cycling back to the start when the time came),
+and using the correct accessors to get to each attribute in an instance of an
+object. Partial credit was awarded for demonstrating each of these.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-10">Walkthrough</h2>
+
+
+<p>According to the description, this function must do three things:</p>
+
+<p>1) roll the dice</p>
+
+<p>2) advance the index (prepare for the future rolls)</p>
+
+<p>3) return the outcome of the roll from the previous point</p>
+
+<p><code>value</code> looks to be the variable that captures the outcome and gets returned. From the doctests, we see that rolling the dice gives the elements from <code>self.values</code> in order and circles back to start (observe how <code>self.index</code> changes back to <code>0</code> in the doctests).</p>
+
+<p>Therefore, it looks like blank (1a) could be a number from <code>self.values</code> at the current index. Namely, it should be <code>self.values[self.index]</code>. The first line and the final <code>return value</code> achieves the requirements 1 and 3 from above.</p>
+
+<p>For advancing the index, we could do <code>self.index = self.index + 1</code>, so on the future roll, the roll outcome would be the next element of <code>self.values</code>. However, if we are already on the last element, incrementing the index would go beyond the bounds of the list. In that case, we have to get back to the index <code>0</code>. The skeleton offers us the <code>%</code> operation for help.</p>
+
+<p>In general, when we mod something by the number <code>N</code>, the result would always stay in range <code>0..N&#x2d;1</code>. Recall that in the past assignments, we’ve used <code>% 10</code> on the number to get its rightmost digit. Using <code>10</code> ensured that we would only get numbers from 0-9.</p>
+
+<p>To avoid the out of bounds error, we always have to stay in the valid index range - <code>0..len(self.values)</code>. Therefore, as long as we mod <code>self.index + 1</code> by length of the list, we ensure that going beyond the length of the list will map back to the appropriate index from the beginning.</p>
+
+<p>The complete solution looks like:</p>
+
+<pre><code class="python">class HoopDice:
+    ...
+    def roll(self):
+        value = self.values[self.index]
+                    #  (1a)
+        self.index = (self.index + 1) % len(self.values)
+           # (1b)          (1c)              (1d)
+        return value</code></pre>
+
+
+
+
+<h2 id="part-b-2">Part (b)</h2>
+
+
+<p><strong>For the rest of the question, assume that <code>HoopDice.roll</code> is implemented correctly,</strong> regardless of your answers above.</p>
+
+<p>In the rest of the question, you will work on making the game itself. Take a look at the <code>HoopGame</code> class, which takes in the setup for your game and makes it playable. You'll fill in the blanks shortly.</p>
+
+<pre><code class="python">class HoopGame:
+    def __init__(self, players, dice, goal):
+        &quot;&quot;&quot;Initialize a game with a list of PLAYERS, which contains at least one
+        HoopPlayer, a single HoopDice DICE, and a goal score of GOAL.
+        &quot;&quot;&quot;
+        self.players = players
+        self.dice = dice
+        self.goal = goal
+
+    def next_player(self):
+        &quot;&quot;&quot;Infinitely yields the next player in the game, in order.&quot;&quot;&quot;
+        yield from ______________
+        yield from ______________
+
+    def get_scores(self):
+        &quot;&quot;&quot;Collects and returns a list of the current scores for all players
+        in the same order as the SELF.PLAYERS list.
+        &quot;&quot;&quot;
+        # Implementation omitted. Assume this method works correctly.
+    def get_scores_except(self, player):
+        &quot;&quot;&quot;Collects and returns a list of the current scores for all players
+        except PLAYER.
+        &quot;&quot;&quot;
+        return [______________ for pl in ______________ if ______________]
+    def roll_dice(self, num_rolls):
+        &quot;&quot;&quot;Simulate rolling SELF.DICE exactly NUM_ROLLS &gt; 0 times. Return sum of
+        the outcomes unless any of the outcomes is 1. In that case, return 1.
+        &quot;&quot;&quot;
+        outcomes = [______________ for x in ______________]
+        ones = [______________ for outcome in outcomes]
+        return 1 if ______________(ones) else ______________(outcomes)
+
+    def play(self):
+        &quot;&quot;&quot;Play the game while no player has reached or exceeded the goal score.
+        After the game ends, return all players&#x27; scores.
+        &quot;&quot;&quot;
+        player_gen = self.next_player()
+        while max(self.get_scores()) &lt; self.goal:
+            player = ______________(player_gen)
+            other_scores = self.get_scores_except(player)
+            num_rolls = ______________(player.score, other_scores)
+            outcome = self.roll_dice(num_rolls)
+            ______________ += outcome
+        return self.get_scores()</code></pre>
+
+
+
+<p>To see what the expected behavior of each method is, take a look at its doctests. These will be provided for the relevant methods in each subpart for the rest of the question.</p>
+
+<p><strong>In all following subparts, assume that the following has already been run</strong> to set up the game:</p>
+
+<pre><code class="python">&gt;&gt;&gt; roll_once_strategy = lambda pl, ops: 1
+&gt;&gt;&gt; roll_twice_strategy = lambda pl, ops: 2
+&gt;&gt;&gt; always_5 = HoopDice([5])
+&gt;&gt;&gt; player1 = HoopPlayer(roll_twice_strategy)
+&gt;&gt;&gt; player2 = HoopPlayer(roll_once_strategy)
+&gt;&gt;&gt; player3 = HoopPlayer(lambda pl, ops: 6)
+&gt;&gt;&gt; game = HoopGame([player1, player2, player3], always_5, 55)
+&gt;&gt;&gt; # since we omit the implementation of HoopGame.get_scores, here&#x27;s what it
+&gt;&gt;&gt; # should output:
+&gt;&gt;&gt; game.get_scores()
+[0, 0, 0]</code></pre>
+
+
+
+<p>The first <code>HoopGame</code> method you'll implement is <code>HoopGame.next_player</code>, which gives the game a way to iterate over all of the players playing, in order to give them each a turn in order.</p>
+
+<pre><code class="python">class HoopGame:
+    ...
+    def next_player(self):
+        &quot;&quot;&quot;Infinitely yields the next player in the game, in order.
+        &gt;&gt;&gt; player_gen = game.next_player()
+        &gt;&gt;&gt; next(player_gen) is player1
+        True
+        &gt;&gt;&gt; next(player_gen) is player3
+        False
+        &gt;&gt;&gt; next(player_gen) is player3
+        True
+        &gt;&gt;&gt; next(player_gen) is player1
+        True
+        &gt;&gt;&gt; next(player_gen) is player2
+        True
+        &gt;&gt;&gt; new_player_gen = game.next_player()
+        &gt;&gt;&gt; next(new_player_gen) is player1
+        True
+        &gt;&gt;&gt; next(player_gen) is player3
+        True
+        &quot;&quot;&quot;
+        yield from ______________
+                        (2a)
+        yield from ______________
+                        (2b)</code></pre>
+
+
+
+<ol>
+  <li>Fill in blank (2a)</li>
+  <li>Fill in blank (2b)</li>
+</ol>
+
+<p><!--</p>
+
+<blockquote><p>This part of the question was designed to test students' understanding of the
+two possible use cases of <code>yield from</code>: yielding from an iterable, and using
+<code>yield from</code> to delegate the action of yielding to another generator. The neat
+extension here was that the second <code>yield from</code> would delegate to the <em>same</em>
+generator. As with the previous part, credit was awarded for demonstrating
+knowledge of this, as well as for using the correct accessors for each
+relevant attribute of an object.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-11">Walkthrough</h2>
+
+
+<p>The implementation of this method should ensure two functionalities:</p>
+
+<p>1) yielding players of the instance</p>
+
+<p>2) when there are no more players, start over from the first player and keep yielding. In other words, this generator should be infinite.</p>
+
+<p>Recall that <code>yield from &lt;some generator&gt;</code>  can always be rewritten as:</p>
+
+<pre><code class="python">for elem in &lt;some generator&gt;:
+    yield elem</code></pre>
+
+
+
+<p>In other words, <code>yield from</code> spits out the elements from the iterator/iterable until it is exhausted. Since we have to yield the players, it would make sense for the blank (2a) to be:</p>
+
+<pre><code class="python">yield from self.players
+            #   (2a)</code></pre>
+
+
+
+<p>We’ve fulfilled the first requirement (observe that it has to be <code>self.players</code>, not just <code>players</code>, since we are using the attribute of the instance).</p>
+
+<p>How do we deal with the infiniteness property though? We need something like:</p>
+
+<pre><code class="python">yield from self.players
+yield from self.players
+yield from self.players
+yield from self.players
+yield from self.players
+...</code></pre>
+
+
+
+<p>but we have only one spot left for <code>yield from</code>. Do we have a generator method that yields players infinitely from the start (since after the first <code>yield from</code> , we have to start over)?</p>
+
+<p>Yes! It is <code>self.next_player()</code>!</p>
+
+<pre><code class="python">yield from self.next_player()
+               (2b)</code></pre>
+
+
+
+<p>Again, we have to use <code>self</code> to call the method recursively, since that is how it preserves the “attachment” to its <code>players</code> attribute.</p>
+
+<p>You might be wondering, haven’t we already “exhausted” <code>self.players</code>? How come that when we call <code>self.next_player()</code> again, we are able to start from scratch since it is the same <code>players</code> list object? Well, when <code>yield from</code> is used with lists (which is an iterable), it firstly needs to turn it into an iterator:</p>
+
+<pre><code class="python">lst = [1, 2, 3, 4]
+yield from lst 
+
+# the line above translates into:
+yield from iter(lst)</code></pre>
+
+
+
+<p>It means that every time we execute the <code>yield from</code> on a list, it creates a <strong>new</strong> iterator from its contents. This was reflected in one of the most common student solutions, though it was incorrect:</p>
+
+<pre><code class="python"># incorrect but common solution
+class HoopGame:
+    ...
+    def next_player(self):
+        yield from self.players
+                #    (2a)
+        yield from self.players
+                #    (2b)</code></pre>
+
+
+
+<p>Since every <code>yield from</code> line creates its own separate iterator, the implementation above yields the elements for two “rounds”. However, we need infinite number of “rounds”, not only two, which is handled by the recursive call. The final solution looks like:</p>
+
+<pre><code class="python">class HoopGame:
+    ...
+    def next_player(self):
+        yield from self.players
+                 #   (2a)
+        yield from self.next_player()
+                 #   (2b)</code></pre>
+
+
+
+
+<h2 id="part-c-2">Part (c)</h2>
+
+
+<p>The <code>HoopGame.get_scores</code> method is already fully implemented and provides a way to get a list of the scores of <em>all</em> players.</p>
+
+<p>However, each player's strategy relies on the player's <em>opponents'</em> scores, so <code>HoopGame</code> also needs a method that gives the scores of all players <em>except</em> the current one. Fill in the skeleton for <code>HoopGame.get_scores_except</code> below. Keep in mind that multiple players may have the same score.</p>
+
+<pre><code class="python">class HoopGame:
+    ...
+    def get_scores_except(self, player):
+        &quot;&quot;&quot;Collects and returns a list of the current scores for all players
+        except PLAYER.
+        &gt;&gt;&gt; game.get_scores_except(player2)
+        [0, 0]
+        &quot;&quot;&quot;
+        return [______________ for pl in ______________ if ______________]
+                    (3a)                     (3b)              (3c)</code></pre>
+
+
+
+<p>As a reminder, here's what the <code>HoopPlayer</code> class looks like:</p>
+
+<pre><code class="python">class HoopPlayer:
+    def __init__(self, strategy):
+        &quot;&quot;&quot;Initialize a player with STRATEGY, and a starting SCORE of 0. The
+        STRATEGY should be a function that takes this player&#x27;s score and a list
+        of other players&#x27; scores.
+        &quot;&quot;&quot;
+        self.strategy = strategy
+        self.score = 0</code></pre>
+
+
+
+<ol>
+  <li>Fill in blank (3a)</li>
+  <li>Fill in blank (3b)</li>
+  <li>Fill in blank (3c)</li>
+</ol>
+
+<p><!--</p>
+
+<blockquote><p>This part was intended to test students' ability to filter through an existing
+list. The intended solution did not use <code>self.get_scores()</code>, but an alternate
+solution that did this was possible, so credit was awarded for either approach
+(as with previous parts, proper usage of accessors for attributes was also
+required for credit to be awarded).
+--></p></blockquote>
+
+
+<h2 id="walkthrough-12">Walkthrough</h2>
+
+
+<p>The method <code>get_scores_except</code> should return the list with scores of all players except the provided <code>player</code> argument. Let’s try to translate this statement into the list comprehension. We can focus on each component separately to fill in the blanks:</p>
+
+<ul>
+  <li>return the list ... of <strong>all players</strong> except ...</li>
+</ul>
+
+<p>How can we get all of the players? Since <code>get_scores_except</code> is the method of <code>HoopGame</code> class, we have access to its attributes. <code>self.players</code> is exactly what we need and what we put for blank (3b):</p>
+
+<pre><code class="python">return [______________ for pl in self.players if ______________]
+      #      (3a)                    (3b)              (3c)</code></pre>
+
+
+
+<ul>
+  <li>return the list with <strong>scores</strong> of all players except ...</li>
+</ul>
+
+<p>The list should be populated with scores of the players. Since we are iterating over <code>self.players</code> with the for-loop, <code>pl</code> will refer to an instance of a player. To get their score, we can put <code>pl.score</code> into blank (3a):</p>
+
+<pre><code class="python">return [pl.score for pl in self.players if ______________]
+    #      (3a)                (3b)              (3c)</code></pre>
+
+
+
+<ul>
+  <li>return the list ... <strong>except the provided <code>player</code> argument</strong></li>
+</ul>
+
+<p>We should consider all of the players, <em>except</em> the one provided as an argument. So as long as <code>pl</code> is not <code>player</code>, we should be fine. The complete solution:</p>
+
+<pre><code class="python">class HoopGame:
+    ...
+    def get_scores_except(self, player):
+        return [pl.score for pl in self.players if pl is not player]
+            #   (3a)                (3b)              (3c)
+
+# since we are comparing objects, we should use &quot;is not&quot; instead of using &quot;!=&quot; (though, in this case, both work)</code></pre>
+
+
+
+
+<h2 id="part-d">Part (d)</h2>
+
+
+<p>Next, give <code>HoopGame</code> the ability to roll its dice some given number of times and return the total from rolling all those times. Recall that the dice in the game is just a single dice, represented by the <code>HoopDice</code> instance at <code>self.dice</code>. Fill in the skeleton for <code>HoopGame.roll_dice</code> below:</p>
+
+<pre><code class="python">class HoopGame:
+    ...
+    def roll_dice(self, num_rolls):
+        &quot;&quot;&quot;Simulate rolling SELF.DICE exactly NUM_ROLLS &gt; 0 times. Return sum of
+        the outcomes unless any of the outcomes is 1. In that case, return 1.
+        &gt;&gt;&gt; game.roll_dice(4)
+        20
+        &quot;&quot;&quot;
+        outcomes = [______________ for x in ______________]
+                        (4a)                    (4b)
+        ones = [______________ for outcome in outcomes]
+                    (4c)
+        return 1 if ______________(ones) else ______________(outcomes)
+                        (4d)                      (4e)</code></pre>
+
+
+
+<ol>
+  <li>Fill in blank (4a)</li>
+  <li>Fill in blank (4b)</li>
+  <li>Fill in blank (4c)</li>
+  <li>Fill in blank (4d)</li>
+  <li>Fill in blank (4e)</li>
+</ol>
+
+<p><!--</p>
+
+<blockquote><p>This question was designed to test composition of different classes as well as
+usage of built-in list functions. Credit was awarded for demonstrating an
+understanding of these ideas, as well as (like the rest of the question) for
+using correct accessors for attributes of any object.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-13">Walkthrough</h2>
+
+
+<p>Recall that <code>self.dice</code> is where we store the dice instance (<code>self</code> is referring to <code>HoopGame</code> class instance). In order to roll the dice once, we have to call <code>self.dice.roll()</code>, which returns the outcome of the roll. The question asks us to roll the dice <code>num_rolls</code> times and store the results in <code>outcomes</code> list:</p>
+
+<pre><code class="python">outcomes = [self.dice.roll() for x in range(num_rolls)]
+            #	(4a)                     (4b) 
+
+# this list comprehension is equivalent to the following code:
+outcomes_2 = []
+for x in range(num_rolls):
+    outcome = self.dice.roll()
+    outcomes_2.append(outcome)
+
+# notice that x variable is not used at all in the list comprehension
+# the expression below would evaluate to the same list
+[self.dice.roll() for _ in range(num_rolls)]</code></pre>
+
+
+
+<p>The initial intuition for the list <code>ones</code> might be that it needs to have all <code>1</code>-s from the outcomes list. However, the skeleton does not provide any space for the filtering predicate (<code>outcome == 1</code>) after the for-loop. If we put the predicate as the element description into blank (4c), the list <code>ones</code> would be populated with <code>True</code> and <code>False</code> values (the result of evaluating <code>outcome == 1</code> for each element of <code>outcomes</code>):</p>
+
+<pre><code class="python">ones = [outcome == 1 for outcome in outcomes]
+       #   (4c)</code></pre>
+
+
+
+<p>As long as we keep in mind that <code>ones</code> contains boolean values, we should be fine moving forward.</p>
+
+<p>For the last two blanks, the function description actually provides us a huge hint: “Return <strong>sum</strong> of the outcomes unless <strong>any</strong> of the outcomes is 1”. It would make sense to return <code>1</code> if <code>any(ones)</code> is <code>True</code> value (there is at least one <code>True</code> in <code>ones</code>) and <code>sum(outcomes)</code> otherwise:</p>
+
+<pre><code class="python">return 1 if any(ones) else sum(outcomes)
+        #     (4d)            (4e)</code></pre>
+
+
+
+<p>Notice that using <code>sum(ones)</code> for blank (4d) also works, because for mathematical purposes, <code>True</code> is equal to <code>1</code> and <code>False</code> is equal to <code>0</code> -- this was an alternate solution. The complete solution looks like:</p>
+
+<pre><code class="python">class HoopGame:
+    ...
+    def roll_dice(self, num_rolls):
+        &quot;&quot;&quot;Simulate rolling SELF.DICE exactly NUM_ROLLS &gt; 0 times. Return sum of
+        the outcomes unless any of the outcomes is 1. In that case, return 1.
+        &gt;&gt;&gt; game.roll_dice(4)
+        20
+        &quot;&quot;&quot;
+        outcomes = [self.dice.roll() for x in range(num_rolls)]
+                     #   (4a)                       (4b)
+        ones = [outcome == 1 for outcome in outcomes]
+                 #   (4c)
+        return 1 if any(ones) else sum(outcomes)
+                 #     (4d)            (4e)</code></pre>
+
+
+
+
+<h2 id="part-e">Part (e)</h2>
+
+
+<p>Finally, it's time to play the game! Recall that a player's strategy depends on two inputs: the player's own score, and a list of the scores of the player's opponents. Using existing attributes wherever possible, fill in the skeleton for <code>HoopGame.play</code> below:</p>
+
+<pre><code class="python">class HoopGame:
+    ...
+    def play(self):
+        &quot;&quot;&quot;Play the game while no player has reached or exceeded the goal score.
+        After the game ends, return all players&#x27; scores.
+        &gt;&gt;&gt; game.play()
+        [20, 10, 60]
+        &quot;&quot;&quot;
+        player_gen = self.next_player()
+        while max(self.get_scores()) &lt; self.goal:
+            player = ______________(player_gen)
+                        (5a)
+            other_scores = self.get_scores_except(player)
+            num_rolls = ______________(player.score, other_scores)
+                            (5b)
+            outcome = self.roll_dice(num_rolls)
+            ______________ += outcome
+                (5c)
+        return self.get_scores()</code></pre>
+
+
+
+<ol>
+  <li>Fill in blank (5a)</li>
+  <li>Fill in blank (5b)</li>
+  <li>Fill in blank (5c)</li>
+</ol>
+
+<p><!--</p>
+
+<blockquote><p>This part was designed to further test composition of classes as well as
+students' ability to tie together the rest of the question. Credit was awarded
+for correctly using various components of the relevant classes. Partial credit
+was deducted for incorrectly accessing any attribute of any object.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-14">Walkthrough</h2>
+
+
+<p>Before we enter the while-loop, the skeleton creates the generator <code>player_gen</code> using <code>self.next_player()</code>. From part (b), we know that this is an infinite generator and the only way to interact with it is to call <code>next</code> on the object (which yields the next player). This is also our answer for blank (5a):</p>
+
+<pre><code class="python">...
+player = next(player_gen)
+        # (5a)
+...</code></pre>
+
+
+
+<p>The code in blank (5b) should be a <strong>function</strong> (the blank is followed-up by parentheses) that helps us to figure out the number of rolls based on the player’s score and the list of opponents’ score. We haven’t implemented such function ourselves, but we know that each player has a <code>strategy</code> attribute, which is defined as <code>“The STRATEGY should be a function that takes this player&#x27;s score and a list of other players&#x27; scores”</code>. Hence the blank (5b) looks like:</p>
+
+<pre><code class="python">...
+num_rolls = player.strategy(player.score, other_scores)
+               #   (5b)
+...
+
+# notice that we can&#x27;t do self.strategy, 
+# since self here refers to the HoopGame instance</code></pre>
+
+
+
+<p>After computing the <code>outcome</code>, it should impact the current player’s score. This can be achieved by writing <code>player.score</code> into blank (5c). The complete solution looks like:</p>
+
+<pre><code class="python">class HoopGame:
+    ...
+    def play(self):
+        &quot;&quot;&quot;Play the game while no player has reached or exceeded the goal score.
+        After the game ends, return all players&#x27; scores.
+        &gt;&gt;&gt; game.play()
+        [20, 10, 60]
+        &quot;&quot;&quot;
+        player_gen = self.next_player()
+        while max(self.get_scores()) &lt; self.goal:
+            player = next(player_gen)
+                    # (5a)
+            other_scores = self.get_scores_except(player)
+            num_rolls = player.strategy(player.score, other_scores)
+                         #   (5b)
+            outcome = self.roll_dice(num_rolls)
+            player.score += outcome
+              #  (5c)
+        return self.get_scores()</code></pre>
+
+
+
+<p>Changing the score on blank (5c) also ensures that the while-loop would terminate at some point, since by increasing the score of the current player, we move them closer to the goal.</p>
+
+
+<h2 id="part-f">Part (f)</h2>
+
+
+<p>Now that you've finished implementing the game, you'll implement a new kind of <code>BrokenHoopDice</code>. This dice extends <code>HoopDice</code>, but is broken! That is, it alternates between behaving like a normal dice and returning <code>when_broken</code> value between turns.</p>
+
+<p><strong>For this part of the question, you may not use <code>=</code> or <code>lambda</code>.</strong></p>
+
+<pre><code class="python">class BrokenHoopDice(HoopDice):
+    def __init__(self, values, when_broken):
+        ______________(values)
+             (6a)
+        self.when_broken = when_broken
+        self.______________ = False
+                  (6b)
+    def roll(self):
+        &quot;&quot;&quot;
+        &gt;&gt;&gt; broken = BrokenHoopDice([5, 6, 7], 11)
+        &gt;&gt;&gt; broken.roll()
+        5
+        &gt;&gt;&gt; [broken.roll() for _ in range(6)]
+        [11, 6, 11, 7, 11, 5]
+        &quot;&quot;&quot;
+        if self.is_broken:
+            self.is_broken = not self.is_broken
+            return ______________
+                        (6c)
+        else:
+            self.is_broken = not self.is_broken
+            return ______________()
+                        (6d)</code></pre>
+
+
+
+<ol>
+  <li>Fill in blank (6a)</li>
+  <li>Fill in blank (6b)</li>
+  <li>Fill in blank (6c)</li>
+  <li>Fill in blank (6d)</li>
+</ol>
+
+<p><!--</p>
+
+<blockquote><p>This part was designed to test inheritance. Credit was awarded for
+demonstrating the need for superclass access as well as for correctly
+accessing attributes of the current object or the superclass instance.
+--></p></blockquote>
+
+
+<h2 id="walkthrough-15">Walkthrough</h2>
+
+
+<p>Since <code>BrokenHoopDice</code> extends from the <code>HoopDice</code>, we can use the latter’s constructor to initialize the object. The blank (6a) would be <code>super.__init__(values)</code>.</p>
+
+<p>After initializing the object as <code>HoopDice</code>, we create two additional attributes, one of which is <code>when_broken</code>  and we should figure out the name for the second. Looking at the <code>roll</code> method, we see it uses <code>is_broken</code> attribute, which seems to be the answer for blank (6b). It is set to be <code>False</code> since for the first roll, <code>BrokenHoopDice</code> should behave like a normal dice and turn into broken one for the next roll.</p>
+
+<p>So far, we’ve got the following code:</p>
+
+<pre><code class="python">class BrokenHoopDice(HoopDice):
+    def __init__(self, values, when_broken):
+        super().__init__(values)
+        #  (6a) 
+        self.when_broken = when_broken
+        self.is_broken = False
+        # (6b)
+...</code></pre>
+
+
+
+<p>In the <code>roll</code> method, we see an if-condition that firstly flips the <code>is_broken</code> attribute and returns the appropriate roll result. We know that if the dice is broken, we return the value of <code>when_broken</code> and otherwise, we return the result of a normal <code>HoopDice</code> roll (observe that blank (6d) ends with function call parentheses). The complete solution looks like:</p>
+
+<pre><code class="python">class BrokenHoopDice(HoopDice):
+    def __init__(self, values, when_broken):
+        super().__init__(values)
+        # (6a)
+        self.when_broken = when_broken
+        self.is_broken = False
+        #  (6b)
+    def roll(self):
+        &quot;&quot;&quot;
+        &gt;&gt;&gt; broken = BrokenHoopDice([5, 6, 7], 11)
+        &gt;&gt;&gt; broken.roll()
+        5
+        &gt;&gt;&gt; [broken.roll() for _ in range(6)]
+        [11, 6, 11, 7, 11, 5]
+        &quot;&quot;&quot;
+        if self.is_broken:
+            self.is_broken = not self.is_broken
+            return self.when_broken
+                       # (6c)
+        else:
+            self.is_broken = not self.is_broken
+            return super().roll()
+                       # (6d)</code></pre>
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#1-a-bug-s-life">1. A Bug’s Life</a></li>
+  <ul>
+    <li><a href="index.html#wasp">Wasp</a></li>
+    <li><a href="index.html#walkthrough">Walkthrough</a></li>
+    <li><a href="index.html#moth">Moth</a></li>
+    <li><a href="index.html#walkthrough-2">Walkthrough</a></li>
+    <li><a href="index.html#bumblebee">Bumblebee</a></li>
+    <li><a href="index.html#walkthrough-3">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#2-what-would-python-display">2. What Would Python Display?</a></li>
+  <ul>
+    <li><a href="index.html#question">Question</a></li>
+    <li><a href="index.html#walkthrough-4">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#3-a-different-kind-of-dictionary">3. A Different Kind of Dictionary</a></li>
+  <ul>
+    <li><a href="index.html#question-2">Question</a></li>
+    <li><a href="index.html#walkthrough-5">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#4-beadazzled">4. Beadazzled</a></li>
+  <ul>
+    <li><a href="index.html#question-3">Question</a></li>
+    <li><a href="index.html#walkthrough-6">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#5-file-tree-tionaries">5. File Tree-tionaries</a></li>
+  <ul>
+    <li><a href="index.html#question-4">Question</a></li>
+    <li><a href="index.html#walkthrough-7">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#6-mapping-time-and-space">6. Mapping Time and Space</a></li>
+  <ul>
+    <li><a href="index.html#question-5">Question</a></li>
+    <li><a href="index.html#walkthrough-8">Walkthrough</a></li>
+    <ul>
+      <li><a href="index.html#part-a">Part (a)</a></li>
+      <li><a href="index.html#part-b">Part (b)</a></li>
+      <li><a href="index.html#part-c">Part (c)</a></li>
+    </ul>
+  </ul>
+  <li><a href="index.html#7-tulip-mania">7. Tulip Mania</a></li>
+  <ul>
+    <li><a href="index.html#question-6">Question</a></li>
+    <li><a href="index.html#walkthrough-9">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#8-cs61a-presents-the-game-of-hoop">8. CS61A Presents the Game of Hoop</a></li>
+  <ul>
+    <li><a href="index.html#part-a-2">Part (a)</a></li>
+    <li><a href="index.html#walkthrough-10">Walkthrough</a></li>
+    <li><a href="index.html#part-b-2">Part (b)</a></li>
+    <li><a href="index.html#walkthrough-11">Walkthrough</a></li>
+    <li><a href="index.html#part-c-2">Part (c)</a></li>
+    <li><a href="index.html#walkthrough-12">Walkthrough</a></li>
+    <li><a href="index.html#part-d">Part (d)</a></li>
+    <li><a href="index.html#walkthrough-13">Walkthrough</a></li>
+    <li><a href="index.html#part-e">Part (e)</a></li>
+    <li><a href="index.html#walkthrough-14">Walkthrough</a></li>
+    <li><a href="index.html#part-f">Part (f)</a></li>
+    <li><a href="index.html#walkthrough-15">Walkthrough</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../../../assets/js/network_storage.js"></script>
+    <script src="../../../../assets/js/code_tabindex.js"></script>
+    <script src="../../../../assets/js/storable.js"></script>
+    <script src="../../../../assets/js/editor.js"></script>
+    <script src="../../../../assets/js/copy-button.js"></script>
+    <script src="../../../../assets/js/env-diagram.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+<script src="../../../../assets/js/storable.js"></script>
+<script src="../../../../assets/js/env-diagram.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+</script>
+
+  </body>
+</html>

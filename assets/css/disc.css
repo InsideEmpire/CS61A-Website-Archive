@@ -1,0 +1,20 @@
+.sol-highlight {
+  border: 2px dashed;
+  border-color: #48c448;
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
+.active .sol-highlight {
+  border-color: #3e713e;
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
+pre code .sol-highlight {
+  margin-bottom: 0px;
+}
+
+textarea {
+  font-family: monospace;
+}

@@ -1,0 +1,685 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/disc.css">
+
+
+    <title>
+Discussion 12 | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Discussion 12: SQL
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="disc12.pdf" class="label label-outline">disc12.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<!-- <div class="alert storable-login-status"></div> -->
+
+
+    
+<p>Switch to Pensieve:</p>
+
+<ul>
+  <li><strong>Everyone</strong>: Go to <a href="https://tutor.pensieve.co/schools/berkeley/all/cs61a/cs61a_fa24/04a207e7-28f4-400b-ab76-bd99f0f5f76a/open">pensieve.co</a>, log in with your @berkeley.edu email, and <strong>enter your group number</strong> (which was in the email that assigned you to this lab).</li>
+</ul>
+
+<p>Once you're on Pensieve, you don't need to return to this page; Pensieve has all the same content (but more features). If for some reason Penseive doesn't work, return to this page and continue with the discussion.</p>
+
+
+<h1 id="getting-started">Getting Started</h1>
+
+
+<p><strong>To get help from a TA</strong>, If you do not have an in-person TA, you can reach your TA using this <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom link</a>.</p>
+
+<p>If there are fewer than 3 people in your group, feel free to merge your group with another group in the room.</p>
+
+<p>Everybody say your name, and then share your favorite restaurant, cafe, or boba shop near campus. (Yes, Kingpin Donuts counts as a restaurant.)</p>
+
+
+<h1 id="select-statements">Select Statements</h1>
+
+
+<p>A <code>SELECT</code> statement describes an output table based on input rows. To write one:</p>
+
+<ol>
+  <li>Describe the <strong>input rows</strong> using <code>FROM</code> and <code>WHERE</code> clauses.</li>
+  <li>Format and order the <strong>output rows</strong> and columns using <code>SELECT</code> and <code>ORDER BY</code> clauses.</li>
+</ol>
+
+<p><code>SELECT</code> <em>(Step 2)</em> <code>FROM</code> <em>(Step 1)</em> <code>WHERE</code> <em>(Step 1)</em> <code>ORDER BY</code> <em>(Step 2)</em>;</p>
+
+<p>Step 1 may involve joining tables (using commas) to form input rows that consist of two or more rows from existing tables.</p>
+
+<p>The <code>WHERE</code> and <code>ORDER BY</code> clauses are optional.</p>
+
+
+<h2 id="pizza-time">Pizza Time</h2>
+
+
+<p>The <code>pizzas</code> table contains the names, opening, and closing hours of great pizza
+places in Berkeley. The <code>meals</code> table contains typical meal times (for college
+students). A pizza place is open for a meal if the meal time is at or within the
+<code>open</code> and <code>close</code> times.</p>
+
+<pre><code>CREATE TABLE pizzas AS
+  SELECT &quot;Artichoke&quot; AS name, 12 AS open, 15 AS close UNION
+  SELECT &quot;La Val&#x27;s&quot;         , 11        , 22          UNION
+  SELECT &quot;Sliver&quot;           , 11        , 20          UNION
+  SELECT &quot;Cheeseboard&quot;      , 16        , 23          UNION
+  SELECT &quot;Emilia&#x27;s&quot;         , 13        , 18;
+
+CREATE TABLE meals AS
+  SELECT &quot;breakfast&quot; AS meal, 11 AS time UNION
+  SELECT &quot;lunch&quot;            , 13         UNION
+  SELECT &quot;dinner&quot;           , 19         UNION
+  SELECT &quot;snack&quot;            , 22;</code></pre>
+
+
+
+
+<h3 id="q1-open-early">Q1: Open Early</h3>
+
+
+<p>You'd like to have pizza before 13 o'clock (1pm). Create a <code>opening</code> table with
+the names of all pizza places that <code>open</code> before 13 o'clock, listed in reverse
+alphabetical order.</p>
+
+<p><strong><code>opening</code></strong> table:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <th>name</th>
+  </tr>
+  <tr>
+    <td>Sliver</td>
+  </tr>
+  <tr>
+    <td>La Val's</td>
+  </tr>
+  <tr>
+    <td>Artichoke</td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+
+
+
+            <div class="monaco-storable" id="opening-input" style="height:126px;"></div>
+            <a href="javascript:void" id="modal-link-opening-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-opening-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-opening-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('&#x2d;&#x2d; Pizza places that open before 1pm in alphabetical order\nSELECT "REPLACE THIS LINE WITH YOUR SOLUTION";\n\n', "sql", "opening-input"));
+            </script>
+        
+
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Reverse Alphabetical Order<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+To order by <code>name</code> in reverse alphabitical order, write <code>ORDER BY name DESC</code>.
+</div>
+
+
+<h3 id="q2-study-session">Q2: Study Session</h3>
+
+
+<p>You're planning to study at a pizza place from the moment it opens until 14
+o'clock (2pm). Create a table <code>study</code> with two columns, the <code>name</code> of each pizza
+place and the <code>duration</code> of the study session you would have if you studied there
+(the difference between when it opens and 14 o'clock). For pizza places that are
+not open before 2pm, the <code>duration</code> should be zero. Order the
+rows by decreasing duration.</p>
+
+<p><strong>Hint:</strong> Use an expression of the form <code>MAX(_, 0)</code> to make sure a result is not below 0.</p>
+
+<p><strong><code>study</code></strong> table:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <th>name</th>
+    <th>duration</th>
+  </tr>
+  <tr>
+    <td>La Val's</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>Sliver</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>Artichoke</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>Emilia's</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>Cheeseboard</td>
+    <td>0</td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+
+
+
+            <div class="monaco-storable" id="study-input" style="height:126px;"></div>
+            <a href="javascript:void" id="modal-link-study-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-study-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-study-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('&#x2d;&#x2d; Pizza places and the duration of a study break that ends at 14 o&#x27;clock\nSELECT "REPLACE THIS LINE WITH YOUR SOLUTION";\n\n', "sql", "study-input"));
+            </script>
+        
+
+
+        <button id='toggle-2' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Order by Duration<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+To order by decreasing duration, first name the column with <code>SELECT ..., ... AS duration ...</code>, then <code>ORDER BY duration DESC</code>.
+</div>
+
+
+<h3 id="q3-late-night-snack">Q3: Late Night Snack</h3>
+
+
+<p>What's still open for a late night <code>snack</code>? Create a <code>late</code> table with one
+column named <code>status</code> that has a sentence describing the closing time of each
+pizza place that closes at or after <code>snack</code> time. <strong>Important:</strong> Don't use any
+numbers in your SQL query! Instead, use a join to compare each restaurant's
+closing time to the time of a snack. The rows may appear in any order.</p>
+
+<p><strong><code>late</code></strong> table:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <th>status</th>
+  </tr>
+  <tr>
+    <td>Cheeseboard closes at 23</td>
+  </tr>
+  <tr>
+    <td>La Val's closes at 22</td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+
+
+<p>The <code>||</code> operator in SQL concatenates two strings together, just like <code>+</code> in Python.</p>
+
+
+            <div class="monaco-storable" id="late-input" style="height:162px;"></div>
+            <a href="javascript:void" id="modal-link-late-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-late-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-late-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('&#x2d;&#x2d; Pizza places that are open for late&#x2d;night&#x2d;snack time and when they close\n  SELECT ____ || &quot; closes at &quot; || ____ AS status\n  FROM ____\n  WHERE ____;\n\n', "sql", "late-input"));
+            </script>
+        
+
+
+        <button id='toggle-3' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Referencing the Snack Time<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-3">
+To compare a pizza place's <code>close</code> time to the time of a snack:
+
+<ul>
+  <li>join the <code>pizzas</code> and <code>meals</code> tables using <code>FROM pizzas, meals</code></li>
+  <li>use only rows where the <code>meal</code> is a <code>&quot;snack&quot;</code></li>
+  <li>compare the <code>time</code> of the snack to the <code>close</code> of the pizza place.
+  </div></li>
+</ul>
+
+
+        <button id='toggle-4' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Composing a Sentence<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-4">
+Use <code>name || &quot; closes at &quot; || close</code> to create the sentences in the resulting table. The <code>||</code> operator concatenates values into strings.
+</div>
+
+
+<h3 id="q4-double-pizza">Q4: Double Pizza</h3>
+
+
+<p>If two meals are more than 6 hours apart, then there's nothing wrong with going
+to the same pizza place for both, right? Create a <code>double</code> table with three
+columns. The <code>first</code> column is the earlier meal, the <code>second</code> column is the
+later meal, and the <code>name</code> column is the name of a pizza place. Only include
+rows that describe two meals that are <strong>more than 6 hours apart</strong> and a pizza
+place that is open for both of the meals. The rows may appear in any order.</p>
+
+<p><strong><code>double</code></strong> table:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <th>first</th>
+    <th>second</th>
+    <th>name</th>
+  </tr>
+  <tr>
+    <td>breakfast</td>
+    <td>dinner</td>
+    <td>La Val's</td>
+  </tr>
+  <tr>
+    <td>breakfast</td>
+    <td>dinner</td>
+    <td>Sliver</td>
+  </tr>
+  <tr>
+    <td>breakfast</td>
+    <td>snack</td>
+    <td>La Val's</td>
+  </tr>
+  <tr>
+    <td>lunch</td>
+    <td>snack</td>
+    <td>La Val's</td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+
+
+
+            <div class="monaco-storable" id="double-input" style="height:162px;"></div>
+            <a href="javascript:void" id="modal-link-double-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-double-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-double-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('&#x2d;&#x2d; Two meals at the same place\n  SELECT ____ AS first, ____ AS second, name\n  FROM ____, ____, pizzas\n  WHERE ____;\n\n', "sql", "double-input"));
+            </script>
+        
+
+
+        <button id='toggle-5' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Joining Tables<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-5">
+Use <code>FROM meals AS a, meals AS b, pizzas</code> so that each row has info about two meals and a pizza place. Then you can write a <code>WHERE</code> clause that compares both <code>a.time</code> and <code>b.time</code> to <code>open</code> and <code>close</code> and each other to ensure all the relevant conditions are met.
+</div>
+
+<!--  -->
+
+<!-- <p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q double<button id="copy-code-python3ok-qdouble" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qdouble").onclick = () => copyCode('python3 ok -q double', "copy-code-python3ok-qdouble");
+        </script>
+        <br/> -->
+
+<!--
+<attach-sql>
+-- Two meals at the same place
+  SELECT <strong><em>_ AS first, </em></strong>_ AS second, name
+-- BEGIN SOLUTION NO PROMPT ALT="  FROM <strong><em>_, </em></strong><em>, pizzas"
+
+<pre><code>     FROM meals AS a, meals AS b, pizzas</code></pre>
+
+<p>-- END SOLUTION
+-- BEGIN SOLUTION NO PROMPT ALT="  WHERE </em><em></em>_;"</p>
+
+<pre><code>     WHERE open &lt;= a.time AND a.time &lt;= close AND
+           open &lt;= b.time AND b.time &lt;= close AND
+           b.time &gt; a.time + 6;</code></pre>
+
+<p>-- END SOLUTION
+</attach-sql> --></p>
+
+
+<h1 id="document-the-occasion">Document the Occasion</h1>
+
+
+<p>Please all fill out the <a href="https://forms.gle/UCYakosihNmKSuZE9">attendance form</a> (one submission per person per week).</p>
+
+<p>If you finish early, maybe go get pizza together...</p>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#getting-started">Getting Started</a></li>
+  <li><a href="index.html#select-statements">Select Statements</a></li>
+  <ul>
+    <li><a href="index.html#pizza-time">Pizza Time</a></li>
+    <ul>
+      <li><a href="index.html#q1-open-early">Q1: Open Early</a></li>
+      <li><a href="index.html#q2-study-session">Q2: Study Session</a></li>
+      <li><a href="index.html#q3-late-night-snack">Q3: Late Night Snack</a></li>
+      <li><a href="index.html#q4-double-pizza">Q4: Double Pizza</a></li>
+    </ul>
+  </ul>
+  <li><a href="index.html#document-the-occasion">Document the Occasion</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

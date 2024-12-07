@@ -1,0 +1,750 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/lab.css">
+
+
+    <title>
+Lab 10 Solutions | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Lab 10 Solutions
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="lab10.zip" class="label label-outline">lab10.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+<h2>Solution Files</h2>
+
+
+    
+<h1 id="topics">Topics</h1>
+
+
+<p>Consult this section if you need a refresher on the material for this lab. It's
+okay to skip directly to <a href="index.html#required-questions">the questions</a> and refer back
+here should you get stuck.</p>
+
+<br>
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Interpreters<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+
+<h2 id="interpreters" class="no-toc">Interpreters</h2>
+
+
+<p>An interpreter is a program that allows you to interact with the 
+computer using a specific language. It takes the code you write, 
+interprets it, and then executes the corresponding actions, often 
+using a more fundamental language to communicate with the computer 
+hardware.</p>
+
+<p>In Project 4, you'll develop an interpreter for the Scheme 
+programming language using Python. Interestingly, the Python 
+interpreter you've been using throughout this course is primarily 
+written in the C programming language. At the lowest level, computers 
+operate by interpreting machine code, which is a series of ones and 
+zeros that instructs the computer on performing basic tasks such as 
+arithmetic operations and data retrieval.</p>
+
+<p>When we talk about an interpreter, there are two languages at work:</p>
+
+<ol>
+  <li><strong>The language being interpreted:</strong> For Project 4, this is the Scheme language.</li>
+  <li><strong>The implementation language:</strong> This is the language used to create 
+  the interpreter itself, which, for Project 4, will be Python.</li>
+</ol>
+
+<br>
+
+<p><strong>REPL</strong></p>
+
+<p>A common feature of interpreters is the Read-Eval-Print Loop (REPL), which processes user inputs in a cyclic fashion through three stages:</p>
+
+<ul>
+  <li><p><strong>Read:</strong> The interpreter first reads the input string provided by the user. 
+  This input goes through a parsing process that involves two key steps:</p>
+
+  <ul>
+    <li>The <em>lexical analysis</em> step breaks down the input string into tokens, 
+    which are the basic elements or "words" of the language you're 
+    interpreting. These tokens represent the smallest units of meaning within the input.</li>
+    <li><p>The <em>syntactic analysis</em> step takes the tokens from the previous step and organizes
+    them into a data structure that the underlying language can understand. For our 
+    Scheme interpreter, we assemble the tokens into a <code>Pair</code> object (similar to a 
+    <code>Link</code>), to represent the structure of the original call expression.</p>
+
+    <ul>
+      <li>The first item in the <code>Pair</code> represents the operator of the call expression, while the subsequent elements are the operands or arguments upon which the operation will act. Note that these operands can also be call expressions themselves (nested expressions).
+      <br></li>
+    </ul></li>
+  </ul></li>
+</ul>
+
+<p>Below is a summary of the read process for a Scheme expression input:<br></p>
+
+<p><img class="img-responsive center-block" src="assets/parser.png" alt="" width="" height=""><br></p>
+
+<!-- 
+And here is a summary of how syntactic analysis converts input tokens into <code>Pair</code> objects:<br>
+
+<p><img class="img-responsive center-block" src="assets/to_pair.png" alt="" width="" height=""><br> --></p>
+
+<ul>
+  <li><p><strong>Eval:</strong> This step evaluates the expressions you've written in that programming
+  language to obtain a value. It involves the following two functions:</p>
+
+  <ul>
+    <li><code>eval</code> takes an expression and evaluates it based on the language's rules. 
+    When the expression is a call expression, <code>eval</code> uses the <code>apply</code> function to obtain the result. 
+    It will evaluate the operator and its operands in order. For example, in <code>(add 1 2)</code>, 
+    <code>eval</code> would identify <code>add</code> as the operator and <code>1</code> and <code>2</code> as the operands. 
+    It evaluates <code>add</code> to ensure it's a valid function and then evaluates <code>1</code> and 
+    <code>2</code> to ensure they're valid arguments.</li>
+    <li><code>apply</code> takes the evaluated operator (the function) and applies it to the 
+    evaluated operands (the arguments). Note that it's possible that, during this process, <code>apply</code> needs to evaluate more expressions (like those found within the function body). This is where <code>apply</code> may call back to <code>eval</code>, and thus these two stages are <em>mutually recursive</em>.</li>
+  </ul></li>
+  <li><strong>Print:</strong> Display the result of evaluating the user input.</li>
+</ul>
+
+<br>
+Here's how all the pieces fit together:<br>
+
+<p><img class="img-responsive center-block" src="assets/repl.png" alt="" width="" height=""></p>
+
+</div>
+<br>
+
+
+<h1 id="required-questions">Required Questions</h1>
+
+
+
+        <button id='toggle-2' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Getting Started Videos<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+
+
+<h2 id="getting-started-videos" class="no-toc">Getting Started Videos</h2>
+
+
+<p>These videos may provide some helpful direction for tackling the coding
+problems on this assignment.</p>
+
+<blockquote><p>To see these videos, you should be logged into your berkeley.edu email.</p></blockquote>
+
+
+            <iframe width="560" height="315" src="https://youtube.com/embed/videoseries?list=PLx38hZJ5RLZdwIF0I28zXMYAvd-BQ2nWY"
+                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" aria-label = "lab10-getstarted"
+                allowfullscreen></iframe><p><a href='https://youtu.be/playlist?list=PLx38hZJ5RLZdwIF0I28zXMYAvd-BQ2nWY'> YouTube link </a></p>
+</div>
+
+
+<h2 id="calculator">Calculator</h2>
+
+
+<p>An interpreter is a program that executes programs. Today, we will extend the interpreter for Calculator, a simple made-up language that is a subset of Scheme. This lab is like the Scheme Project in miniature.</p>
+
+<p>The Calculator language includes only the four basic arithmetic operations: <code>+</code>, <code>&#x2d;</code>, <code>*</code>, and <code>/</code>. These operations can be nested and can take various numbers of arguments, just like in Scheme. A few examples of calculator expressions and their corresponding values are shown below.</p>
+
+<pre><code class="scheme"> calc&gt; (+ 2 2 2)
+ 6
+
+ calc&gt; (&#x2d; 5)
+ &#x2d;5
+
+ calc&gt; (* (+ 1 2) (+ 2 3 4))
+ 27</code></pre>
+
+
+
+<p>Calculator expressions are represented as Python objects:</p>
+
+<ul>
+  <li>Numbers are represented using Python numbers.</li>
+  <li>The symbols for arithmetic operations are represented using Python strings (e.g. <code>&#x27;+&#x27;</code>).</li>
+  <li>Call expressions are represented using the <code>Pair</code> class below.</li>
+</ul>
+
+
+<h2 id="pair-class">Pair Class</h2>
+
+
+<p>To represent Scheme lists in Python, we will use the <code>Pair</code> class (in both this lab and the Scheme project). A <code>Pair</code> instance has two attributes: <code>first</code> and <code>rest</code>. <code>Pair</code> is always called on two arguments. To make a list, nest calls to <code>Pair</code> and pass in <code>nil</code> as the second argument of the last pair.</p>
+
+<ul>
+  <li>Look familiar? <code>Pair</code> is very similar to <code>Link</code>, the class we used to represent linked lists. They differ in their <code>str</code> representation: printing a <code>Pair</code> instance displays the list using Scheme syntax.</li>
+</ul>
+
+<blockquote><p><strong>Note</strong> In the Python code, <code>nil</code> is bound to a user-defined object that represents an empty Scheme list.
+Similarly, <code>nil</code> in Scheme evaluates to an empty list.</p></blockquote>
+
+<p>For example, once our interpreter reads in the Scheme expression <code>(+ 2 3)</code>, it is represented as <code>Pair(&#x27;+&#x27;, Pair(2, Pair(3, nil)))</code>.</p>
+
+<pre><code>&gt;&gt;&gt; p = Pair(&#x27;+&#x27;, Pair(2, Pair(3, nil)))
+&gt;&gt;&gt; p.first
+&#x27;+&#x27;
+&gt;&gt;&gt; p.rest
+Pair(2, Pair(3, nil))
+&gt;&gt;&gt; p.rest.first
+2
+&gt;&gt;&gt; print(p)
+(+ 2 3)</code></pre>
+
+
+
+<p>The <code>Pair</code> class has a <code>map</code> method that takes a one-argument python function <code>fn</code>. It returns the Scheme list that results from applying <code>fn</code> to each element of the Scheme list.</p>
+
+<pre><code>&gt;&gt;&gt; p.rest.map(lambda x: 2 * x)
+Pair(4, Pair(6, nil))</code></pre>
+
+
+
+<br>
+
+        <button id='toggle-3' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Pair Class<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-3">
+
+<p>Here is the <code>Pair</code> class and <code>nil</code> object (<code>__str__</code> and <code>__repr__</code> methods not
+shown).</p>
+
+<pre><code>class Pair:
+    &quot;&quot;&quot;Represents the built&#x2d;in pair data structure in Scheme.&quot;&quot;&quot;
+    def __init__(self, first, rest):
+        self.first = first
+        self.rest = rest
+
+    def map(self, fn):
+        &quot;&quot;&quot;Return a Scheme list after mapping Python function FN to SELF.&quot;&quot;&quot;
+        mapped = fn(self.first)
+        if self.rest is nil or isinstance(self.rest, Pair):
+            return Pair(mapped, self.rest.map(fn))
+        else:
+            raise TypeError(&#x27;ill&#x2d;formed list&#x27;)</code></pre>
+
+
+
+<pre><code>class nil:
+    &quot;&quot;&quot;The empty list&quot;&quot;&quot;
+
+    def map(self, fn):
+        return self
+
+nil = nil() # Assignment hides the nil class; there is only one instance</code></pre>
+
+
+
+</div>
+<br>
+
+<page-break>
+
+
+<h3 id="q1-using-pair">Q1: Using Pair</h3>
+
+
+<p>Answer the following questions about a <code>Pair</code> instance
+representing the Calculator expression <code>(+ (&#x2d; 2 4) 6 8)</code>.</p>
+
+<p>Use Ok to test your understanding:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q using_pair -u<button id="copy-code-python3ok-qusing_pair-u" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qusing_pair-u").onclick = () => copyCode('python3 ok -q using_pair -u', "copy-code-python3ok-qusing_pair-u");
+        </script>
+        <br/>
+
+
+<h2 id="calculator-evaluation">Calculator Evaluation</h2>
+
+
+<p>For Question 2 (New Procedure) and Question 4 (Saving Values), you'll need to update the <code>calc_eval</code> function below, which evaluates a Calculator expression. For Question 2, you'll determine what are the <code>operator</code> and <code>operands</code> for a call expression in Scheme as well as how to apply a procedure to arguments the <code>calc_apply</code> line. For Question 4, you'll determine how to look up the value of symbols that have been previously defined.</p>
+
+<solution>
+
+<pre><code>def calc_eval(exp):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; calc_eval(Pair(&quot;define&quot;, Pair(&quot;a&quot;, Pair(1, nil))))
+    &#x27;a&#x27;
+    &gt;&gt;&gt; calc_eval(&quot;a&quot;)
+    1
+    &gt;&gt;&gt; calc_eval(Pair(&quot;+&quot;, Pair(1, Pair(2, nil))))
+    3
+    &quot;&quot;&quot;
+    if isinstance(exp, Pair):
+<div class="sol-highlight">        operator = exp.first</div><div class="sol-highlight">        operands = exp.rest</div>        if operator == &#x27;and&#x27;: # and expressions
+            return eval_and(operands)
+        elif operator == &#x27;define&#x27;: # define expressions
+            return eval_define(operands)
+        else: # Call expressions
+<div class="sol-highlight">            return calc_apply(calc_eval(operator), operands.map(calc_eval))</div>    elif exp in OPERATORS:   # Looking up procedures
+        return OPERATORS[exp]
+    elif isinstance(exp, int) or isinstance(exp, bool):   # Numbers and booleans
+        return exp
+<div class="sol-highlight">    elif exp in bindings:   # Looking up variables</div><div class="sol-highlight">        return bindings[exp]</div></code></pre>
+
+</solution>
+
+
+<h3 id="q2-new-procedure">Q2: New Procedure</h3>
+
+
+<p>Add the <code>//</code> operation to Calculator, a floor-division procedure such that <code>(// dividend divisor)</code> returns the result of dividing <code>dividend</code> by <code>divisor</code>, ignoring the remainder (<code>dividend // divisor</code> in Python). Handle multiple inputs as illustrated in the following example: <code>(// dividend divisor1 divisor2 divisor3)</code> evaluates to <code>(((dividend // divisor1) // divisor2) // divisor3)</code> in Python. Assume every call to <code>//</code> has at least two arguments.</p>
+
+<blockquote><p><em>Hint:</em> You will need to modify both the <code>calc_eval</code> and <code>floor_div</code> methods for this question!</p></blockquote>
+
+<pre><code class="scheme">calc&gt; (// 1 1)
+1
+calc&gt; (// 5 2)
+2
+calc&gt; (// 28 (+ 1 1) 1)
+14</code></pre>
+
+
+
+<blockquote><p><em>Hint:</em> Make sure that every element in a <code>Pair</code> (the operator and all operands) will be <code>calc_eval</code>-uated once, so that we can correctly apply the relevant Python operator to operands! Also, Pair is similar to the Link class so think about how you would approach this as a linked list problem.</p></blockquote>
+
+<!-- You may find the <code>map</code> method of the <code>Pair</code> class useful for this. -->
+
+<solution>
+
+<pre><code>def floor_div(args):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; floor_div(Pair(100, Pair(10, nil)))
+    10
+    &gt;&gt;&gt; floor_div(Pair(5, Pair(3, nil)))
+    1
+    &gt;&gt;&gt; floor_div(Pair(1, Pair(1, nil)))
+    1
+    &gt;&gt;&gt; floor_div(Pair(5, Pair(2, nil)))
+    2
+    &gt;&gt;&gt; floor_div(Pair(23, Pair(2, Pair(5, nil))))
+    2
+    &gt;&gt;&gt; calc_eval(Pair(&quot;//&quot;, Pair(4, Pair(2, nil))))
+    2
+    &gt;&gt;&gt; calc_eval(Pair(&quot;//&quot;, Pair(100, Pair(2, Pair(2, Pair(2, Pair(2, Pair(2, nil))))))))
+    3
+    &gt;&gt;&gt; calc_eval(Pair(&quot;//&quot;, Pair(100, Pair(Pair(&quot;+&quot;, Pair(2, Pair(3, nil))), nil))))
+    20
+    &quot;&quot;&quot;
+<div class="sol-highlight">    result = args.first
+    divisors = args.rest
+    while divisors != nil:
+        divisor = divisors.first
+        result //= divisor
+        divisors = divisors.rest
+    return result</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q floor_div<button id="copy-code-python3ok-qfloor_div" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qfloor_div").onclick = () => copyCode('python3 ok -q floor_div', "copy-code-python3ok-qfloor_div");
+        </script>
+        <br/>
+
+
+<h3 id="q3-new-form">Q3: New Form</h3>
+
+
+<p>Add <code>and</code> expressions to our
+Calculator interpreter as well as introduce the Scheme boolean values
+<code>#t</code> and <code>#f</code>, represented as Python <code>True</code> and <code>False</code>.
+(The examples below assumes conditional operators (e.g. <code>&lt;</code>, <code>&gt;</code>, <code>=</code>, etc) have already been implemented,
+but you do not have to worry about them for this question.)</p>
+
+<pre><code class="scheme">calc&gt; (and (= 1 1) 3)
+3
+calc&gt; (and (+ 1 0) (&lt; 1 0) (/ 1 0))
+#f
+calc&gt; (and #f (+ 1 0))
+#f
+calc&gt; (and 0 1 (+ 5 1)) ; 0 is a true value in Scheme!
+6</code></pre>
+
+
+
+<p>In a call expression, we first evaluate the operator, then evaluate the operands, and finally apply the procedure to its arguments (just like you did for <code>floor_div</code> in the previous question).
+However, we cannot evaluate <code>and</code> expressions the same way we evaluate call expressions.  Since <code>and</code> is a special form that short circuits on the first false argument, we need to add special logic so that we don't always evaluate all the sub-expressions.</p>
+
+<blockquote><p><strong>Important</strong>: To check whether some <code>val</code> is a false value in Scheme, use
+<code>val is scheme_f</code> rather than <code>val == scheme_f</code> because in Python <code>0 == False</code>
+but <code>0 is not False</code> (crazy, right!).</p></blockquote>
+
+<solution>
+
+<pre><code>scheme_t = True   # Scheme&#x27;s #t
+scheme_f = False  # Scheme&#x27;s #f
+
+def eval_and(expressions):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; calc_eval(Pair(&quot;and&quot;, Pair(1, nil)))
+    1
+    &gt;&gt;&gt; calc_eval(Pair(&quot;and&quot;, Pair(False, Pair(&quot;1&quot;, nil))))
+    False
+    &gt;&gt;&gt; calc_eval(Pair(&quot;and&quot;, Pair(1, Pair(Pair(&quot;//&quot;, Pair(5, Pair(2, nil))), nil))))
+    2
+    &gt;&gt;&gt; calc_eval(Pair(&quot;and&quot;, Pair(Pair(&#x27;+&#x27;, Pair(1, Pair(1, nil))), Pair(3, nil))))
+    3
+    &gt;&gt;&gt; calc_eval(Pair(&quot;and&quot;, Pair(Pair(&#x27;&#x2d;&#x27;, Pair(1, Pair(0, nil))), Pair(Pair(&#x27;/&#x27;, Pair(5, Pair(2, nil))), nil))))
+    2.5
+    &gt;&gt;&gt; calc_eval(Pair(&quot;and&quot;, Pair(0, Pair(1, nil))))
+    1
+    &gt;&gt;&gt; calc_eval(Pair(&quot;and&quot;, nil))
+    True
+    &quot;&quot;&quot;
+<div class="sol-highlight">    curr, val = expressions, True
+    while curr is not nil:
+        val = calc_eval(curr.first)
+        if val is scheme_f:
+            return scheme_f
+        curr = curr.rest
+    return val</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q eval_and<button id="copy-code-python3ok-qeval_and" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qeval_and").onclick = () => copyCode('python3 ok -q eval_and', "copy-code-python3ok-qeval_and");
+        </script>
+        <br/>
+
+
+<h3 id="q4-saving-values">Q4: Saving Values</h3>
+
+
+<p>Implement a <code>define</code> special form that binds values to symbols. This should work like <code>define</code> in Scheme: <code>(define &lt;symbol&gt; &lt;expression&gt;)</code> first evaluates the <code>expression</code>, then binds the <code>symbol</code> to the value of <code>expression</code>. The whole <code>define</code> expression evaluates to the <code>symbol</code>. Here's an example to illustrate:</p>
+
+<pre><code class="scheme">calc&gt; (define a 1)
+a
+calc&gt; a
+1</code></pre>
+
+
+
+<p>This is a more involved change. Here are the 4 steps involved:</p>
+
+<ol>
+  <li>Add a <code>bindings</code> dictionary that will store the symbols and correspondings values (done for you).</li>
+  <li>Identify when the define form is given to <code>calc_eval</code> (done for you).</li>
+  <li>Modify <code>calc_eval</code> to allow the lookup of symbols in <code>bindings</code> and get their values.</li>
+  <li>Write the function <code>eval_define</code> which adds the defined symbol and its value to the bindings dictionary.</li>
+</ol>
+
+<solution>
+
+<pre><code>bindings = {}
+
+def eval_define(expressions):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; eval_define(Pair(&quot;a&quot;, Pair(1, nil)))
+    &#x27;a&#x27;
+    &gt;&gt;&gt; eval_define(Pair(&quot;b&quot;, Pair(3, nil)))
+    &#x27;b&#x27;
+    &gt;&gt;&gt; eval_define(Pair(&quot;c&quot;, Pair(&quot;a&quot;, nil)))
+    &#x27;c&#x27;
+    &gt;&gt;&gt; calc_eval(&quot;c&quot;)
+    1
+    &gt;&gt;&gt; calc_eval(Pair(&quot;define&quot;, Pair(&quot;d&quot;, Pair(&quot;//&quot;, nil))))
+    &#x27;d&#x27;
+    &gt;&gt;&gt; calc_eval(Pair(&quot;d&quot;, Pair(4, Pair(2, nil))))
+    2
+    &quot;&quot;&quot;
+<div class="sol-highlight">    symbol, value = expressions.first, calc_eval(expressions.rest.first)
+    bindings[symbol] = value
+    return symbol</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q eval_define<button id="copy-code-python3ok-qeval_define" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qeval_define").onclick = () => copyCode('python3 ok -q eval_define', "copy-code-python3ok-qeval_define");
+        </script>
+        <br/>
+
+
+<h2 id="check-your-score-locally">Check Your Score Locally</h2>
+
+<p>You can locally check your score on each question of this assignment by running</p>
+
+<pre><code>python3 ok &#x2d;&#x2d;score</code></pre>
+
+<p><strong>This does NOT submit the assignment!</strong> When you are satisfied with your score, submit the assignment to Gradescope to receive credit for it.</p>
+
+
+<h1 id="submit-assignment">Submit Assignment</h1>
+
+
+<p>If you are in a regular section of CS 61A, fill out this <a href="https://forms.gle/dHxj8gttNWRY6Ptm9">lab attendance and feedback form</a>. (If you are in the mega section, you don't need to fill out the form.)</p>
+
+<p>Then, submit this assignment by uploading any files you've edited <strong>to the appropriate Gradescope assignment.</strong> <a href="../lab00.html#submit-with-gradescope">Lab 00</a> has detailed instructions.</p>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#topics">Topics</a></li>
+  <li><a href="index.html#required-questions">Required Questions</a></li>
+  <ul>
+    <li><a href="index.html#calculator">Calculator</a></li>
+    <li><a href="index.html#pair-class">Pair Class</a></li>
+    <ul>
+      <li><a href="index.html#q1-using-pair">Q1: Using Pair</a></li>
+    </ul>
+    <li><a href="index.html#calculator-evaluation">Calculator Evaluation</a></li>
+    <ul>
+      <li><a href="index.html#q2-new-procedure">Q2: New Procedure</a></li>
+      <li><a href="index.html#q3-new-form">Q3: New Form</a></li>
+      <li><a href="index.html#q4-saving-values">Q4: Saving Values</a></li>
+    </ul>
+    <li><a href="index.html#check-your-score-locally">Check Your Score Locally</a></li>
+  </ul>
+  <li><a href="index.html#submit-assignment">Submit Assignment</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

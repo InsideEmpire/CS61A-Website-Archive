@@ -1,0 +1,528 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/disc.css">
+
+
+    <title>
+Discussion 6 | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Discussion 6: Generators
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="disc06.pdf" class="label label-outline">disc06.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<!-- <div class="alert storable-login-status"></div> -->
+
+
+    
+<p>Switch to Pensieve:</p>
+
+<ul>
+  <li><strong>Everyone</strong>: Go to <a href="https://tutor.pensieve.co/schools/berkeley/all/cs61a/cs61a_fa24/b6b15f99-013b-4ceb-89ae-11566221ce0c/open">pensieve.co</a>, log in with your @berkeley.edu email, and <strong>enter your group number</strong> (which was in the email that assigned you to this lab).</li>
+</ul>
+
+<p>Once you're on Pensieve, you don't need to return to this page; Pensieve has all the same content (but more features). If for some reason Penseive doesn't work, return to this page and continue with the discussion.</p>
+
+
+<h1 id="getting-started">Getting Started</h1>
+
+
+<p><strong>To get help from a TA</strong>, If you do not have an in-person TA, you can reach your TA using this <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom link</a>.</p>
+
+<p>If there are fewer than 3 people in your group, feel free to merge your group with another group in the room.</p>
+
+<p>Say your name and share a favorite place on the Berkeley campus or surrounding
+city that you've discovered. Try to pick a place that others might not have been
+yet. (But if the room you're in now is your favorite place on campus, that's ok
+too.)</p>
+
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+<a href="https://www.campus-maps.com/university-of-california-berkeley/mccone-hall/">McCone Hall</a> has a nice view from the 5th floor balcony.
+</div>
+
+
+<h1 id="generators">Generators</h1>
+
+
+<p>A <em>generator</em> is an <em>iterator</em> that is returned by calling a <em>generator function</em>, which is a function that contains <code>yield</code> statements instead of <code>return</code> statements. The ways to use an <em>iterator</em> are to call <code>next</code> on it or to use it as an iterable (for example, in a <code>for</code> statement).</p>
+
+
+<h3 id="q1-big-fib">Q1: Big Fib</h3>
+
+
+<p>This generator function yields all of the <a href="https://en.wikipedia.org/wiki/Fibonacci_sequence">Fibonacci</a> numbers.</p>
+
+<pre><code class="python">def gen_fib():
+    n, add = 0, 1
+    while True:
+        yield n
+        n, add = n + add, n</code></pre>
+
+
+
+<p>Explain the following expression to each other so that everyone
+understands how it works. (It creates a list of the first 10 Fibonacci numbers.)</p>
+
+<pre><code class="python">(lambda t: [next(t) for _ in range(10)])(gen_fib())</code></pre>
+
+
+
+<p>Then, complete the expression below by writing only names and parentheses in the
+blanks so that it evaluates to the smallest Fibonacci number that is larger than
+2024.</p>
+
+<p>Talk with each other about what built-in functions might be helpful, such as <a href="https://docs.python.org/3/library/functions.html#map"><code>map</code></a>, <a href="https://docs.python.org/3/library/functions.html#filter"><code>filter</code></a>, <a href="https://docs.python.org/3/library/functions.html#func-list"><code>list</code></a>, <a href="https://docs.python.org/3/library/functions.html#any"><code>any</code></a>, <a href="https://docs.python.org/3/library/functions.html#all"><code>all</code></a>, etc. (Click on these function names to view their documentation.) Try to
+figure out the answer without using Python. Only run the code when your group
+agrees that the answer is right. This is not the time for guess-and-check.</p>
+
+
+            <div class="monaco-storable" id="fibonacci-input" style="height:180px;"></div>
+            <a href="javascript:void" id="modal-link-fibonacci-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-fibonacci-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-fibonacci-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def gen_fib():\n    n, add = 0, 1\n    while True:\n        yield n\n        n, add = n + add, n\n\n____lambda n: n &gt; 2024, ____\n\n', "python", "fibonacci-input"));
+            </script>
+        
+
+
+        <button id='toggle-2' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+
+<p>One solution has the form: <code>next(____(lambda n: n &gt; 2024, ____))</code> where the first
+blank uses a built-in function to create an iterator over just large numbers and the second blank creates
+an iterator over all Fibonacci numbers.</p>
+
+</div>
+
+<div class="page-break"></div>
+
+
+<h3 id="q2-something-different">Q2: Something Different</h3>
+
+
+<p>Implement <code>differences</code>, a generator function that takes <code>t</code>, a non-empty
+iterator over numbers. It yields the differences between each pair of adjacent
+values from <code>t</code>. If <code>t</code> iterates over a positive finite number of values <code>n</code>,
+then <code>differences</code> should yield <code>n&#x2d;1</code> times.</p>
+
+
+            <div class="monaco-storable" id="differences-input" style="height:270px;"></div>
+            <a href="javascript:void" id="modal-link-differences-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-differences-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-differences-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def differences(t):\n    &quot;&quot;&quot;Yield the differences between adjacent values from iterator t.\n\n    &gt;&gt;&gt; list(differences(iter([5, 2, &#x2d;100, 103])))\n    [&#x2d;3, &#x2d;102, 203]\n    &gt;&gt;&gt; next(differences(iter([39, 100])))\n    61\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "differences-input"));
+            </script>
+        
+
+<!-- 
+        <button id='toggle-3' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-3">
+Add to the following implementation by initializing and updating
+<code>previous_x</code> so that it is always bound to the value of <code>t</code> that came before
+<code>x</code>.
+
+<pre><code class="python">for x in t:
+    yield x &#x2d; previous_x</code></pre>
+
+
+</div> -->
+
+<p><strong>Presentation Time.</strong> Work together to explain why <code>differences</code> will always
+yield <code>n&#x2d;1</code> times for an iterator <code>t</code> over <code>n</code> values. Pick someone who hasn't presented to the course staff recently to share your group's answer with your TA (in person or on <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom</a>).</p>
+
+<div class="page-break"></div>
+
+
+<h3 id="intermission">Intermission</h3>
+
+
+<p>We're lazy (like an iterator) and used ChatGPT to generate a generator joke...</p>
+
+
+        <button id='toggle-4' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Why did the Python function become a chef?<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-4">
+
+<p>Because it was skilled at knowing when to "return" to the recipe and when to "yield" to improvisation!</p>
+
+</div>
+
+<p><strong>Switch roles:</strong> Whoever in your group helped type the answer to the last
+question should not type the answer to the next one. Instead, just ask questions
+and give suggestions; let other group members type the answer.</p>
+
+
+<h3 id="q3-partitions">Q3: Partitions</h3>
+
+
+<p>Tree-recursive generator functions have a similar structure to regular
+tree-recursive functions. They are useful for iterating over all possibilities.
+Instead of building a list of results and returning it, just <code>yield</code> each
+result.</p>
+
+<p>You'll need to identify a <em>recursive decomposition</em>: how to express the answer
+in terms of recursive calls that are simpler. Ask yourself what will be yielded
+by a recursive call, then how to use those results.</p>
+
+<p><strong>Definition.</strong> For positive integers <code>n</code> and <code>m</code>, a <em>partition</em> of <code>n</code> using
+parts up to size <code>m</code> is an addition expression of positive integers up to <code>m</code> in
+non-decreasing order that sums to <code>n</code>.</p>
+
+<p>Implement <code>partition_gen</code>, a generator functon that takes positive <code>n</code> and <code>m</code>.
+It yields the partitions of <code>n</code> using parts up to size <code>m</code> as strings.</p>
+
+<p><strong>Reminder:</strong> For the <code>partitions</code> function we studied in lecture
+(<a href="https://youtu.be/DvgT4dnSMVM">video</a>), the recursive decomposition was to
+enumerate all ways of partitioning <code>n</code> using at least one <code>m</code> and then to
+enumerate all ways with no <code>m</code> (only <code>m&#x2d;1</code> and lower).</p>
+
+
+            <div class="monaco-storable" id="partition_gen-input" style="height:486px;"></div>
+            <a href="javascript:void" id="modal-link-partition_gen-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-partition_gen-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-partition_gen-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def partition_gen(n, m):\n    &quot;&quot;&quot;Yield the partitions of n using parts up to size m.\n\n    &gt;&gt;&gt; for partition in sorted(partition_gen(6, 4)):\n    ...     print(partition)\n    1 + 1 + 1 + 1 + 1 + 1\n    1 + 1 + 1 + 1 + 2\n    1 + 1 + 1 + 3\n    1 + 1 + 2 + 2\n    1 + 1 + 4\n    1 + 2 + 3\n    2 + 2 + 2\n    2 + 4\n    3 + 3\n    &quot;&quot;&quot;\n    assert n &gt; 0 and m &gt; 0\n    if n == m:\n        yield ____\n    if n &#x2d; m &gt; 0:\n        "*** YOUR CODE HERE ***"\n    if m &gt; 1:\n        "*** YOUR CODE HERE ***"\n\n', "python", "partition_gen-input"));
+            </script>
+        
+
+
+        <button id='toggle-5' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Base Case<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-5">
+Yield a partition with just one element, <code>n</code>. Make sure you yield a string.
+</div>
+
+
+        <button id='toggle-6' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Recursive Cases<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-6">
+The first recursive case uses at least one <code>m</code>, and so you will need to yield a string that starts with <code>p</code> but also includes <code>m</code>. The second recursive case only uses parts up to size <code>m&#x2d;1</code>. (You can implement the second case in one line using <code>yield from</code>.)
+</div>
+
+<p><strong>Discussion Time.</strong> Work together to explain
+why this implementation of <code>partition_gen</code> does not include base cases for
+<code>n &lt; 0</code>, <code>n == 0</code>, or <code>m == 0</code> even though the original implementation of
+<code>partitions</code> from lecture
+(<a href="https://youtu.be/DvgT4dnSMVM?si=MEkqzloqIcbD1-09&t=515">video</a>) had all three.</p>
+
+
+<h1 id="document-the-occasion">Document the Occasion</h1>
+
+
+<p>Please all fill out the <a href="https://forms.gle/UCYakosihNmKSuZE9">attendance form</a> (one submission per person per week).</p>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#getting-started">Getting Started</a></li>
+  <li><a href="index.html#generators">Generators</a></li>
+  <ul>
+    <li><a href="index.html#q1-big-fib">Q1: Big Fib</a></li>
+    <li><a href="index.html#q2-something-different">Q2: Something Different</a></li>
+    <li><a href="index.html#intermission">Intermission</a></li>
+    <li><a href="index.html#q3-partitions">Q3: Partitions</a></li>
+  </ul>
+  <li><a href="index.html#document-the-occasion">Document the Occasion</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

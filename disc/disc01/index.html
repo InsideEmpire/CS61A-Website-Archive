@@ -1,0 +1,655 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/disc.css">
+
+
+    <title>
+Discussion 1 | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Discussion 1: Control, Environment Diagrams
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="disc01.pdf" class="label label-outline">disc01.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<!-- <div class="alert storable-login-status"></div> -->
+
+
+    
+<p>Find your group, and then get started on this worksheet on Berkeley time. It's best if everyone has a way to view this worksheet (on your phone/tablet
+is fine, but a laptop is better).</p>
+
+<p>If you're in a room with an in-person TA, you can just talk to them. If you're in a room with a remote TA, join this <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom</a> and talk to the TA there.
+If you're in the waiting room, that means they are talking to another group, and they'll let you in once that's done.</p>
+
+<p>Now switch to Pensieve, a shared editing app that has this same worksheet in a format that makes it easy to collaborate with your group and ask questions of an AI tutor.</p>
+
+<ul>
+  <li><strong>Everyone</strong>: Go to <a href="https://tutor.pensieve.co/schools/berkeley/all/cs61a/cs61a_fa24/65b05114a4f67e33586a35ad/open">pensieve.co</a>, log in with your @berkeley.edu email, and <strong>enter your group number</strong> as the room number (which was in the email that assigned you to this lab).</li>
+</ul>
+
+<p>Once you're on Pensieve, you don't need to return to this page; Pensieve has all the same content (but more features). If for some reason Penseive doesn't work, return to this page and continue with the discussion.</p>
+
+
+<h1 id="ice-breaker">Ice Breaker</h1>
+
+
+<p>Everyone say your name and some activity you enjoy doing outside. For each
+activity, ask if anyone else in your group likes to do that too. (Optional:
+after lab you could make plans to go do one of these activities
+together.)</p>
+
+<p>Then, each person share an expression that people say when they really like
+something, such as "that's awesome" or "nice one" or "bruh."  Each person should
+try to come up with a different expression. Feel free to ask your group for help
+if you're stuck. You can even use other languages than English. Then, during the
+discussion, if someone says or does something well, use your expression!</p>
+
+
+<h1 id="while-and-if">While and If</h1>
+
+
+<p>Learning to use <code>if</code> and <code>while</code> is an essential skill. During this discussion,
+focus on what we've studied in the first three lectures: <code>if</code>, <code>while</code>,
+assignment (<code>=</code>), comparison (<code>&lt;</code>, <code>&gt;</code>, <code>==</code>, ...), and arithmetic. Please don't
+use features of Python that we haven't discussed in class yet, such as <code>for</code>,
+<code>range</code>, and lists. We'll have plenty of time for those later in the course, but
+now is the time to practice the use of <code>if</code> (textbook section
+<a href="https://www.composingprograms.com/pages/15-control.html#conditional-statements">1.5.4</a>)
+and <code>while</code> (textbook section
+<a href="https://www.composingprograms.com/pages/15-control.html#conditional-statements">1.5.5</a>).</p>
+
+
+<h3 id="q1-race">Q1: Race</h3>
+
+
+<p>The <code>race</code> function below sometimes returns the wrong value and sometimes runs forever.</p>
+
+
+            <div class="monaco-storable" id="race-input" style="height:360px;"></div>
+            <a href="javascript:void" id="modal-link-race-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-race-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-race-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def race(x, y):\n    &quot;&quot;&quot;The tortoise always walks x feet per minute, while the hare repeatedly\n    runs y feet per minute for 5 minutes, then rests for 5 minutes. Return how\n    many minutes pass until the tortoise first catches up to the hare.\n\n    &gt;&gt;&gt; race(5, 7)  # After 7 minutes, both have gone 35 steps\n    7\n    &gt;&gt;&gt; race(2, 4) # After 10 minutes, both have gone 20 steps\n    10\n    &quot;&quot;&quot;\n    assert y &gt; x and y &lt;= 2 * x, &#x27;the hare must be fast but not too fast&#x27;\n    tortoise, hare, minutes = 0, 0, 0\n    while minutes == 0 or tortoise &#x2d; hare:\n        tortoise += x\n        if minutes % 10 &lt; 5:\n            hare += y\n        minutes += 1\n    return minutes\n', "python", "race-input"));
+            </script>
+        
+
+<p>Find positive integers <code>x</code> and <code>y</code> (with <code>y</code> larger than <code>x</code> but
+not larger than <code>2 * x</code>) for which either:</p>
+
+<ul>
+  <li><code>race(x, y)</code> returns the wrong value or</li>
+  <li><code>race(x, y)</code> runs forever</li>
+</ul>
+
+<p>You just need to find one pair of numbers that satisfies either of these
+conditions to finish the question, but if you want to think of more you can.</p>
+
+<p>Notes:</p>
+
+<ul>
+  <li><code>x += 1</code> is the same as <code>x = x + 1</code> when <code>x</code> is assigned to a number.</li>
+  <li>0 is a false value and all other numbers are true values.</li>
+</ul>
+
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+The value of <code>race(x, y)</code> is incorrect when it is not the <strong>first</strong> time the
+tortoise passes the hare. Try some small numbers (below 5) to see if you can
+find a case where <code>tortoise</code> has become larger than <code>hare</code>, but the expression
+<code>tortoise &#x2d; hare</code> was not zero when it happened.
+</div>
+
+
+
+<p>If you want to discuss this problem with a TA, just ask (in person or on Zoom).</p>
+
+<div class="page-break"></div>
+
+
+<h3 id="q2-fizzbuzz">Q2: Fizzbuzz</h3>
+
+
+<p>Implement the classic <a href="https://en.wikipedia.org/wiki/Fizz_buzz"><em>Fizz Buzz</em>
+sequence</a>. The <code>fizzbuzz</code> function
+takes a positive integer <code>n</code> and prints out a <em>single line</em> for each integer
+from 1 to <code>n</code>. For each <code>i</code>:</p>
+
+<ul>
+  <li>If <code>i</code> is divisible by both 3 and 5, print <code>fizzbuzz</code>.</li>
+  <li>If <code>i</code> is divisible by 3 (but not 5), print <code>fizz</code>.</li>
+  <li>If <code>i</code> is divisible by 5 (but not 3), print <code>buzz</code>.</li>
+  <li>Otherwise, print the number <code>i</code>.</li>
+</ul>
+
+<p>Try to make your implementation of <code>fizzbuzz</code> concise.</p>
+
+
+            <div class="monaco-storable" id="fizzbuzz-input" style="height:558px;"></div>
+            <a href="javascript:void" id="modal-link-fizzbuzz-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-fizzbuzz-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-fizzbuzz-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def fizzbuzz(n):\n    &quot;&quot;&quot;\n    &gt;&gt;&gt; result = fizzbuzz(16)\n    1\n    2\n    fizz\n    4\n    buzz\n    fizz\n    7\n    8\n    fizz\n    buzz\n    11\n    fizz\n    13\n    14\n    fizzbuzz\n    16\n    &gt;&gt;&gt; print(result)\n    None\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "fizzbuzz-input"));
+            </script>
+        
+
+
+        <button id='toggle-2' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+Be careful about the order of your <code>if</code> and <code>elif</code> clauses: try first checking if the current number is divisible by both 3 and 5, then check for just divisibility by 3 and just divisibility by 5.
+</div>
+
+
+
+<div class="page-break"></div>
+
+
+<h1 id="problem-solving">Problem Solving</h1>
+
+
+<p>A useful approach to implementing a function is to:</p>
+
+<ol>
+  <li>Pick an example input and corresponding output.</li>
+  <li>Describe a process (in English) that computes the output from the input using simple steps.</li>
+  <li>Figure out what additional names you'll need to carry out this process.</li>
+  <li>Implement the process in code using those additional names.</li>
+  <li>Determine whether the implementation really works on your original example.</li>
+  <li>Determine whether the implementation really works on other examples. (If not, you might need to revise step 2.)</li>
+</ol>
+
+<p>Importantly, this approach doesn't go straight from reading a question to writing code.</p>
+
+<p>For example, in the <code>is_prime</code> problem below, you could:</p>
+
+<ol>
+  <li>Pick <code>n</code> is 9 as the input and <code>False</code> as the output.</li>
+  <li>Here's a process: Check that <code>9</code> (<code>n</code>) is not a multiple of any integers between 1 and <code>9</code> (<code>n</code>).</li>
+  <li>Introduce <code>i</code> to represent each number between 1 and 9 (<code>n</code>).</li>
+  <li>Implement <code>is_prime</code> (you get to do this part with your group).</li>
+  <li>Check that <code>is_prime(9)</code> will return <code>False</code> by thinking through the execution of the code.</li>
+  <li>Check that <code>is_prime(3)</code> will return <code>True</code> and <code>is_prime(1)</code> will return <code>False</code>.</li>
+</ol>
+
+<p>Try this approach together on the next two problems.</p>
+
+<p><strong>Important:</strong> It's highly recommended that you <strong>don't</strong> check your work using
+a computer right away. Instead, talk to your group and think to try to figure
+out if an answer is correct. On exams, you won't be able to guess and check
+because you won't have a Python interpreter. Now is a great time to practice
+checking your work by thinking through examples. You could even draw an
+environment diagram!</p>
+
+<p>If you're not sure about how something works or get stuck, ask for help from the course staff.</p>
+
+
+<h3 id="q3-is-prime">Q3: Is Prime?</h3>
+
+
+<p>Write a function that returns <code>True</code> if a positive integer <code>n</code> is a prime
+number and <code>False</code> otherwise.</p>
+
+<p>A prime number n is a number that is not divisible by any numbers other than
+1 and n itself. For example, 13 is prime, since it is only divisible by 1 and
+13, but 14 is not, since it is divisible by 1, 2, 7, and 14.</p>
+
+<p>Use the <code>%</code> operator: <code>x % y</code> returns the remainder of <code>x</code> when divided by <code>y</code>.</p>
+
+
+        <button id='toggle-3' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-3">
+Here's a <code>while</code> statement that goes through all numbers above 1 and below <code>n</code> :
+
+<pre><code>i = 2
+while i &lt; n:
+    ...
+    i = i + 1</code></pre>
+
+
+
+<p>You can use <code>n % i == 0</code> to check whether <code>i</code> is a factor of <code>n</code>. If it is, <code>return False</code>.
+</div></p>
+
+
+            <div class="monaco-storable" id="is_prime-input" style="height:360px;"></div>
+            <a href="javascript:void" id="modal-link-is_prime-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-is_prime-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-is_prime-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def is_prime(n):\n    &quot;&quot;&quot;\n    &gt;&gt;&gt; is_prime(10)\n    False\n    &gt;&gt;&gt; is_prime(7)\n    True\n    &gt;&gt;&gt; is_prime(1) # one is not a prime number!!\n    False\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "is_prime-input"));
+            </script>
+        
+
+
+
+<p><strong>Presentation Time</strong>: Come up with a <strong>one sentence description</strong> of the process you implemented to solve <code>is_prime</code> that you think someone could understand without looking at your code. Share the sentence with your TA for feedback. The purpose of this quick exercise is to practice talking about the behavior of a program using a useful amount of detail.</p>
+
+<div class="page-break"></div>
+
+
+<h3 id="q4-unique-digits">Q4: Unique Digits</h3>
+
+
+<p>Write a function that returns the number of unique digits in a positive integer.</p>
+
+<blockquote><p><strong>Hints:</strong> You can use <code>//</code> and <code>%</code> to separate a positive integer into
+its one's digit and the rest of its digits.</p>
+
+<p>You may find it helpful to first define a function
+<code>has_digit(n, k)</code>, which determines whether a number <code>n</code> has digit <code>k</code>.</p></blockquote>
+
+
+            <div class="monaco-storable" id="unique_digits-input" style="height:630px;"></div>
+            <a href="javascript:void" id="modal-link-unique_digits-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-unique_digits-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-unique_digits-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def unique_digits(n):\n    &quot;&quot;&quot;Return the number of unique digits in positive integer n.\n\n    &gt;&gt;&gt; unique_digits(8675309) # All are unique\n    7\n    &gt;&gt;&gt; unique_digits(13173131) # 1, 3, and 7\n    3\n    &gt;&gt;&gt; unique_digits(101) # 0 and 1\n    2\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\ndef has_digit(n, k):\n    &quot;&quot;&quot;Returns whether k is a digit in n.\n\n    &gt;&gt;&gt; has_digit(10, 1)\n    True\n    &gt;&gt;&gt; has_digit(12, 7)\n    False\n    &quot;&quot;&quot;\n    assert k &gt;= 0 and k &lt; 10\n    "*** YOUR CODE HERE ***"\n\n', "python", "unique_digits-input"));
+            </script>
+        
+
+
+        <button id='toggle-4' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-4">
+One approach is to loop through every digit from 0 to 9 and check whether <code>n</code> has the digit. Count up the ones it has.
+</div>
+
+
+
+<div class="page-break"></div>
+
+
+<h1 id="environment-diagrams">Environment Diagrams</h1>
+
+
+<p>An <strong>environment diagram</strong> keeps track of names and their values in frames,
+which are drawn as boxes.</p>
+
+
+<h3 id="q5-bottles">Q5: Bottles</h3>
+
+
+<p>Answer the following questions with your group. Step
+through the diagram to check your answers.</p>
+
+<p>1) What determines how many different frames appear in an environment diagram? <br>
+a) The number of functions defined in the code <br>
+b) The number of call expressions in the code <br>
+c) The number of return statements in the code <br>
+d) The number of times user-defined functions are called when running the code <br></p>
+
+<p>2) What happens to the return value of <code>pass_it(bottles)</code>? <br>
+a) It is used as the new value of <code>remaining</code> in the global frame <br>
+b) It is used as the new value of <code>bottles</code> in the global frame <br>
+c) It is used as the new value of <code>pass_it</code> in the global frame <br>
+d) None of the above <br></p>
+
+<p>3) What effect does the line <code>bottles = 98</code> have on the global frame? <br>
+a) It temporarily changes the value bound to <code>bottles</code> in the global frame. <br>
+b) It permanently changes the value bound to <code>bottles</code> in the global frame. <br>
+c) It has no effect on the global frame. <br></p>
+
+
+            <iframe
+                width="800"
+                height="460"
+                frameborder="0"
+                src="https://pythontutor.com/iframe-embed.html#code=bottles+%3D+99%0Atake+%3D+1%0A%0Adef+pass_it%28around%29%3A%0A++++bottles+%3D+98%0A++++return+take%0A%0Aremaining+%3D+bottles+-+pass_it%28bottles%29%0Abottles+%3D+remaining%0A&codeDivHeight=460&codeDivWidth=350&cumulative=true&curInstr=1&heapPrimitives=nevernest&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">
+            </iframe>
+        
+
+
+<h3 id="q6-double-trouble">Q6: Double Trouble</h3>
+
+
+<p>Draw the environment diagram on paper or a whiteboard (without having the
+computer draw it for you)! Then, check your work by stepping through the
+diagram.</p>
+
+
+            <iframe
+                width="800"
+                height="460"
+                frameborder="0"
+                src="https://pythontutor.com/iframe-embed.html#code=def+double%28x%29%3A%0A++++return+x+%2A+2%0A%0Adef+triple%28x%29%3A%0A++++return+x+%2A+3%0A%0Ahat+%3D+double%0Adouble+%3D+triple%0A&codeDivHeight=460&codeDivWidth=350&cumulative=true&curInstr=1&heapPrimitives=nevernest&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">
+            </iframe>
+        
+
+
+
+
+<h1 id="document-the-occasion">Document the occasion</h1>
+
+
+<p>Please all fill out the <a href="https://forms.gle/UCYakosihNmKSuZE9">attendance form</a> (one submission per person per week).</p>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#ice-breaker">Ice Breaker</a></li>
+  <li><a href="index.html#while-and-if">While and If</a></li>
+  <ul>
+    <li><a href="index.html#q1-race">Q1: Race</a></li>
+    <li><a href="index.html#q2-fizzbuzz">Q2: Fizzbuzz</a></li>
+  </ul>
+  <li><a href="index.html#problem-solving">Problem Solving</a></li>
+  <ul>
+    <li><a href="index.html#q3-is-prime">Q3: Is Prime?</a></li>
+    <li><a href="index.html#q4-unique-digits">Q4: Unique Digits</a></li>
+  </ul>
+  <li><a href="index.html#environment-diagrams">Environment Diagrams</a></li>
+  <ul>
+    <li><a href="index.html#q5-bottles">Q5: Bottles</a></li>
+    <li><a href="index.html#q6-double-trouble">Q6: Double Trouble</a></li>
+  </ul>
+  <li><a href="index.html#document-the-occasion">Document the occasion</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

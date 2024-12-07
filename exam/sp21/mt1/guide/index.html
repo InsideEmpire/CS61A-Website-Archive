@@ -1,0 +1,745 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../../../assets/js/hl.js"></script>
+    <script src="../../../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../../../assets/css/style.css">
+    <link rel="stylesheet" href="../../../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../../../assets/images/favicon.ico">
+
+    
+
+    <title>
+Midterm 1 Walkthrough | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../../../index.html">Lectures</a></li>
+            
+            <li><a href="../../../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>Midterm 1 Walkthrough</h1>
+    </header>
+     <h2 id="reverse-environment-diagrams">Reverse Environment Diagrams</h2>
+
+
+<p>There were three possible questions, all pretty much the same but with different variable names and some parameter order switching.</p>
+
+<p>You can view the code for each in PythonTutor:</p>
+
+<p><a href="http://pythontutor.com/composingprograms.html#code=def%20yo_%28n,%20rev%29%3A%0A%20%20%20%20if%20n%20%3C%200%3A%0A%20%20%20%20%20%20%20%20return%20rev%28n,%20-3%29%0A%20%20%20%20elif%20n%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20return%20float%28%22inf%22%29%0A%20%20%20%20return%20n%20*%20-2%0A%0Adef%20_yo%28x,%20y%29%3A%0A%20%20%20%20if%20y%20%3C%200%3A%0A%20%20%20%20%20%20%20%20y%20%2B%3D%201%0A%20%20%20%20if%20x%20%3D%3D%20y%3A%0A%20%20%20%20%20%20%20%20return%20lambda%20a%3A%20lambda%20b%3A%20a%20*%20x%20%2B%20b%20*%20y%0A%20%20%20%20return%20lambda%20a%3A%20lambda%20b%3A%20a%20%2B%20b%0A%0Aflo%20%3D%20yo_%28-2,%20_yo%29%283%29%285%29%0A&cumulative=true&curInstr=19&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">Flow that Yo-Yo</a></p>
+
+<p><a href="http://pythontutor.com/composingprograms.html#code=def%20ga%28station,%20radio%29%3A%0A%20%20%20%20if%20station%20%3C%200%3A%0A%20%20%20%20%20%20%20%20return%20radio%28station,%20-3%29%0A%20%20%20%20elif%20station%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20return%20float%28%22inf%22%29%0A%20%20%20%20return%20station%20*%20-98%0A%0Adef%20gaa%28cee,%20dee%29%3A%0A%20%20%20%20if%20dee%20%3C%200%3A%0A%20%20%20%20%20%20%20%20dee%20%2B%3D%201%0A%20%20%20%20if%20cee%20%3D%3D%20dee%3A%0A%20%20%20%20%20%20%20%20return%20lambda%20x%3A%20lambda%20y%3A%20x%20*%20cee%20-%20y%20*%20dee%0A%20%20%20%20return%20lambda%20x%3A%20lambda%20y%3A%20x%20*%20y%0A%0Aqueen%20%3D%20ga%28-2,%20gaa%29%283%29%285%29&cumulative=true&curInstr=19&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">Radio Ga-Ga</a></p>
+
+<p><a href="http://pythontutor.com/composingprograms.html#code=def%20yiip%28signal,%20bookbook%29%3A%0A%20%20%20%20if%20signal%20%3C%200%3A%0A%20%20%20%20%20%20%20%20return%20bookbook%28-3,%20signal%29%0A%20%20%20%20elif%20signal%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20return%20float%28%22inf%22%29%0A%20%20%20%20return%20signal%20*%20-98%0A%0Adef%20yip%28mup,%20pet%29%3A%0A%20%20%20%20if%20mup%20%3C%200%3A%0A%20%20%20%20%20%20%20%20mup%20%2B%3D%201%0A%20%20%20%20if%20mup%20%3D%3D%20pet%3A%0A%20%20%20%20%20%20%20%20return%20lambda%20al%3A%20lambda%20fal%3A%20mup**al%20%2B%20pet**fal%0A%20%20%20%20return%20lambda%20al%3A%20lambda%20fal%3A%20al%20-%20fal%0A%0Ayuiop%20%3D%20yiip%28-2,%20yip%29%283%29%285%29%0A&cumulative=true&curInstr=19&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">YipYiip Book</a></p>
+
+<p>Two of the questions had multiple possible answers, and you had to select every possible answer to get full credit. The answer had to be a logical condition that would evaluate to a truthy value, and multiple conditions evaluated to <code>True</code> for each diagram. For example, the code above used <code>y &lt; 0</code>, but many other conditions also worked: <code>x &lt; 0</code>, <code>y &lt;= 0</code>, <code>x &lt;= 0</code>. If you missed the other conditions, please remember to read a question fully to see if it's a "select all that apply" question, and then consider which conditions would result in the same diagram.</p>
+
+<p>Here's a general strategy for Reverse Environment Diagram questions:</p>
+
+<ul>
+  <li>Load up PythonTutor</li>
+  <li>Fill in the blanks with some default values to see full environment diagram (add random numbers/string/lambda)</li>
+  <li>Go through code line by line, and see if you can update any of your default values to match what the expected output should be</li>
+  <li>For "select all that apply", consider each case with the variables present at that line of code to see how it would change the control flow</li>
+</ul>
+
+
+<h2 id="the-case-of-the-missing-docstring">The Case of the Missing Docstring</h2>
+
+
+<p>The correct answer was "Returns the average of positive elements in L or returns zero if no such elements exist."</p>
+
+<p>Here's why the others were incorrect:</p>
+
+<ul>
+  <li><p>Returns the average of all elements in L or returns zero if no elements exist.</p>
+
+  <ul>
+    <li>The code had <code>if item &gt; 0:</code> inside the loop and only added the value in that case, so it wasn't averaging all the elements, it was only averaging the elements that were greater than 0.</li>
+  </ul></li>
+  <li><p>Returns the average of elements in L with an odd index or returns zero if no such elements exist.</p>
+
+  <ul>
+    <li>There was no condition checking to see if the elements had an odd index (such a condition would probably look like <code>if i % 2 == 1</code>).</li>
+  </ul></li>
+  <li><p>Returns the average of elements in L that are >= 0 or returns zero if no such elements exist.</p>
+
+  <ul>
+    <li>The code had <code>if item &gt; 0</code>, not <code>if item &gt;= 0</code>, so this is not quite right.</li>
+  </ul></li>
+</ul>
+
+
+<h2 id="magical-test-weaver">Magical Test Weaver</h2>
+
+
+<p>This question was inspired by <code>interleave_digits</code> from the 2/8 Function Examples lecture.</p>
+
+<p>The answer required a very careful reading of the docstring:</p>
+
+<pre><code>&quot;&quot;&quot; Assuming A and B are positive integers with the same number of base&#x2d;10 digits
+and C is a positive integer &lt; 10, return the number whose base&#x2d;10
+representation is the interleaving of digits in A and B (alternating
+first one from A then one from B) from all positions where the
+two digits in A and B at that position are both &gt;= C.  Return 0 if there
+are no such positions. Raises an exception if preconditions are not met.&quot;&quot;&quot;</code></pre>
+
+<p>Plus an understanding of the terms used:</p>
+
+<ul>
+  <li><strong>Positive</strong>: A number that is greater than 0. We made the clarification during the exam that 0 is not a positive number, as many people asked.</li>
+  <li><strong>Integer</strong>: An integer is a whole number (a number that is not a fraction).</li>
+  <li><strong>Precondition</strong>: A precondition describes the requirements of the input parameters of a function (versus a postcondition that describes the requirements of the output).</li>
+  <li><strong>Exception</strong>: When code raises an exception and that exception is not explicitly handled, the entire program stops running and the exception is displayed. See <a href="https://www.composingprograms.com/pages/33-exceptions.html">Exceptions</a> in the textbook or the 2/5 Design + Exceptions lecture.</li>
+</ul>
+
+<p>The correct answer was only:</p>
+
+<pre><code>&gt;&gt;&gt; magic_weave(456, 567, 5)
+5667</code></pre>
+
+<p>Here's why the others were incorrect:</p>
+
+<pre><code>&gt;&gt;&gt; magic_weave(123, 456, 5)
+56</code></pre>
+
+<p>^ This test contains two numbers from the second number and none from the first number. That is <em>not</em> an interleaving as described by the docstring and evidenced in the passing doctest.</p>
+
+<pre><code>&gt;&gt;&gt; magic_weave(234, 456, 5)
+3546</code></pre>
+
+<p>^ This test interleaves the second and third elements of each number. However, the docstring specifies that a pair of digits can only be interleaved if they are both >= the third parameter. Since 3 and 4 are less than 5, neither pair of digits should have been interleaved.</p>
+
+<pre><code>&gt;&gt;&gt; magic_weave(0, 0, 5)
+0</code></pre>
+
+<p>^ This test passes in 0 for both A and B. However, 0 is not a positive integer, and the docstring specified that an exception would be raised if preconditions are not met. An exception is not the same thing as the answer 0, so this not be a passing doctest. (We gave partial credit if you selected this and the other precondition failure below, however, since we have not shown exception-checking doctests in class).</p>
+
+<pre><code>&gt;&gt;&gt; magic_weave(101, 202, 0)
+120012</code></pre>
+
+<p>^ This test passed in 0 for C. However, 0 is not a positive integer, so once again, this function call should result in a raised exception, not a return value of 0. (We gave partial credit if you selected this and the one above, however.)</p>
+
+<pre><code>&gt;&gt;&gt; magic_weave(567, 899, 10)
+586979</code></pre>
+
+<p>^ This test has two issues. The first issue is that it should only interleave digits in each position that are >= C, and none of the digits are >= 10 (as that'd be impossible for a single digit). The other issue is that the preconditions specify that C should be < 10, so this should actually result in an exception raised.</p>
+
+
+<h2 id="domain-on-the-range">Domain on the Range</h2>
+
+
+<p>This question asked you to make higher-order functions to restrict the domain and range of a function. These functions are inspired by functions that are common in production codebases for checking that the input parameters to functions are valid in some way. They're quite handy, especially when combined with Python decorators.</p>
+
+
+<h3 id="restrict-domain">Restrict domain</h3>
+
+
+<p>This solution checks whether the given <code>n</code> is outside the range and returns -Infinity if so, and returns <code>f(n)</code> otherwise.</p>
+
+<pre><code>def restrict_domain(f, min_d, max_d):
+    def helper(n):
+        if n &lt; min_d or n &gt; max_d:
+            return float(&quot;&#x2d;inf&quot;)
+        return f(n)
+    return helper</code></pre>
+
+<p>It's also valid to do the opposite: check if n is within the range, and return <code>f(n)</code> if so.</p>
+
+<pre><code>def restrict_domain(f, min_d, max_d):
+    def helper(n):
+        if n &gt;= min_d and n &lt;= max_d:
+            return f(n)
+        return float(&quot;&#x2d;inf&quot;)
+    return helper</code></pre>
+
+<p>The docstring says that the range is inclusive, which means it contains the start and the end of the range. So it would be incorrect to say <code>n &gt; min_d and n &lt; max_d</code>, since a value of <code>min_d</code> or <code>max_d</code> would be excluded in that case. Pay careful attention to whether you use <code>&gt;=</code> or <code>&gt;</code> in a problem, and whether you have doctests checking for the edges of a range, since that can be a common source of errors in programming.</p>
+
+
+<h3 id="restrict-range">Restrict range</h3>
+
+
+<p>This solution first calculates the result of <code>f(n)</code> and stores it in a variable. If that result is outside the range, it returns -Infinity and otherwise returns the result.</p>
+
+<pre><code>def restrict_range(f, min_r, max_r):
+    def helper(n):
+        result = f(n)
+        if result &lt; min_r or result &gt; max_r:
+            return float(&quot;&#x2d;inf&quot;)
+        return result
+    return helper</code></pre>
+
+<p>Another valid approach is to switch the <code>if</code>:</p>
+
+<pre><code>def restrict_range(f, min_r, max_r):
+    def helper(n):
+        result = f(n)
+        if result &gt;= min_r and result &lt;= max_r:
+            return result
+        return float(&quot;&#x2d;inf&quot;)
+    return helper</code></pre>
+
+<p>Some solutions opted not to store the result in a temporary variable:</p>
+
+<pre><code>def restrict_range(f, min_r, max_r):
+    def helper(n):
+        if f(n) &gt;= min_r and f(n) &lt;= max_r:
+            return f(n)
+        return float(&quot;&#x2d;inf&quot;)
+    return helper</code></pre>
+
+<p>That approach requires calling <code>f(n)</code> three times, and <code>f(n)</code> could be an expensive computation, so it's not the most efficient solution. However, we gave full credit for it, since we did not ask for efficiency and have not discussed that much. Plus, this function could be used in a codebase where the computations were either trivial or cached, so a repeated call to a function would not be a significant waste of computation time.</p>
+
+
+<h3 id="restrict-both">Restrict both</h3>
+
+
+<p>This question asked you to write a single higher-order function that called both functions in order to restrict both the domain and the range.</p>
+
+<p>The simplest solution composes the two functions</p>
+
+<pre><code>def restrict_both(f, min_d, max_d, min_r, max_r):
+    return restrict_range(restrict_domain(f, min_d, max_d), min_r, max_r)</code></pre>
+
+<p>Some students came up with longer solutions that still worked and got full credit, such as:</p>
+
+<pre><code>def restrict_both3(f, low_d, high_d, low_r, high_r):
+    def helper(x):
+        a1 = restrict_domain(f, low_d, high_d)(x)
+        if a1 != float(&quot;&#x2d;inf&quot;):
+            a2 = restrict_range(f, low_r, high_r)(x)
+            if a2 != float(&quot;&#x2d;inf&quot;):
+                return f(x)
+        return float(&quot;&#x2d;inf&quot;)
+    return helper</code></pre>
+
+<p>It's important that a solution like that checks the domain before the range. If the checks aren't ordered that way, the doctests fail, since the test lambda resulted in a <code>DivisionByZero</code> error if it was called with 0. If you have time, please always check your solutions in code.cs61a.org and run the doctests there (by clicking the red test tube), since that can reveal errors and edge cases.</p>
+
+<p>If you missed this question, you may want to revisit:</p>
+
+<ul>
+  <li><a href="../../../../lab/lab02/index.html#q7">Lab 7: Composite Identity function</a></li>
+  <li><a href="../../../../hw/hw02/index.html#q1">Homework 2: Q1-3</a></li>
+</ul>
+
+<p>You can erase your work and try those problems again to see if the concepts still make sense.</p>
+
+
+<h2 id="digit-replacer">Digit replacer</h2>
+
+
+<p>This question required an ability to break down numbers and build them back up again. We've done that in several problems, starting with <a href="../../../../lab/lab01/index.html#q5">Lab 1: Sum Digits</a>. Remember:</p>
+
+<ul>
+  <li><code>(n // 10)</code> shaves off the last digit of a number (<code>345 // 10</code> results in 34).</li>
+  <li><code>(n % 10)</code> gets the last digit of a number (<code>345 % 10</code> results in 5).</li>
+  <li><code>(n * 10**pow)</code> creates a number with <code>n</code> in that <code>pow</code>-er of 10 (<code>3 * 10**2</code> results in 300).</li>
+</ul>
+
+<p>We generally process numbers from the right-most digit to the left-most digit since it is easier to get the right-most digit (thanks to <code>%</code>) than the left-most digit.</p>
+
+<p>Let's see how we can use those techniques for iterative and recursive solutions.</p>
+
+
+<h3 id="iterative">Iterative</h3>
+
+
+<p>This solution initializes the new number to 0, the power of ten to 0, and starts processing the right-most digit. If <code>pred(digit)</code> is true, it computes <code>transform(digit)</code>. It then multiplies that digit by the current power of 10 and adds it to the new number. It increments the power of ten, shaves the last digit off the number, and keeps going in the next iteration of the loop.</p>
+
+<pre><code>def digit_replacer(pred, transform):
+    def func(n):
+            new_number = 0
+            power_of_ten = 0
+
+            while n &gt; 0:
+                    digit = n % 10
+                    if pred(digit):
+                        digit = transform(digit)
+                    new_number += digit * 10**power_of_ten
+                    power_of_ten += 1
+                    n = n // 10
+            return new_number
+    return func</code></pre>
+
+<p>So, for <code>n</code> of 345, if we ignore digit transformation, the values in each iteration of the loop are:</p>
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <td>START
+OF LOOP</td>
+    <td>n</td>
+    <td>digit</td>
+    <td>new_number</td>
+    <td>power_of_ten</td>
+    <td>n</td>
+    <td>END OF
+LOOP</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>345</td>
+    <td>5</td>
+    <td>5 (from 0 + 5 * 10**0)</td>
+    <td>1</td>
+    <td>34</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>34</td>
+    <td>4</td>
+    <td>45 (from 5 +  4 * 10**1)</td>
+    <td>2</td>
+    <td>3</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>3</td>
+    <td>3</td>
+    <td>345 (from 45 + 3 * 10**2)</td>
+    <td>3</td>
+    <td>0</td>
+    <td></td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+<p>When combined with the digit transformation step, the digit added to the new number can change as needed.</p>
+
+
+<h3 id="recursive">Recursive</h3>
+
+
+<p>We use similar techniques when solving this recursively. Here's one solution:</p>
+
+<pre><code>def digit_replacer(pred, transform):
+
+    def func(n):
+            if n == 0:
+                return 0
+            digit = n % 10
+            if pred(digit):
+                digit = transform(digit)
+            return func(n // 10) * 10 + digit
+
+    return func</code></pre>
+
+<p>The base case is when <code>n == 0</code>, which is the same as the case when the loop stopped in the iterative approach. Keep that in mind when considering iterative and recursive approaches to the same problem - the loop condition is often related to the base case.</p>
+
+<p>The recursive call breaks down the problem by passing the shaved number (<code>n // 10</code>), then multiplying it by 10 and adding it to the digit. That's very similar to <code>digit * 10**power_of_ten</code> from the iterative approach. However, it doesn't need to multiply by the power of 10 as the recursion takes care of that (each call will add <code>* 10</code> to the next result). You can see why that works in this video about <a href="https://www.youtube.com/watch?v=UMZqEXY-e5c&feature=youtu.be">interleave_digits</a>, a similar problem.</p>
+
+<p>There were several variants on this recursive approach which also got full credit. They mostly differed in their length and use of intermediary variables. Here's an example:</p>
+
+<pre><code>def digit_replacer(pred, transform):
+
+    def replacer(n):
+            if n == 0:
+                return 0
+            if p(n % 10):
+                return replacer(n // 10) * 10 + f(n % 10)
+            return replacer(n // 10) * 10 + (n % 10)
+
+    return replacer</code></pre>
+
+<p>If you missed this question, try doing the problems in Lecture 9 (Function examples) and revisiting <a href="../../../../disc/disc03/index.html#q2">the Merge numbers problem</a>from discussion.</p>
+
+
+<h2 id="run-checker">Run Checker</h2>
+
+
+<p>This question shows how we can use nested functions to remember previous inputs to a function. We used similar techniques for the <code>commentary</code> and <code>say</code> functions in the Hog project.</p>
+
+<p>Here's the suggested solution:</p>
+
+<pre><code>def run_checker(condition, result):
+
+    def f(two_ago, one_ago):
+            def g(input):
+                if condition(two_ago, one_ago, input):
+                    print(result(two_ago, one_ago, input))
+                else:
+                    print(&quot;No run!&quot;)
+                return f(one_ago, input)
+            return g
+
+    return f(&#x2d;1, &#x2d;1)</code></pre>
+
+<p>Let's step through the doctest example:</p>
+
+<pre><code>&gt;&gt;&gt; f = run_checker(lambda a, b, c: a &gt; b &gt; c and a &gt;= 10,
+                lambda a, b, c: a*(b+c))</code></pre>
+
+<p>When <code>run_checker</code> is first called, it returns <code>f(&#x2d;1, &#x2d;1)</code>, which returns a reference to the <code>g</code> function. That <code>g</code> reference was defined in an environment where <code>two_ago</code> is -1 and <code>one_ago</code> is -1.</p>
+
+<pre><code>&gt;&gt;&gt; f = f(15)</code></pre>
+
+<p>That call to <code>f</code> is really a call to the <code>g</code> reference with an input of 15. It checks <code>condition(&#x2d;1, &#x2d;1, 15)</code>, sees that it is <code>False</code>, and prints "No run!". It then returns <code>f(&#x2d;1, 15)</code>, which returns a new reference to a <code>g</code> function. This <code>g</code> reference was defined in an environment where <code>two_ago</code> is -1 and <code>one_ago</code> is 15.</p>
+
+<pre><code>&gt;&gt;&gt; f = f(10)</code></pre>
+
+<p>Once again, this call to <code>f</code> is really a call to the recent <code>g</code> reference with an input of 10. It checks <code>condition(&#x2d;1, 15, 10)</code>, sees that it's <code>False</code>, and prints "No run!". It then returns <code>f(15, 10)</code>, which returns a new reference to the <code>g</code> function. This <code>g</code> reference was defined in an environment where <code>two_ago</code> is 15 and <code>one_ago</code> is 10.</p>
+
+<pre><code>&gt;&gt;&gt; f = f(5)</code></pre>
+
+<p>This call to <code>f</code> is really a call to the most recent <code>g</code> reference with an input of 5. It checks <code>condition(15, 10, 5)</code>, sees that it's <code>True</code>, and prints <code>result(15, 10, 5)</code>, which is 225.  It then returns <code>f(10, 5)</code>, which returns a new reference to the <code>g</code> function. This <code>g</code> reference was defined in an environment where <code>two_ago</code> is 10 and <code>one_ago</code> is 5.</p>
+
+<p>You can keep going with the doctests (and try in PythonTutor), but hopefully that gives you an idea of how this type of function works. It's important to understand how Python looks up the values of names in an environment, and to realize that there's a different environment for each of the <code>g</code> functions returned during the program.</p>
+
+<p>Similar questions:</p>
+
+<ul>
+  <li><a href="https://cs61a.org/examprep/examprep01/#q4">Exam Prep: My Last Three Brain Cells</a> (nearly the same!)</li>
+  <li><a href="https://cs61a.org/examprep/examprep02/#q2">Exam Prep: Natural Chains</a></li>
+</ul>
+
+
+<h2 id="measure-twice-cup-once">Measure Twice, Cup Once</h2>
+
+
+<p>This is essentially a partition counting problem. If you had never seen this before, this would be a fairly difficult problem to solve (especially on an exam).
+However, we have seen this problem in <a href="https://www.composingprograms.com/pages/17-recursive-functions.html#example-partitions">the textbook</a>, <a href="https://cs61a.org/assets/slides/07-Tree_Recursion_full.pdf">in lecture 7 (Slides 39-45)</a>, and <a href="../../../../hw/hw03/index.html#q4">in homework (Count Coins)</a>. One skill you can aim to develop in this class is recognizing classes of problems and considering what algorithms you have learned in the past to tackle that class of problem. Then you can consider the particular problem, how it's different from the solution you learned, and adjust your approach accordingly.</p>
+
+<p>The classic <code>count_partitions(n, m)</code> problem counts up how many ways we can make the number <code>n</code> using parts up to size <code>m</code>. For example, <code>count_partitions(6, 4)</code> results in 9, since there are nine ways to make the number 6 using numbers up to 4:</p>
+
+<ol>
+  <li>6 = 2 + 4</li>
+  <li>6 = 1 + 1 + 4</li>
+  <li>6 = 3 + 3</li>
+  <li>6 = 1 + 2 + 3</li>
+  <li>6 = 1 + 1 + 1 + 3</li>
+  <li>6 = 2 + 2 + 2</li>
+  <li>6 = 1 + 1 + 2 + 2</li>
+  <li>6 = 1 + 1 + 1 + 1 + 2</li>
+  <li>6 = 1 + 1 + 1 + 1 + 1 + 1</li>
+</ol>
+
+<p>The <code>count_coins(change)</code> problem counts how many ways we can make <code>change</code> using coins. So, <code>count_change(15)</code> results in 6, since there are six ways to make 15 cents using US coins:</p>
+
+<ol>
+  <li>15 1-cent coins</li>
+  <li>10 1-cent, 1 5-cent coins</li>
+  <li>5 1-cent, 2 5-cent coins</li>
+  <li>5 1-cent, 1 10-cent coins</li>
+  <li>3 5-cent coins</li>
+  <li>1 5-cent, 1 10-cent coin</li>
+</ol>
+
+<p>There are some differences between the problems:</p>
+
+<ul>
+  <li><code>count_partitions</code> is using integers for partitions, so it can just increment by 1 to find the next largest partition size. It stops when the partition size is > m. (Or it can decrement by 1, and stop when partition size is 0).</li>
+  <li><code>count_coins</code> is using coin sizes, so it must use a function to find the next largest coin size. It stops when the coin size is <code>None</code>.</li>
+</ul>
+
+<p>That meant we could use a very similar approach to each problem, but had to change the way that we found the next partition size and our logic for stopping.</p>
+
+<p>Here's the textbook solution for <code>count_partitions</code>:</p>
+
+<pre><code>def count_partitions(n, m):
+    &quot;&quot;&quot;Count the ways to partition n using parts up to m.&quot;&quot;&quot;
+    if n == 0:
+        return 1
+    elif n &lt; 0:
+        return 0
+    elif m == 0:
+        return 0
+    else:
+        return count_partitions(n&#x2d;m, m) + count_partitions(n, m&#x2d;1)</code></pre>
+
+<p>Review the solution for <code>count_coins</code> by solving the problem again or by checking the official solution.
+<br/>
+
+What's the same?</p>
+
+<ul>
+  <li>They both have the same two bases cases for returning 1 when it's found a successful partition and returning 0 when it's overshot.</li>
+  <li>They both return the sum of two recursive calls, one call that counts partitioning with the next largest coin, and the other that counts partitions with the current coin.</li>
+</ul>
+
+<p>What's different?</p>
+
+<ul>
+  <li>The <code>count_coins</code> function uses a helper function, which aids us in keeping track of the current coin (since <code>count_coins</code> only takes a single parameter, not enough for our tracking purposes).</li>
+  <li>Relatedly, it calls a function to figure out the next coin size, instead of simply decrementing.</li>
+  <li>They have two different conditions for their third base case, which tells them when they've run out of partition sizes. <code>count_partitions</code> checks <code>m == 0</code>, while <code>count_coins</code> checks for an invalid smallest coin.</li>
+</ul>
+
+<p>That brings us to <code>measure_methods(grams_needed, available_sizes)</code>. This variant of the problem passes in a list of cup sizes, and we must select partition sizes from that list.</p>
+
+<p>Here's a solution that's similar to the <code>count_coins</code> solution:</p>
+
+<pre><code>def measure_methods(grams_needed, available_sizes):
+
+    def measurer(grams_needed, cup_index):
+            if grams_needed &lt; 0:
+                return 0
+            if grams_needed == 0:
+                return 1
+            if cup_index &gt;= len(available_sizes):
+                return 0
+
+            without_cup = measurer(grams_needed, cup_index + 1)
+            with_cup = measurer(grams_needed &#x2d; available_sizes[cup_index], cup_index)
+            return without_cup + with_cup
+
+    return measurer(grams_needed, 0)</code></pre>
+
+<p>What's the same? The first two bases cases, the summing of the two recursive calls, the use of a helper function to track the current cup size.</p>
+
+<p>What's different?</p>
+
+<ul>
+  <li>The helper method uses a second parameter to track the current list index (instead of the current coin value). It starts with 0, since that's the first index in a list, and then adds 1 in the recursive call which count partitions for the next largest cup.</li>
+  <li>In order to get the current size, it indexes into the array: <code>available_sizes[cup_index]</code></li>
+  <li>The third base case checks whether the index is beyond the length of the array, using <code>cup_index &gt;= len(available_sizes)</code>.</li>
+</ul>
+
+<p>There were quite a few correct approaches to this problem, but they all essentially did the same thing: figured out some way to track where we were in the array and count partitions, either by counting up or counting down.</p>
+
+<p>Here's one that counted down:</p>
+
+<pre><code>def measure_methods(total_needed, cup_sizes):
+
+    def helper(total_needed, curr_i):
+        if total_needed &lt; 0:
+            return 0
+        elif curr_i &lt; 0:
+            return 0
+        elif total_needed == 0:
+            return 1
+        else:
+            with_cup = helper(total_needed &#x2d; cup_sizes[curr_i], curr_i)
+            without_cup = helper(total_needed, curr_i &#x2d; 1)
+            return with_cup + without_cup
+
+    return helper(total_needed, len(cup_sizes) &#x2d; 1)</code></pre>
+
+<p>Try spotting the differences in that approach!</p>
+
+<p>If you missed this problem, please try it again and re-visit the <code>count_cups</code>. If you're perplexed by how the two recursive calls manage to count partitions, you could even draw out the whole tree of recursive calls. You'll see that the paths that end in 1 are correct partitions, and the paths that end in 0 are not (due to either resulting in too large of a total or trying to use a size that doesn't exist). Do whatever helps you understand the approach! :)</p>
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#reverse-environment-diagrams">Reverse Environment Diagrams</a></li>
+  <li><a href="index.html#the-case-of-the-missing-docstring">The Case of the Missing Docstring</a></li>
+  <li><a href="index.html#magical-test-weaver">Magical Test Weaver</a></li>
+  <li><a href="index.html#domain-on-the-range">Domain on the Range</a></li>
+  <ul>
+    <li><a href="index.html#restrict-domain">Restrict domain</a></li>
+    <li><a href="index.html#restrict-range">Restrict range</a></li>
+    <li><a href="index.html#restrict-both">Restrict both</a></li>
+  </ul>
+  <li><a href="index.html#digit-replacer">Digit replacer</a></li>
+  <ul>
+    <li><a href="index.html#iterative">Iterative</a></li>
+    <li><a href="index.html#recursive">Recursive</a></li>
+  </ul>
+  <li><a href="index.html#run-checker">Run Checker</a></li>
+  <li><a href="index.html#measure-twice-cup-once">Measure Twice, Cup Once</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../../../assets/js/network_storage.js"></script>
+    <script src="../../../../assets/js/code_tabindex.js"></script>
+    <script src="../../../../assets/js/storable.js"></script>
+    <script src="../../../../assets/js/editor.js"></script>
+    <script src="../../../../assets/js/copy-button.js"></script>
+    <script src="../../../../assets/js/env-diagram.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+<script src="../../../../assets/js/storable.js"></script>
+<script src="../../../../assets/js/env-diagram.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+</script>
+
+  </body>
+</html>

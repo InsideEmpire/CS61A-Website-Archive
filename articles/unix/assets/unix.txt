@@ -1,0 +1,34 @@
+UNIX commands
+=============
+
+Directories
+-----------
+* `ls`: list the files and folders inside of the current
+  directory
+* `mkdir`: make a new directory. For example, `mkdir lab0` creates a
+   directory called `lab0`
+* `cd`: change directories. For example, `cd lab0` changes directories
+  to `lab0`
+* `rm -r`: remove a specified directory. For
+  example, `rm -r lab0` removes the `lab0` directory and all files
+  and subdirectories inside it.
+
+Files
+-----
+* `cat`: displays the contents of a file on the screen. For
+  example, `cat unix.txt` shows the contents of the file `unix.txt`
+* `mv`: moves a file/directory to another file/directory. For example,
+  `mv file1 file2` moves the contents of `file1` into
+  a (possibly new) file called `file2`. When moving one file to
+  another, we are effectively renaming the file!
+* `cp`: copies a file to another file/directory. For
+  example, `cp file1 file2` copies the contents of `file1` into a
+  file named `file2`.
+* `rm`: removes a file. For example, `rm file1` deletes the
+  file called `file1`.
+
+Miscellaneous
+-------------
+* `echo`: displays words on the screen
+* `man`: displays manual pages for a specified command
+

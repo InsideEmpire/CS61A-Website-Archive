@@ -1,0 +1,622 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/disc.css">
+
+
+    <title>
+Discussion 11 | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Discussion 11: Macros
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="disc11.pdf" class="label label-outline">disc11.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<!-- <div class="alert storable-login-status"></div> -->
+
+
+    
+<p>Switch to Pensieve:</p>
+
+<ul>
+  <li><strong>Everyone</strong>: Go to <a href="https://tutor.pensieve.co/schools/berkeley/all/cs61a/cs61a_fa24/f69c3ec0-bbc1-4d3e-a24f-6f4d9d3fba25/open">pensieve.co</a>, log in with your @berkeley.edu email, and <strong>enter your group number</strong> (which was in the email that assigned you to this lab).</li>
+</ul>
+
+<p>Once you're on Pensieve, you don't need to return to this page; Pensieve has all the same content (but more features). If for some reason Penseive doesn't work, return to this page and continue with the discussion.</p>
+
+
+<h1 id="getting-started">Getting Started</h1>
+
+
+<p><strong>To get help from a TA</strong>, If you do not have an in-person TA, you can reach your TA using this <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom link</a>.</p>
+
+<p>If there are fewer than 3 people in your group, feel free to merge your group with another group in the room.</p>
+
+<p>Everybody say your name, and then your favorite kind of pie.</p>
+
+
+<h1 id="macros">Macros</h1>
+
+
+<p>A macro is a code transformation that is created using <code>define&#x2d;macro</code> and applied using a call expression. A macro call is evaluated by:</p>
+
+<ol>
+  <li>Binding the formal paramters of the macro to the unevaluated operand expressions of the macro call.</li>
+  <li>Evaluating the body of the macro, which returns an expression.</li>
+  <li>Evaluating the expression returned by the macro in the environment of the original macro call.</li>
+</ol>
+
+<pre><code>scm&gt; (define&#x2d;macro (twice expr) (list &#x27;begin expr expr))
+twice
+scm&gt; (twice (+ 2 2))  ; evaluates (begin (+ 2 2) (+ 2 2))
+4
+scm&gt; (twice (print (+ 2 2)))  ; evaluates (begin (print (+ 2 2)) (print (+ 2 2)))
+4
+4</code></pre>
+
+
+
+<p><strong>Debugging tip:</strong> In order to see what expression a macro creates, change it to a regular procedure, then call it with quoted arguments.</p>
+
+<pre><code>scm&gt; (define (twice expr) (list &#x27;begin expr expr))  ; Same definition, but with define instead of define&#x2d;macro
+twice
+scm&gt; (twice &#x27;(print (+ 2 2)))                       ; Called with a quoted argument
+(begin (print (+ 2 2)) (print (+ 2 2)))
+scm&gt; (eval (twice &#x27;(print (+ 2 2))))                ; Evaluating the result has the same behavior as the original macro
+4
+4</code></pre>
+
+
+
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Quasiquotation<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+Quasiquotation uses the backtick (below the tilde) to quote the next expression. Sub-expressions within the quasiquoted expression can be unquoted using a comma. Here are examples:
+
+<pre><code>scm&gt; (define x (+ 2 1))
+x
+scm&gt; `(x ,x)
+(x 3)
+scm&gt; (define s &#x27;(1 2 3))
+s
+scm&gt; `(+ x ,(cons &#x27;* s))
+(+ x (* 1 2 3))</code></pre>
+
+
+</div>
+
+
+<h3 id="q1-mystery-macro">Q1: Mystery Macro</h3>
+
+
+<p>Figure out what this <code>mystery&#x2d;macro</code> does. Try to describe what
+it does by reading the code and discussing examples as a group.</p>
+
+<pre><code>(define&#x2d;macro (mystery&#x2d;macro expr old new)
+    (mystery&#x2d;helper expr old new))
+
+(define (mystery&#x2d;helper e o n)
+  (if (pair? e)
+      (cons (mystery&#x2d;helper (car e) o n) (mystery&#x2d;helper (cdr e) o n))
+      (if (eq? e o) n e)))</code></pre>
+
+
+
+<p><strong>Pro Tip:</strong> Please don't just look at the hints right away. Hints are for when you get stuck.</p>
+
+
+        <button id='toggle-2' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Examples<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+Here are some example uses of <code>mystery&#x2d;macro</code> that could help you understand what it does and how it might be used.
+
+<pre><code>scm&gt; (define five 5)
+five
+scm&gt; (mystery&#x2d;macro (* x x) x five)
+25
+scm&gt; (mystery&#x2d;macro (* x x) x (+ five 1))
+36
+scm&gt; (mystery&#x2d;macro &#x27;(* x x) x y)
+(* y y)
+scm&gt; (mystery&#x2d;macro (&gt; (x) (&gt; (y) (+ x y))) &gt; lambda)
+(lambda (x) (lambda (y) (+ x y)))
+scm&gt; (mystery&#x2d;macro (begin e e e) e (print five))
+5
+5
+5</code></pre>
+
+
+</div>
+
+
+        <button id='toggle-3' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-3">
+The <code>mystery&#x2d;macro</code> replaces all instances of an <code>old</code> symbol with a <code>new</code> expression before evaluating the expression <code>expr</code>.
+</div>
+
+
+<h3 id="q2-multiple-assignment">Q2: Multiple Assignment</h3>
+
+
+<p>In Scheme, the expression returned by a macro procedure is evaluated in the
+same environment in which the macro was called. Therefore, it's possible to return
+a <code>define</code> expression from a macro and have it affect the environment in which
+the macro was called. This differs from a regular scheme procedure that contains
+a <code>define</code> expression, which would only affect the procedure's local frame.</p>
+
+<p>In Python, we can bind two names to values in one line as follows:</p>
+
+<pre><code>&gt;&gt;&gt; x, y = 1 + 1, 3  # now x is bound to 2 and y is bound to 3
+&gt;&gt;&gt; x, y = y, x      # swap the values of x and y
+&gt;&gt;&gt; x
+3
+&gt;&gt;&gt; y
+2</code></pre>
+
+
+
+<p>Implement the <code>assign</code> Scheme macro, which takes in two symbols <code>sym1</code>
+and <code>sym2</code> as well as two expressions <code>expr1</code> and <code>expr2</code>. It should bind
+<code>sym1</code> to the value of <code>expr1</code> and <code>sym2</code> to the value of <code>expr2</code> in the
+environment from which the macro was called.</p>
+
+<pre><code class="scheme">scm&gt; (assign x y (+ 1 1) 3)  ; now x is bound to 2 and y is bound to 3
+scm&gt; (assign x y y x)        ; swap the values of x and y
+scm&gt; x
+3
+scm&gt; y
+2</code></pre>
+
+
+
+<p>Make sure that <code>expr2</code> is evaluated before <code>sym1</code> is changed. Assume that
+<code>expr1</code> and <code>expr2</code> do not have side effects (and so do not contain  <code>define</code> or
+<code>assign</code> expressions).</p>
+
+
+            
+            <b>Your Answer</b>
+            
+            <div class="monaco-storable" id="assign-input" style="height:342px;"></div>
+            <a href="javascript:void" id="modal-link-assign-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-assign-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-assign-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('(define&#x2d;macro (assign sym1 sym2 expr1 expr2)\n  `(begin\n     (define ,sym1 ,expr1)\n     (define ___ ___)))\n\n(assign x y (+ 1 1) 3)\n(assign x y y x)\n(expect x 3)\n(expect y 2)\n\n\n', "scheme", "assign-input"));
+            </script>
+        
+            <div class="sol-highlight">
+                <b>Solution</b>
+                
+<pre><code>(define&#x2d;macro (assign sym1 sym2 expr1 expr2)
+  `(begin
+     (define ,sym1 ,expr1)
+     (define ,sym2 &#x27;,(eval expr2))))
+
+(assign x y (+ 1 1) 3)
+(assign x y y x)
+(expect x 3)
+(expect y 2)
+
+; Extra tests
+(define z &#x27;x)      ; z is bound to the symbol x
+(assign v w 2 z)   ; now v is bound to 2 and w is bound to the symbol x
+(assign v w w v)   ; swap the values of v and w
+(expect v x)
+(expect w 2)
+</code></pre>
+
+            </div>
+        
+
+
+        <button id='toggle-4' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-4">
+
+<p>Call <code>eval</code> on <code>expr2</code> so that its value is included in the <code>define</code> expression
+created by <code>assign</code>: <code>,(eval expr2)</code>. That way, the <code>define</code> for <code>expr1</code> won't
+affect the value of <code>expr2</code>, because <code>expr2</code> will already have been evaluated.</p>
+
+</div>
+
+<p><strong>Presentation Time:</strong> Come up with a one-sentence explanation of why the second <code>define</code> line has to be different from the first <code>define</code> line in this implementation. Choose someone from your group who hasn't presented recently to say this explanation to your TA for feedback in person or on <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom</a>.</p>
+
+<p>For an <strong>optional extra challenge</strong>, try these additional tests that make
+sure <code>assign</code> works correctly even when the value of <code>expr2</code> is not a number,
+but instead a symbol.</p>
+
+<pre><code>(define z &#x27;x)      ; z is bound to the symbol x
+(assign v w 2 z)   ; now v is bound to 2 and w is bound to the symbol x
+(assign v w w v)   ; swap the values of v and w
+(expect v x)
+(expect w 2)</code></pre>
+
+
+
+
+        <button id='toggle-5' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Extra Challenge<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-5">
+
+<p>In order to ensure that the value of <code>expr2</code> is not evaluated a second time, quote the result of evaluating it.</p>
+
+<p>For example, <code>(assign v w 2 z)</code> should be equivalent to:</p>
+
+<pre><code class="scheme">(begin
+  (define v 2)
+  (define w (quote x)))</code></pre>
+
+
+
+<p>In this <code>begin</code> expression, <code>(quote x)</code> comes from first evaluating <code>z</code> and then
+quoting the result.</p>
+
+</div>
+
+
+<h3 id="q3-switch">Q3: Switch</h3>
+
+
+<p>Define the macro <code>switch</code>, which takes in an expression <code>expr</code> and a list of
+pairs called <code>cases</code> where the first element of the pair is some number and the
+second element is a single expression. <code>switch</code> will evaluate the expression
+contained in of <code>cases</code> that corresponds to the number that <code>expr</code> evaluates to.</p>
+
+<pre><code class="scheme">scm&gt; (switch (+ 1 1) ((1 (print &#x27;a))
+                      (2 (print &#x27;b))
+                      (3 (print &#x27;c))))
+b</code></pre>
+
+
+
+<p>You may assume that the value <code>expr</code> evaluates to is always the first element of one of the pairs in <code>cases</code>. You can also assume that the first value of each pair in
+<code>cases</code> is a number and the second expression does not contain the symbol <code>val</code>.</p>
+
+<p>Use <code>equal?</code> to check if two numbers are equal.</p>
+
+
+        <button id='toggle-6' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Example Result<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-6">
+For the example shown above, build the following expression:
+
+<pre><code>(let ((val (+ 1 1)))
+     (cond ((equal? val 1) (print &#x27;a))
+           ((equal? val 2) (print &#x27;b))
+           ((equal? val 3) (print &#x27;c))))</code></pre>
+
+
+
+<p>This expression first assigns <code>val</code> to 3 and then compares <code>val</code> to the first element in each pair in <code>cases</code>.
+</div></p>
+
+
+            
+            <b>Your Answer</b>
+            
+            <div class="monaco-storable" id="switch-input" style="height:216px;"></div>
+            <a href="javascript:void" id="modal-link-switch-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-switch-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-switch-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor("(define&#x2d;macro (switch expr cases)\n    `(let ((val ,expr))\n\t  ,(cons\n\t    'YOUR-CODE-HERE\n\t    (map (lambda (case) (cons\n\t           'YOUR-CODE-HERE\n\t\t       (cdr case)))\n\t\t     cases))))\n", "scheme", "switch-input"));
+            </script>
+        
+            <div class="sol-highlight">
+                <b>Solution</b>
+                
+<pre><code>(define&#x2d;macro (switch expr cases)
+    `(let ((val ,expr))
+	  ,(cons
+	    &#x27;cond
+	    (map (lambda (case) (cons
+		       `(equal? val ,(car case))
+		       (cdr case)))
+		     cases))))</code></pre>
+
+            </div>
+        
+
+
+<h1 id="document-the-occasion">Document the Occasion</h1>
+
+
+<p>Please all fill out the <a href="https://forms.gle/UCYakosihNmKSuZE9">attendance form</a> (one submission per person per week).</p>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#getting-started">Getting Started</a></li>
+  <li><a href="index.html#macros">Macros</a></li>
+  <ul>
+    <li><a href="index.html#q1-mystery-macro">Q1: Mystery Macro</a></li>
+    <li><a href="index.html#q2-multiple-assignment">Q2: Multiple Assignment</a></li>
+    <li><a href="index.html#q3-switch">Q3: Switch</a></li>
+  </ul>
+  <li><a href="index.html#document-the-occasion">Document the Occasion</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

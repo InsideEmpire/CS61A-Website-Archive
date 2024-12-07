@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+    <title>
+Department/Campus Resources | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="index.html">Campus Resources</a></li>
+                
+                <li><a href="../advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>Department/Campus Resources</h1>
+    </header>
+     <p><strong>Written by Jordan Schwartz</strong></p>
+
+<p>In addition to receiving advice from course staff, there are many resources
+available to students through the department and university. Often, finding and
+accessing these resources can be overwhelming or challenging, but we hope to
+provide you with an outline of resources available and somewhere to start.</p>
+
+<p>This list is not complete and is subject to change and be updated. If you know
+of a resource that is missing, feel free to email cs61a@berkeley.edu!</p>
+
+
+<h2 id="reporting-an-incident">Reporting an Incident</h2>
+
+<p>We recognize that disputes and conflicts can occur between students, staff,
+instructors, etc. There are many different types of incidents, including but not
+limited to discrimination, assault, conflict, etc., so we want to provide some
+resources to help absolve any conflict you may face.</p>
+
+<p>If you are feeling lost or overwhelmed, please feel free to make an appointment
+with someone on staff (we are happy to point you in the right direction!)
+through <a href="../../office-hours.html">advising</a>.</p>
+
+<ul>
+  <li>The EECS department provides
+  <a href="https://eecs.berkeley.edu/resources/students/grievances#eecs-climate">many ways</a>
+  to report issues within the department, including general incidents,
+  grievances with faculty, sexual harassment, and discrimination. Please report
+  any incidents to us or to the department using the
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSc4NYHdUJ8IzYA1SoiTinWBybGWkj0mfmdnHAeygAxkZajelQ/viewform">department form</a>,
+  so that we can continue to improve the CS student experience. Thank you!</li>
+  <li>The <a href="https://advocate.berkeley.edu">Student Advocate’s Office</a> (SAO) "is a
+  student-run organization that helps students litigate issues with professors."</li>
+  <li>The <a href="https://sa.berkeley.edu/Ombuds">Ombudsperson for Students</a> "can be your
+  first step, your last resort, or anything in between. The Ombudsperson will
+  listen to your concerns, serve as a sounding board, discuss your options with
+  you, and help you get a new perspective and determine the next steps to take."</li>
+  <li>Lastly, <a href="https://diversity.berkeley.edu/report-incident">many resources</a> of
+  support and ways to report issues are provided by the university as well.</li>
+</ul>
+
+
+<h2 id="advising">Advising</h2>
+
+<p>Advising is meant as a resource to help guide you as a student through your
+education and time at Berkeley. Some examples are to help with degree or
+graduation requirements as well as campus policies and procedures. Outside of
+61A where we have advising OH appointments, there are different types of
+advising at Berkeley depending on your college.</p>
+
+<blockquote><p>Still not sure where to start/go? <a href="../../office-hours.html">Come ask someone on staff!</a></p></blockquote>
+
+
+<h3 id="college-of-letters-and-science">College of Letters and Science</h3>
+
+<p>Within L&amp;S there are a few different types of advising: college, major, and peer
+advising. College advisors take a broader view of your academics while major
+advisors focus on your specific major.
+<a href="https://lsadvising.berkeley.edu/appointments-advice/college-advising-vs-major-advising">This comprehensive guide</a>
+explains their differences and how to access them.</p>
+
+<p>The <a href="https://lsadvising.berkeley.edu/virtual-front-desk">virtual front desk</a>,
+which is staffed by both staff and peer advisors, can also give more immediate
+advice.</p>
+
+<p>There is also peer advising which is based on the major/department you have
+questions for! We highly recommend starting here as they have all the resources
+from the school and department while also being able to understand your
+experience from a potentially similar perspective. Here are a few listed, if you
+don’t see one that is applicable to your situation, try searching in a browser
+for “[department or college name] peer advising Berkeley”.</p>
+
+<ul>
+  <li><a href="https://eecs.berkeley.edu/resources/undergrads/cs/advising">Computer Science Peer Advising</a></li>
+  <li><a href="https://data.berkeley.edu/degrees/peer-advising">Data Science Peer Advising</a></li>
+  <li><a href="https://cogsci.berkeley.edu/advising/peer-advising">Cognitive Science Peer Advising</a></li>
+</ul>
+
+
+<h3 id="college-of-engineering">College of Engineering</h3>
+
+<p>Advising through CoE is mainly run through Engineering Student Services.
+<a href="https://engineering.berkeley.edu/students/advising-counseling">This website</a>
+provides a thorough overview of the services and different types of engineering
+offered.</p>
+
+<ul>
+  <li><a href="index.html#">ESS</a> provides an academic advisor for pretty much anything related to your
+  undergraduate education.</li>
+  <li><a href="index.html#">Faculty advisors</a> provide academic mentors and can help with selecting
+  courses or potential career paths for example.</li>
+  <li><a href="index.html#">Departmental advising</a> provides advisors focused on your specific major
+  and are most knowledgeable about programs, resources, and services for
+  students of your major.</li>
+  <li><a href="index.html#">Peer advisors</a> are trained and knowledgeable students who are equipped to
+  help answer any questions you may have about navigating Berkeley.</li>
+</ul>
+
+
+<h2 id="resources-for-women">Resources for Women</h2>
+
+
+<ul>
+  <li><a href="https://awe.berkeley.edu">Association of Women in EECS</a> (AWE): "a student-run
+  organization at UC Berkeley that seeks to empower female and non-binary
+  undergraduate students pursuing Computer Science and/or Electrical Engineering
+  disciplines. AWE hosts a variety of academic, industry, and social events
+  throughout the year to support and connect our members."</li>
+  <li><a href="https://swe.berkeley.edu">Society of Women Engineers</a> (SWE): "a national
+  nonprofit organization which strives to highlight the achievements of women as
+  leaders and engineers."</li>
+  <li>CSM Affinity Sections for Women: Sections that are for and run by women.</li>
+  <li><a href="https://cejce.berkeley.edu/geneq">Gender Equity Resource Center</a></li>
+  <li><a href="https://eecs.berkeley.edu/people/students/organizations">More student organizations listed here</a>!</li>
+</ul>
+
+
+<h2 id="resources-for-queer-students">Resources for Queer Students</h2>
+
+
+<ul>
+  <li><a href="https://www.facebook.com/ucbqarc">Queer Alliance Resource Center</a></li>
+  <li><a href="https://cejce.berkeley.edu/geneq">Gender Equity Resource Center</a></li>
+  <li><a href="https://eecs.berkeley.edu/people/students/organizations">More student organizations listed here</a>!</li>
+</ul>
+
+
+<h2 id="resources-for-students-of-color">Resources for Students of Color</h2>
+
+
+<ul>
+  <li><a href="https://bridges.berkeley.edu">bridges</a>: "the overarching organization of all
+  of the recruitment and retention centers for underrepresented racial/ethnic
+  identity groups"</li>
+  <li><a href="http://www.ucberkeleybessa.com">Black Engineering and Science Student Association</a>:
+  Mission Statement: "To increase the number of culturally responsible black
+  engineers and scientists who excel academically, succeed professionally, and
+  positively impact the community."</li>
+  <li><a href="https://hes.berkeley.edu/">Hispanic Engineers and Scientists</a>: "an
+  organization meant to be a resource for underrepresented Latinx students in
+  STEM as they navigate their professional/academic endeavors and achieve
+  holistic wellness"</li>
+  <li><a href="https://eecs.berkeley.edu/people/students/organizations">More student organizations listed here</a>!</li>
+</ul>
+
+
+<h2 id="resources-for-transfer-students">Resources for Transfer Students</h2>
+
+
+<ul>
+  <li><a href="https://transfers.berkeley.edu/home">Transfer Student Center</a></li>
+  <li>CSM Affinity Sections for Transfer Students: Sections that are run for and by
+  transfer students.</li>
+</ul>
+
+
+<h2 id="other-academic-resources">Other Academic Resources</h2>
+
+
+<ul>
+  <li>EECS 101 Piazza: Place for announcements and advice from the EECS department.
+  To join, navigate to <a href="https://piazza.com">Piazza</a>, click "Join Another Class,"
+  select term "Other," search for "EECS 101".</li>
+  <li>DATA 001 Piazza: Place for announcements and advice from the Data Science
+  department. To join, navigate to <a href="https://piazza.com">Piazza</a>, click "Join
+  Another Class," select term "Other," search for "DATA 001".</li>
+  <li>COGSCI Piazza: Place for announcements and advice from the Cognitive Science
+  department. To join, navigate to <a href="https://piazza.com">Piazza</a>, click "Join
+  Another Class," select term "Other," search for "COGSCI".</li>
+  <li><p><a href="https://csmentors.berkeley.edu">Computer Science Mentors</a> (CSM): "a
+  student-run organization that provides guidance and resources in a smaller
+  classroom environment through group tutoring sessions. Each section has 4-6
+  students and focuses on material from lower division CS and EECS courses at
+  Berkeley. Section sign-ups will open within the first few weeks of classes.
+  CSM also sometimes offers affinity sections for no prior experience students,
+  women, LGBTQ students, and transfer students."</p>
+
+  <ul>
+    <li>CSM will also be running No Prior Experience (NPE) Affinity Sections for
+    students with no to limited experience in CS.</li>
+  </ul></li>
+  <li><a href="https://hkn.eecs.berkeley.edu">eta kappa nu</a> (HKN): "the national Electrical
+  and Computer Engineering honor society. HKN offers many student services for
+  both CS and EECS courses as well. There is tutoring including office hours,
+  advising, exam preparation, course surveys, and peer advising."</li>
+  <li><a href="https://engineering.berkeley.edu/student-services/academic-support">The Center for Access to Engineering Excellence</a>
+  "is committed to providing a supportive and welcoming environment conducive to
+  academic and personal success. They pride themselves as champions for
+  diversity, equity and inclusion in all of their programs and services."</li>
+  <li>Private Tutoring: the EECS advising department compiles a list of private
+  student tutors. Tutors are often most useful for understanding content but not
+  for completing assignments, especially to follow academic integrity
+  expectations. Link will be updated once the spring 2022 list is released.</li>
+  <li><a href="http://slc.berkeley.edu">Student Learning Center</a> (SLC) "supports a global
+  community of learners as they navigate the cultural expectations and academic
+  rigor of UC Berkeley. Through service models that honor their diverse starting
+  points and meet them where they are, we aim to empower all students to realize
+  their full academic potential and aspirations."</li>
+  <li><a href="https://eop.berkeley.edu">Educational Opportunity Program</a> (EOP) "provides
+  students who identify as first-generation, low-income, and/or historically
+  underrepresented college students with the guidance, support, and resources to
+  succeed at Berkeley and take meaningful steps toward achieving their personal
+  and professional goals."</li>
+</ul>
+
+
+<h2 id="mental-health-resources-at-berkeley">Mental Health Resources At Berkeley</h2>
+
+
+<ul>
+  <li><a href="https://uhs.berkeley.edu/caps">CAPS</a></li>
+  <li><a href="https://asuc.org/wp-content/uploads/2018/02/Mental-Health-Resources.pdf">ASUC Mental Health Resources</a></li>
+</ul>
+
+
+<h2 id="sexual-harrassment-and-sexual-assault-resources">Sexual Harrassment and Sexual Assault Resources</h2>
+
+
+<ul>
+  <li><a href="https://care.berkeley.edu/care-line/">Path to Care / Care Line</a>: "24/7,
+  confidential, free, campus-based resource for urgent support around sexual
+  assault, sexual harassment, interpersonal violence, stalking, and invasion of
+  sexual privacy."</li>
+  <li>See also <a href="index.html#reporting-an-incident">Reporting an Incident</a></li>
+</ul>
+
+
+<h2 id="basic-needs-resources">Basic Needs Resources</h2>
+
+
+<ul>
+  <li><a href="https://basicneeds.berkeley.edu/home">Basic Needs Center</a>: Provides "support
+  with all the essential resources needed to not only survive, but thrive here
+  at UC Berkeley."</li>
+  <li><a href="https://basicneeds.berkeley.edu/pantry">UC Berkeley Food Pantry</a>: "an
+  emergency food relief supply"</li>
+</ul>
+
+
+<h2 id="covid-19-resources">COVID-19 Resources</h2>
+
+<p><a href="https://coronavirus.berkeley.edu">UC Berkeley COVID-19 Dashboard</a></p>
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#reporting-an-incident">Reporting an Incident</a></li>
+  <li><a href="index.html#advising">Advising</a></li>
+  <ul>
+    <li><a href="index.html#college-of-letters-and-science">College of Letters and Science</a></li>
+    <li><a href="index.html#college-of-engineering">College of Engineering</a></li>
+  </ul>
+  <li><a href="index.html#resources-for-women">Resources for Women</a></li>
+  <li><a href="index.html#resources-for-queer-students">Resources for Queer Students</a></li>
+  <li><a href="index.html#resources-for-students-of-color">Resources for Students of Color</a></li>
+  <li><a href="index.html#resources-for-transfer-students">Resources for Transfer Students</a></li>
+  <li><a href="index.html#other-academic-resources">Other Academic Resources</a></li>
+  <li><a href="index.html#mental-health-resources-at-berkeley">Mental Health Resources At Berkeley</a></li>
+  <li><a href="index.html#sexual-harrassment-and-sexual-assault-resources">Sexual Harrassment and Sexual Assault Resources</a></li>
+  <li><a href="index.html#basic-needs-resources">Basic Needs Resources</a></li>
+  <li><a href="index.html#covid-19-resources">COVID-19 Resources</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+<script src="../../assets/js/storable.js"></script>
+<script src="../../assets/js/env-diagram.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+</script>
+
+  </body>
+</html>

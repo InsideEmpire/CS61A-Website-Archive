@@ -1,0 +1,484 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+    <title>
+Advice from Former Students | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>Advice from Former Students</h1>
+    </header>
+     <h2 id="summary">Summary</h2>
+
+
+<p>The end-of-semester survey asked Spring 2024 students what advice they would give to future students.</p>
+
+<p>Here's the GPT-4o summary:</p>
+
+<p><strong>Advice for Students Considering CS 61A:</strong></p>
+
+<ol>
+  <li><strong>Preparation:</strong></li>
+</ol>
+
+<ul>
+  <li><p><strong>Prior Coding Experience:</strong> Strongly consider taking an introductory course like CS10 if you have no prior programming experience.</p>
+
+  <ul>
+    <li>"If you have not had any coding experience, take CS10! It builds all the concepts from the ground up and is taught by a professor who deeply cares about your education."</li>
+    <li>"I cannot stress this enough, but if you do not have any coding experience take CS10! Although the class can be a bit of work (sometimes more than CS61A lol) it has prepared me more than enough for CS61A."</li>
+    <li>"If you have little to no coding experience this will be a hard course for you. Budget a significant amount of time weekly to spend on this course."</li>
+  </ul></li>
+  <li><p><strong>Data 8:</strong> Taking Data 8 before or instead of concurrently with CS 61A can be beneficial.</p>
+
+  <ul>
+    <li>"Take Data8 before; taking concurrent is a bit hard."</li>
+    <li>"Just work really hard I guess, this class is pretty hard but if you took DATA 8 before it makes SQL super easy."</li>
+    <li>"My advice is to take CS 10 instead of Data 8 if they want to prepare for CS 61A. I heard that CS 10 was more helpful than Data 8."</li>
+  </ul></li>
+</ul>
+
+<ol>
+  <li><strong>Study and Practice:</strong></li>
+</ol>
+
+<ul>
+  <li><p><strong>Practice Problems:</strong> Do lots of practice problems and exams.</p>
+
+  <ul>
+    <li>"Do the practice exams if you want to perform well. Do them like crazy."</li>
+    <li>"Take lots of practice exams, trust the process."</li>
+    <li>"Do lots of practice problems, do not let yourself fall behind, and go to lecture."</li>
+  </ul></li>
+  <li><p><strong>Consistent Study:</strong> Stay on top of lectures, assignments, and practice problems. Do not fall behind.</p>
+
+  <ul>
+    <li>"Stay on top of content, homework, and projects to the best degree possible! Once an assignment is released, start early and get help in office hours!"</li>
+    <li>"Stay ahead and make sure to come to lectures and videos don't get behind because it's difficult to catch up."</li>
+    <li>"Keep up with course material, do the labs and homeworks on your own as much as you can, they are the best practice for learning the material."</li>
+  </ul></li>
+  <li><p><strong>Understand Concepts:</strong> Ensure you deeply understand the material, not just superficially.</p>
+
+  <ul>
+    <li>"Make sure to understand what exactly the code is doing- mutable trees is where this becomes especially handy."</li>
+    <li>"Do not let yourself fall behind... Please do as many problems as you can for exams. The more problems you do, the better you get at application-based problems and intuition."</li>
+    <li>"Understand the problem, and the process of solving it. Why is iteration necessary? Why can't recursion be applied?"</li>
+  </ul></li>
+</ul>
+
+<ol>
+  <li><strong>Course Resources:</strong></li>
+</ol>
+
+<ul>
+  <li><p><strong>Office Hours:</strong> Utilize office hours for questions and clarifications.</p>
+
+  <ul>
+    <li>"GO TO OFFICE HOURS! SPAM PRACTICE TESTS!"</li>
+    <li>"If you're struggling, go to office hours! The TAs are awesome."</li>
+    <li>"Get all the help you can! Don't be afraid of office hours: Denero is awesome and so are all of the TAs and AIs!"</li>
+  </ul></li>
+  <li><p><strong>Course Materials:</strong> Make use of videos, lectures, and online resources provided.</p>
+
+  <ul>
+    <li>"Watch the video lectures before attending the course and try to get ahead."</li>
+    <li>"Make sure to watch the videos before lecture. It's really easy to get behind and very difficult to catch up once you do."</li>
+    <li>"The best way to learn CS is just practice. Watch the videos."</li>
+  </ul></li>
+  <li><p><strong>Study Groups:</strong> Form study groups to discuss and solve problems together.</p>
+
+  <ul>
+    <li>"Make friends in the class."</li>
+    <li>"Find friends you can study and work on projects with."</li>
+    <li>"Make sure you make friends in class. A support group like that really helps."</li>
+  </ul></li>
+</ul>
+
+<ol>
+  <li><strong>Time Management:</strong></li>
+</ol>
+
+<ul>
+  <li><p><strong>Start Early:</strong> Begin assignments, projects, and studying for exams early.</p>
+
+  <ul>
+    <li>"Start all the homework/projects early!! That way you have time if you get stuck :)"</li>
+    <li>"Start the projects early, do not be afraid to use Ed as a resource."</li>
+    <li>"Start every assignment the day it's assigned to find weaknesses or struggles which you then have time to go to office hours and ask questions. No procrastination."</li>
+  </ul></li>
+  <li><p><strong>Regular Reviews:</strong> Regularly review lecture notes and previous assignments.</p>
+
+  <ul>
+    <li>"Go back and revisit the examples from videos and lecture to make sure you really understand what is going on instead of accepting it and moving on."</li>
+    <li>"Keep up with lectures and go to lab!"</li>
+    <li>"Make sure that you understand every concept as the class goes on, as the class is very cumulative and every topic helps with the next."</li>
+  </ul></li>
+</ul>
+
+<ol>
+  <li><strong>Mindset and Approach:</strong></li>
+</ol>
+
+<ul>
+  <li><p><strong>Persistence:</strong> Embrace the challenging nature of the course and persist through difficulties.</p>
+
+  <ul>
+    <li>"Don't be worried if programming doesn't come naturally to you as it may others. Just keep practicing and learning!"</li>
+    <li>"Embrace the struggle!"</li>
+    <li>"Don't get discouraged when you see others doing well. It doesn't mean that you aren't capable of doing it too."</li>
+  </ul></li>
+  <li><p><strong>Ask Questions:</strong> Don’t hesitate to ask questions and seek help when needed.</p>
+
+  <ul>
+    <li>"Ask questions!!!"</li>
+    <li>"Make sure to ask questions when you don't understand something, it will come up again later on."</li>
+    <li>"Ask for help as much as you can!"</li>
+  </ul></li>
+  <li><p><strong>Enjoy the Process:</strong> Appreciate the learning process and the development of problem-solving skills.</p>
+
+  <ul>
+    <li>"Enjoy the moment."</li>
+    <li>"The entire course is centered around changing how you approach problems."</li>
+    <li>"Go ahead and take the course, it's fun, interesting, and teaches you a ton. Don't be intimidated by the reputation this course has."</li>
+  </ul></li>
+</ul>
+
+
+<h2 id="original">Original</h2>
+
+
+<p>Here's what individual students wrote, grouped by topic by GPT-4o:</p>
+
+
+<h3 id="practice-and-studying">Practice and Studying</h3>
+
+
+<ul>
+  <li>Practice Problems and Ask Questions</li>
+  <li>DO lots of practice exams to study for a midterm</li>
+  <li>Do lots of practice problems, do not let yourself fall behind, and go to lecture.</li>
+  <li>Take a lot of practice exams.</li>
+  <li>Do the practice exams if you want to perform well. Do them like crazy</li>
+  <li>Do a lot of practice problems</li>
+  <li>Make sure to do lots of practice problems and tests, and review errors closely</li>
+  <li>Do the practice exams to prepare.</li>
+  <li>Stay on top of watching lectures. Cramming for this class will be very difficult, and consistent practice is key.</li>
+  <li>Spam practice tests lol</li>
+  <li>Do previous exams as practice</li>
+  <li>Take as many practice tests as possible</li>
+  <li>Start studying before you'd ever think to, also midterm two is tough</li>
+  <li>Grind practice exams</li>
+  <li>Practice, Practice and oh yeah practice</li>
+  <li>Practice makes perfect. Kind of a cliche, but I definitely fully understand most of the concepts in this course after trying to implement them and making my hands dirty.</li>
+  <li>Practice Tests, Practice Tests, Practice Tests, and Practice Tests</li>
+  <li>Do homework without assistance and modify the problems to help practice on your own. To do well in this course you have to be curious about every little detail, just following the assigned work might not be enough.</li>
+  <li>Stay on top of the lectures and don't get caught up in everyone bragging about doing the bare minimum--do what works for you</li>
+  <li>CS61A is a very fast-paced class with semi-dense material, which is very intimidating to many in the beginning. But, watching the lecture videos ahead of time and utilizing all the past exams and resources CS61A provides will help you master the material and succeed in this class.</li>
+  <li>Do the practice tests!</li>
+  <li>Treat 61A as a math class in how you study (repeatedly do problems until you get the intuition to do problems). Do not treat it like a conceptual class where you just understand the concepts.</li>
+  <li>Make sure to do the practice exams and assignments, since they really help.</li>
+  <li>Stay on top of assignments, if I could go back and revise my study methods I would review every lecture and discussion right after class with a study buddy to see how much I retained and also attend office hours if we both do not understand. I emphasize office hours (online-if you cannot make the trip to Warren).</li>
+  <li>Don't let yourself fall behind...</li>
+  <li>Do as many problems as you can for exams. The more problems you do, the better you get at application based problems and intuition.</li>
+  <li>Really sit down and process the problems you're given. It's okay to not know how to do them right away but you really have to push through and make yourself really think through the problems instead of just looking at the answers the second you get lost.</li>
+  <li>Practice exams are your best friends for exam prep</li>
+  <li>Genuinely the most effective way to study is to not only do a lot of practice exams, but make sure you deeply understand the process for each question/answer (whether or not you get it correct--but especially if you get it incorrect).</li>
+  <li>Take Data 8 before; taking concurrent is a bit hard.</li>
+</ul>
+
+
+<h3 id="course-resources-and-office-hours">Course Resources and Office Hours</h3>
+
+
+<ul>
+  <li>Go to office hours and start homework early.</li>
+  <li>Start all the homework/projects early!! That way you have time if you get stuck :)</li>
+  <li>The entire course is centered around changing how you approach problems. GO TO OFFICE HOURS! SPAM PRACTICE TESTS!</li>
+  <li>Don't fall behind and be caught up before labs / discussions on the videos</li>
+  <li>I would recommend going to all OH immediately if you need help! The staff is always welcoming and creates such a great environment to learn!</li>
+  <li>Go to the lectures in person, watch the videos before do NOT fall behind, attend CSM if you don't have experience, sit with problems you don't understand/ get wrong</li>
+  <li>Take advantage of all the resources CS61A offers/associated with CS61A (CSM, go to labs, discussions, midterm review sessions, final review sessions, small group tutoring, office hours, lecture)... also the best way to succeed is through practicing lots and lots of exam questions --  getting good and drawing diagrams, discussing with peers, explaining steps to yourself...</li>
+  <li>Ask questions!!!</li>
+  <li>The course gave me a breadth of intro CS knowledge, and discipline that I will take into my other courses and internships. It has helped me grow personally and professionally. It is a huge time commitment. Leave significant time to dedicate to the course, especially if you don't have prior coding experience. Practice problems are the best way to feel comfortable with the material and succeed. Doing the work meaningfully each week will help with exam preparation. Go to lectures and do the practice problems intentionally.</li>
+  <li>Make sure to attempt to stay on schedule!! It's super important to be doing the labs and homeworks on time so you don't fall behind.</li>
+  <li>Join CS Scholars and also a CSM section. Especially if you have a hard time self-studying.</li>
+  <li>Make sure to go to lectures and watch the videos, and if you get stuck, the best thing to do is to try to understand the thing you're stuck on rather than brute forcing your way through.</li>
+  <li>If you’re scared, just know there are a ton of options to receive help at office hours. Don’t be embarrassed as many use the resource. I spent quite a bit of time there. Also, grades don’t define your talents. Be proud of yourself and good luck.</li>
+  <li>Go to discussion and lab! The office hours facilitators are always so helpful, so go to that too.</li>
+  <li>If you’re struggling, go to office hours! The TAs are awesome</li>
+  <li>Go to office hours if you need the help!!!</li>
+  <li>Take advantage of all the resources. Everyone is there to help you succeed.</li>
+  <li>Be sure to follow the professor's pace and do the proj&amp;hw&amp;lab carefully!</li>
+  <li>Take your time watching the pre-lecture videos and stay up to date on them.</li>
+  <li>If you have not had any coding experience, take CS10! It builds all the concepts from the ground up and is taught by a professor who deeply cares about your education. If you are scared about falling behind for taking CS10, take it during the summer.</li>
+  <li>Watch the video lectures before attending the course and try to get ahead. Computer Science has a difficult learning curve, so prepare for that</li>
+  <li>Watch the videos before lecture</li>
+  <li>Watch the videos as soon as possible, AND DO ALL OF THE WORK YOURSELF.</li>
+  <li>Don't procrastinate on watching the lectures: it's easy to fall behind.</li>
+  <li>Keep up with lectures and go to lab!</li>
+  <li>Make sure you go to lectures and watch the videos, and if you get stuck, the best thing to do is to try to understand the thing you're stuck on rather than brute forcing your way through.</li>
+  <li>Stay on top of the lectures and don't get caught up in everyone bragging about doing the bare minimum--do what works for you</li>
+  <li>Keep up with the videos!!</li>
+  <li>Stay up to date and try to have fun with it. It is the most rewarding class I have ever taken.</li>
+  <li>Make sure you watch the videos for lecture, it helps a lot.</li>
+  <li>Watch all the videos and review for studying</li>
+  <li>Make sure to keep up with the course videos! It's really easy to get behind and very difficult to catch up once you do.</li>
+  <li>Actually listen when people say not to take it if you have very little to no coding experience. No matter how genius you are.</li>
+  <li>Stay on top of work don't fall behind</li>
+  <li>Bring your ass to lecture. And don't just tune out or give up when the problems get confusing.</li>
+  <li>Keep up with the course lecture and assignments throughout.</li>
+  <li>Do not fall behind in lecture ever</li>
+  <li>Actually do the problems</li>
+  <li>Don't fall behind.</li>
+  <li>Stay on top of workload, go to office hours, study way before exams, and ask for help as much as you can!</li>
+  <li>Start every assignment the day its assigned to find weaknesses or struggles which you then have time to go to office hours and ask questions. No procrastination. Find a partner you can rely on and really work with.</li>
+  <li>Take careful, well-written notes on a google doc. They're good for keeping you focused while watching the videos, serve you greatly for labs and homework and if you take good enough notes, can serve as great review material for midterms or the final.</li>
+  <li>Read the Syllabus in its entirety before the semester starts. Just really helps you understand how the course is structured so you can manage your own learning better.</li>
+  <li>Join a CSM section</li>
+  <li>If you don't have coding experience, it's okay. You can do it.</li>
+  <li>Join CSM</li>
+  <li>Get all the help you can! Don't be afraid of office hours: Denero is awesome and so are all of the TAs and AIs!</li>
+</ul>
+
+
+<h3 id="prior-knowledge-and-preparation">Prior Knowledge and Preparation</h3>
+
+
+<ul>
+  <li>Know basic python</li>
+  <li>Know how to code previously, or take CS10</li>
+  <li>If you do not have any prior coding experience, please take CS10.</li>
+  <li>My advice is to take one of the other courses beforehand to get exposure to python beforehand.</li>
+  <li>Have some background experience in coding before taking CS61A.</li>
+  <li>If you've never done anything tech or CS, take CS10 first.</li>
+  <li>Start coding in elementary school</li>
+  <li>Learning a coding language beforehand would be invaluable as the structure of how computers think will begin to make more sense.</li>
+  <li>Take an intro course to CS prior to 61A if you have no prior experience in CS</li>
+  <li>Take CS10 before CS 61A!!</li>
+  <li>Take Data 8 or CS10 beforehand if you don't have a lot of experience, or even just attending a boot camp will definitely help you to be able to digest information at a better pace!</li>
+  <li>Have a basic understanding of python prior!</li>
+  <li>Don't take this class if you want to have time on doing many extracurricular activities</li>
+  <li>Do not take it if you have zero programming experience, it will be too hard</li>
+</ul>
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#summary">Summary</a></li>
+  <li><a href="index.html#original">Original</a></li>
+  <ul>
+    <li><a href="index.html#practice-and-studying">Practice and Studying</a></li>
+    <li><a href="index.html#course-resources-and-office-hours">Course Resources and Office Hours</a></li>
+    <li><a href="index.html#prior-knowledge-and-preparation">Prior Knowledge and Preparation</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+<script src="../../assets/js/storable.js"></script>
+<script src="../../assets/js/env-diagram.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+</script>
+
+  </body>
+</html>

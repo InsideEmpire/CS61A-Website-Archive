@@ -1,0 +1,761 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/disc.css">
+
+
+    <title>
+Discussion 7 | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Discussion 7: OOP
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="disc07.pdf" class="label label-outline">disc07.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<!-- <div class="alert storable-login-status"></div> -->
+
+
+    
+<p>Switch to Pensieve:</p>
+
+<ul>
+  <li><strong>Everyone</strong>: Go to <a href="https://tutor.pensieve.co/schools/berkeley/all/cs61a/cs61a_fa24/38385f57-787f-4d5f-9d06-474698bccc55/open">pensieve.co</a>, log in with your @berkeley.edu email, and <strong>enter your group number</strong> (which was in the email that assigned you to this lab).</li>
+</ul>
+
+<p>Once you're on Pensieve, you don't need to return to this page; Pensieve has all the same content (but more features). If for some reason Penseive doesn't work, return to this page and continue with the discussion.</p>
+
+
+<h1 id="getting-started">Getting Started</h1>
+
+
+<p><strong>To get help from a TA</strong>, If you do not have an in-person TA, you can reach your TA using this <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom link</a>.</p>
+
+<p>If there are fewer than 3 people in your group, feel free to merge your group with another group in the room.</p>
+
+<p>Say your name and something you've
+practiced for a while, such as playing an instrument, juggling, or martial arts.
+Did you discover any common interests among your group members?</p>
+
+
+<h1 id="iterators">Iterators</h1>
+
+
+
+<h3 id="q1-draw">Q1: Draw</h3>
+
+
+<p>The <code>draw</code> function takes a list <code>hand</code> and a list of unique non-negative
+integers <code>positions</code> that are all less than the length of <code>hand</code>.  It removes
+<code>hand[p]</code> for each <code>p</code> in <code>positions</code> and returns a list of those elements in
+the order they appeared in <code>hand</code> (not the order they appeared in <code>positions</code>).</p>
+
+<p>Fill in each blank with one of these names: <code>list</code>, <code>map</code>, <code>filter</code>, <code>reverse</code>,
+<code>reversed</code>, <code>sort</code>, <code>sorted</code>, <code>append</code>, <code>insert</code>, <code>index</code>, <code>remove</code>, <code>pop</code>,
+<code>zip</code>, or <code>sum</code>. See the <a href="https://docs.python.org/3/library/functions.html">built-in functions</a> and
+<a href="https://docs.python.org/3/tutorial/datastructures.html#more-on-lists">list methods</a>
+documentation for descriptions of what these do.</p>
+
+<p><strong>Discussion Time:</strong> Before writing anything, talk as a group about what
+process you'll implement in order to make sure the right cards are removed and
+returned. Try not to guess-and-check! The purpose of discussion is for you to
+try to solve problems without the help of an interpreter checking your work.</p>
+
+
+            
+            <b>Your Answer</b>
+            
+            <div class="monaco-storable" id="draw-input" style="height:234px;"></div>
+            <a href="javascript:void" id="modal-link-draw-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-draw-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-draw-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def draw(hand, positions):\n    &quot;&quot;&quot;Remove and return the items at positions from hand.\n\n    &gt;&gt;&gt; hand = [&#x27;A&#x27;, &#x27;K&#x27;, &#x27;Q&#x27;, &#x27;J&#x27;, 10, 9]\n    &gt;&gt;&gt; draw(hand, [2, 1, 4])\n    [&#x27;K&#x27;, &#x27;Q&#x27;, 10]\n    &gt;&gt;&gt; hand\n    [&#x27;A&#x27;, &#x27;J&#x27;, 9]\n    &quot;&quot;&quot;\n    return _____(_____( [hand._____(i) for i in _____(_____(positions))] ))\n\n', "python", "draw-input"));
+            </script>
+        
+            <div class="sol-highlight">
+                <b>Solution</b>
+                
+<pre><code>def draw(hand, positions):
+    &quot;&quot;&quot;Remove and return the items at positions from hand.
+
+    &gt;&gt;&gt; hand = [&#x27;A&#x27;, &#x27;K&#x27;, &#x27;Q&#x27;, &#x27;J&#x27;, 10, 9]
+    &gt;&gt;&gt; draw(hand, [2, 1, 4])
+    [&#x27;K&#x27;, &#x27;Q&#x27;, 10]
+    &gt;&gt;&gt; hand
+    [&#x27;A&#x27;, &#x27;J&#x27;, 9]
+    &quot;&quot;&quot;
+    return list(reversed( [hand.pop(i) for i in reversed(sorted(positions))] ))
+</code></pre>
+
+            </div>
+        
+
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Ordering<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+For a list <code>s</code> and integer <code>i</code>, <code>s.pop(i)</code> returns and removes the <code>i</code>th
+element, which changes the position (index) of all the later elements but
+does not affect the position of prior elements.
+</div>
+
+
+        <button id='toggle-2' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Reversed<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+Calling <code>reversed(s)</code> on a list <code>s</code> returns an iterator. Calling
+<code>list(reversed(s))</code> returns a list of the elements in <code>s</code> in reversed order.
+</div>
+
+<p><em>Aced</em> it? Give yourselves a <em>hand</em>!</p>
+
+
+<h1 id="object-oriented-programming">Object-Oriented Programming</h1>
+
+
+<p>A productive approach to defining new classes is to determine what instance
+attributes each object should have and what class attributes each class should
+have. First, describe the type of each attribute and how it will be used, then
+try to implement the class's methods in terms of those attributes.</p>
+
+
+<h3 id="q2-keyboard">Q2: Keyboard</h3>
+
+
+<p><strong>Overview:</strong> A keyboard has a button for every letter of the alphabet. When a
+button is pressed, it outputs its letter by calling an <code>output</code> function (such
+as <code>print</code>). Whether that letter is uppercase or lowercase depends on how many
+times the <em>caps lock</em> key has been pressed.</p>
+
+<p><strong>First</strong>, implement the <code>Button</code> class, which takes a lowercase <code>letter</code> (a
+string) and a one-argument <code>output</code> function, such as <code>Button(&#x27;c&#x27;, print)</code>.</p>
+
+<p>The <code>press</code> method of a <code>Button</code> calls its <code>output</code> attribute (a function) on
+its <code>letter</code> attribute: either uppercase if <code>caps_lock</code> has been pressed an odd
+number of times or lowercase otherwise. The <code>press</code> method also increments
+<code>pressed</code> and returns the key that was pressed. <em>Hint</em>: <code>&#x27;hi&#x27;.upper()</code> evaluates
+to <code>&#x27;HI&#x27;</code>.</p>
+
+<p><strong>Second</strong>, implement the <code>Keyboard</code> class. A <code>Keyboard</code> has a dictionary called
+<code>keys</code> containing a <code>Button</code> (with its <code>letter</code> as its key) for each letter in
+<code>LOWERCASE_LETTERS</code>. It also has a list of the letters <code>typed</code>, which may be
+a mix of uppercase and lowercase letters.</p>
+
+<p>The <code>type</code> method takes a string <code>word</code> containing only lowercase letters. It
+invokes the <code>press</code> method of the <code>Button</code> in <code>keys</code> for each letter in <code>word</code>,
+which adds a letter (either lowercase or uppercase depending on <code>caps_lock</code>) to
+the <code>Keyboard</code>'s <code>typed</code> list.  <strong>Important:</strong> Do not use <code>upper</code> or <code>letter</code> in
+your implementation of <code>type</code>; just call <code>press</code> instead.</p>
+
+<p>Read the doctests and talk about:</p>
+
+<ul>
+  <li>Why it's possible to press a button repeatedly with <code>.press().press().press()</code>.</li>
+  <li>Why pressing a button repeatedly sometimes prints on only one line and sometimes
+  prints multiple lines.</li>
+  <li>Why <code>bored.typed</code> has 10 elements at the end.</li>
+</ul>
+
+<p><strong>Discussion Time</strong>: Before anyone types anything, have a conversation
+describing the type of each attribute and how it will be used. Start with
+<code>Button</code>: how will <code>letter</code> and <code>output</code> be used? Then discuss <code>Keyboard</code>: how
+will <code>typed</code> and <code>keys</code> be used? How will new letters be added to the list
+called <code>typed</code> each time a <code>Button</code> in <code>keys</code> is pressed? Call the staff if
+you're not sure! Once everyone understands the answers to these questions, you
+can try writing the code together.</p>
+
+
+            
+            <b>Your Answer</b>
+            
+            <div class="monaco-storable" id="button-input" style="height:774px;"></div>
+            <a href="javascript:void" id="modal-link-button-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-button-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-button-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('LOWERCASE_LETTERS = &#x27;abcdefghijklmnopqrstuvwxyz&#x27;\n\nclass CapsLock:\n    def __init__(self):\n        self.pressed = 0\n\n    def press(self):\n        self.pressed += 1\n\nclass Button:\n    &quot;&quot;&quot;A button on a keyboard.\n\n    &gt;&gt;&gt; f = lambda c: print(c, end=&#x27;&#x27;)  # The end=&#x27;&#x27; argument avoids going to a new line\n    &gt;&gt;&gt; k, e, y = Button(&#x27;k&#x27;, f), Button(&#x27;e&#x27;, f), Button(&#x27;y&#x27;, f)\n    &gt;&gt;&gt; s = e.press().press().press()\n    eee\n    &gt;&gt;&gt; caps = Button.caps_lock\n    &gt;&gt;&gt; t = [x.press() for x in [k, e, y, caps, e, e, k, caps, e, y, e, caps, y, e, e]]\n    keyEEKeyeYEE\n    &gt;&gt;&gt; u = Button(&#x27;a&#x27;, print).press().press().press()\n    A\n    A\n    A\n    &quot;&quot;&quot;\n    caps_lock = CapsLock()\n\n    def __init__(self, letter, output):\n        assert letter in LOWERCASE_LETTERS\n        self.letter = letter\n        self.output = output\n        self.pressed = 0\n\n    def press(self):\n        &quot;&quot;&quot;Call output on letter (maybe uppercased), then return the button that was pressed.&quot;&quot;&quot;\n        self.pressed += 1\n        "*** YOUR CODE HERE ***"\n\n', "python", "button-input"));
+            </script>
+        
+            <div class="sol-highlight">
+                <b>Solution</b>
+                
+<pre><code>LOWERCASE_LETTERS = &#x27;abcdefghijklmnopqrstuvwxyz&#x27;
+
+class CapsLock:
+    def __init__(self):
+        self.pressed = 0
+
+    def press(self):
+        self.pressed += 1
+
+class Button:
+    &quot;&quot;&quot;A button on a keyboard.
+
+    &gt;&gt;&gt; f = lambda c: print(c, end=&#x27;&#x27;)  # The end=&#x27;&#x27; argument avoids going to a new line
+    &gt;&gt;&gt; k, e, y = Button(&#x27;k&#x27;, f), Button(&#x27;e&#x27;, f), Button(&#x27;y&#x27;, f)
+    &gt;&gt;&gt; s = e.press().press().press()
+    eee
+    &gt;&gt;&gt; caps = Button.caps_lock
+    &gt;&gt;&gt; t = [x.press() for x in [k, e, y, caps, e, e, k, caps, e, y, e, caps, y, e, e]]
+    keyEEKeyeYEE
+    &gt;&gt;&gt; u = Button(&#x27;a&#x27;, print).press().press().press()
+    A
+    A
+    A
+    &quot;&quot;&quot;
+    caps_lock = CapsLock()
+
+    def __init__(self, letter, output):
+        assert letter in LOWERCASE_LETTERS
+        self.letter = letter
+        self.output = output
+        self.pressed = 0
+
+    def press(self):
+        &quot;&quot;&quot;Call output on letter (maybe uppercased), then return the button that was pressed.&quot;&quot;&quot;
+        self.pressed += 1
+        if self.caps_lock.pressed % 2 == 1:
+            self.output(self.letter.upper())
+        else:
+            self.output(self.letter)
+        return self
+</code></pre>
+
+            </div>
+        
+
+
+        <button id='toggle-3' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Button Hint: Uppercasing<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-3">
+Since <code>self.letter</code> is always lowercase, use <code>self.letter.upper()</code> to produce the uppercase version.
+</div>
+
+
+        <button id='toggle-4' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Button Hint: Caps Lock<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-4">
+The number of times <code>caps_lock</code> has been pressed is either
+<code>self.caps_lock.pressed</code> or <code>Button.caps_lock.pressed</code>.
+</div>
+
+
+        <button id='toggle-5' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Button Hint: Output<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-5">
+The <code>output</code> attribute is a function that can be called:
+<code>self.output(self.letter)</code> or <code>self.output(self.letter.upper())</code>. You do not
+need to return the result.
+</div>
+
+
+            
+            <b>Your Answer</b>
+            
+            <div class="monaco-storable" id="keyboard-input" style="height:540px;"></div>
+            <a href="javascript:void" id="modal-link-keyboard-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-keyboard-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-keyboard-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('class Keyboard:\n    &quot;&quot;&quot;A keyboard.\n\n    &gt;&gt;&gt; Button.caps_lock.pressed = 0  # Reset the caps_lock key\n    &gt;&gt;&gt; bored = Keyboard()\n    &gt;&gt;&gt; bored.type(&#x27;hello&#x27;)\n    &gt;&gt;&gt; bored.typed\n    [&#x27;h&#x27;, &#x27;e&#x27;, &#x27;l&#x27;, &#x27;l&#x27;, &#x27;o&#x27;]\n    &gt;&gt;&gt; bored.keys[&#x27;l&#x27;].pressed\n    2\n\n    &gt;&gt;&gt; Button.caps_lock.press()\n    &gt;&gt;&gt; bored.type(&#x27;hello&#x27;)\n    &gt;&gt;&gt; bored.typed\n    [&#x27;h&#x27;, &#x27;e&#x27;, &#x27;l&#x27;, &#x27;l&#x27;, &#x27;o&#x27;, &#x27;H&#x27;, &#x27;E&#x27;, &#x27;L&#x27;, &#x27;L&#x27;, &#x27;O&#x27;]\n    &gt;&gt;&gt; bored.keys[&#x27;l&#x27;].pressed\n    4\n    &quot;&quot;&quot;\n    def __init__(self):\n        self.typed = []\n        self.keys = ...  # Try a dictionary comprehension!\n\n    def type(self, word):\n        &quot;&quot;&quot;Press the button for each letter in word.&quot;&quot;&quot;\n        assert all([w in LOWERCASE_LETTERS for w in word]), &#x27;word must be all lowercase&#x27;\n        "*** YOUR CODE HERE ***"\n\n', "python", "keyboard-input"));
+            </script>
+        
+            <div class="sol-highlight">
+                <b>Solution</b>
+                
+<pre><code>class Keyboard:
+    &quot;&quot;&quot;A keyboard.
+
+    &gt;&gt;&gt; Button.caps_lock.pressed = 0  # Reset the caps_lock key
+    &gt;&gt;&gt; bored = Keyboard()
+    &gt;&gt;&gt; bored.type(&#x27;hello&#x27;)
+    &gt;&gt;&gt; bored.typed
+    [&#x27;h&#x27;, &#x27;e&#x27;, &#x27;l&#x27;, &#x27;l&#x27;, &#x27;o&#x27;]
+    &gt;&gt;&gt; bored.keys[&#x27;l&#x27;].pressed
+    2
+
+    &gt;&gt;&gt; Button.caps_lock.press()
+    &gt;&gt;&gt; bored.type(&#x27;hello&#x27;)
+    &gt;&gt;&gt; bored.typed
+    [&#x27;h&#x27;, &#x27;e&#x27;, &#x27;l&#x27;, &#x27;l&#x27;, &#x27;o&#x27;, &#x27;H&#x27;, &#x27;E&#x27;, &#x27;L&#x27;, &#x27;L&#x27;, &#x27;O&#x27;]
+    &gt;&gt;&gt; bored.keys[&#x27;l&#x27;].pressed
+    4
+    &quot;&quot;&quot;
+    def __init__(self):
+        self.typed = []
+        self.keys = {c: Button(c, self.typed.append) for c in LOWERCASE_LETTERS}
+
+    def type(self, word):
+        &quot;&quot;&quot;Press the button for each letter in word.&quot;&quot;&quot;
+        assert all([w in LOWERCASE_LETTERS for w in word]), &#x27;word must be all lowercase&#x27;
+        for w in word:
+            self.keys[w].press()
+</code></pre>
+
+            </div>
+        
+
+
+        <button id='toggle-6' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Keyboard Hint: Keys<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-6">
+The keys can be created using a dictionary comprehension: <code>self.keys = {c: Button(c, ...) for c in LETTERS}</code>.
+The call to <code>Button</code> should take <code>c</code> and <strong>an output function that appends to <code>self.typed</code></strong>, so that every time
+one of these buttons is pressed, it appends a letter to <code>self.typed</code>.
+</div>
+
+
+        <button id='toggle-7' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Keyboard Hint: Type<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-7">
+Call the <code>press</code> method of <code>self.key[w]</code> for each <code>w</code> in <code>word</code>. It should be
+the case that when you call <code>press</code>, the <code>Button</code> is already set up (in the
+<code>Keyboard.__init__</code> method) to output to the <code>typed</code> list of this <code>Keyboard</code>.
+</div>
+
+<p><strong>Presentation Time</strong>: Describe how new letters are added to
+<code>typed</code> each time a <code>Button</code> in <code>keys</code> is pressed. Instead of just reading
+your code, say what it does (e.g., "When the button of a keyboard is pressed ...").
+One short sentence is enough to describe how new letters are added to <code>typed</code>.
+Pick someone who hasn't presented to the course staff recently to share your group's answer with your TA (in person or on <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom</a>).</p>
+
+
+<h3 id="q3-bear">Q3: Bear</h3>
+
+
+<p>Implement the <code>SleepyBear</code>, and <code>WinkingBear</code> classes so that calling their <code>print</code> method
+matches the doctests. Use as little code as possible and try not to
+repeat any logic from <code>Eye</code> or <code>Bear</code>. Each blank can be filled with just two
+short lines.</p>
+
+<p><strong>Discussion Time:</strong> Before writing code, talk about what is different about a
+<code>SleepyBear</code> and a <code>Bear</code>. When using inheritance, you only need to implement
+the differences between the base class and subclass. Then, talk about what is
+different about a <code>WinkingBear</code> and a <code>Bear</code>. Can you think of a way to make
+the bear wink without a new implementation of <code>print</code>?</p>
+
+<attach-py>
+
+<pre><code>class Eye:
+    &quot;&quot;&quot;An eye.
+
+    &gt;&gt;&gt; Eye().draw()
+    &#x27;0&#x27;
+    &gt;&gt;&gt; print(Eye(False).draw(), Eye(True).draw())
+    0 &#x2d;
+    &quot;&quot;&quot;
+    def __init__(self, closed=False):
+        self.closed = closed
+
+    def draw(self):
+        if self.closed:
+            return &#x27;&#x2d;&#x27;
+        else:
+            return &#x27;0&#x27;
+
+class Bear:
+    &quot;&quot;&quot;A bear.
+
+    &gt;&gt;&gt; Bear().print()
+    ? 0o0?
+    &quot;&quot;&quot;
+    def __init__(self):
+        self.nose_and_mouth = &#x27;o&#x27;
+
+    def next_eye(self):
+        return Eye()
+
+    def print(self):
+        left, right = self.next_eye(), self.next_eye()
+        print(&#x27;? &#x27; + left.draw() + self.nose_and_mouth + right.draw() + &#x27;?&#x27;)</code></pre>
+
+</attach-py>
+
+<div class="page-break"></div>
+
+
+            
+            <b>Your Answer</b>
+            
+            <div class="monaco-storable" id="bear-input" style="height:486px;"></div>
+            <a href="javascript:void" id="modal-link-bear-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-bear-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-bear-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('class SleepyBear(Bear):\n    &quot;&quot;&quot;A bear with closed eyes.\n\n    &gt;&gt;&gt; SleepyBear().print()\n    ? &#x2d;o&#x2d;?\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\nclass WinkingBear(Bear):\n    &quot;&quot;&quot;A bear whose left eye is different from its right eye.\n\n    &gt;&gt;&gt; WinkingBear().print()\n    ? &#x2d;o0?\n    &quot;&quot;&quot;\n    def __init__(self):\n        "*** YOUR CODE HERE ***"\n\n    def next_eye(self):\n        "*** YOUR CODE HERE ***"\n\n', "python", "bear-input"));
+            </script>
+        
+            <div class="sol-highlight">
+                <b>Solution</b>
+                
+<pre><code>class SleepyBear(Bear):
+    &quot;&quot;&quot;A bear with closed eyes.
+
+    &gt;&gt;&gt; SleepyBear().print()
+    ? &#x2d;o&#x2d;?
+    &quot;&quot;&quot;
+    def next_eye(self):
+        return Eye(True)
+
+class WinkingBear(Bear):
+    &quot;&quot;&quot;A bear whose left eye is different from its right eye.
+
+    &gt;&gt;&gt; WinkingBear().print()
+    ? &#x2d;o0?
+    &quot;&quot;&quot;
+    def __init__(self):
+        super().__init__()
+        self.eye_calls = 0
+
+    def next_eye(self):
+        self.eye_calls += 1
+        return Eye(self.eye_calls % 2)
+</code></pre>
+
+            </div>
+        
+
+<!-- 
+        <button id='toggle-8' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: SleepyBear<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-8">
+Implement a <code>next_eye</code> method that returns an Eye instance that is closed.
+</div> -->
+
+<!-- 
+        <button id='toggle-9' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: WinkingBear<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-9">
+One way to make the bear wink is to track how may times the <code>next_eye</code> method is
+invoked using a new instance attribute and return a closed eye if <code>next_eye</code> has
+been called an even number of times.
+</div> -->
+
+
+<h1 id="document-the-occasion">Document the Occasion</h1>
+
+
+<p>Please all fill out the <a href="https://forms.gle/UCYakosihNmKSuZE9">attendance form</a> (one submission per person per week).</p>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#getting-started">Getting Started</a></li>
+  <li><a href="index.html#iterators">Iterators</a></li>
+  <ul>
+    <li><a href="index.html#q1-draw">Q1: Draw</a></li>
+  </ul>
+  <li><a href="index.html#object-oriented-programming">Object-Oriented Programming</a></li>
+  <ul>
+    <li><a href="index.html#q2-keyboard">Q2: Keyboard</a></li>
+    <li><a href="index.html#q3-bear">Q3: Bear</a></li>
+  </ul>
+  <li><a href="index.html#document-the-occasion">Document the Occasion</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

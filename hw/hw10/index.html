@@ -1,0 +1,617 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/hw.css">
+
+
+    <title>
+Homework 10 | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Homework 10: SQL
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="hw10.zip" class="label label-outline">hw10.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><em>Due by 11:59pm on Thursday, December 5</em></p>
+
+
+
+
+
+<h2>Instructions</h2>
+
+<p>Download <a href="hw10.zip">hw10.zip</a>.</p>
+
+<p><strong>Submission:</strong> When you are done, submit the assignment by uploading all code files you've edited to Gradescope. You may submit more than once before the deadline; only the
+final submission will be scored. Check that you have successfully submitted
+your code on Gradescope.  See <a
+  href="../../lab/lab00.html#task-c-submitting-the-assignment">Lab 0</a> for more instructions on
+submitting assignments.</p>
+
+<p><strong>Using Ok:</strong> If you have any questions about using Ok, please
+refer to <a href="../../articles/using-ok.html">this guide.</a>
+
+
+
+<p><strong>Grading:</strong> Homework is graded based on
+correctness. Each incorrect problem will decrease the total score by one point.
+<strong>This homework is out of 2 points.</strong>
+
+
+
+
+    
+<br>
+
+<p>To check your progress, you can run <code>sqlite3</code> directly by running:</p>
+
+<pre><code>python3 sqlite_shell.py &#x2d;&#x2d;init hw10.sql</code></pre>
+
+<p>You should also check your work using <code>ok</code>:</p>
+
+<pre><code>python3 ok</code></pre>
+
+
+<h2 id="visualizing-sql">Visualizing SQL</h2>
+
+
+<p>If you would like some support with visualizing SQL, please navigate 
+to <a href="https://code.cs61a.org/">code.cs61a.org</a> and select <em>Start SQL Interpreter</em>.</p>
+
+<p>From there, you can either practice on tables you make yourself, existing tables from the CS 61A database (which can be found by typing <code>.tables</code>), or on the tables from the assignment you are working on by copying and pasting the entire <code>CREATE TABLE ...</code> command.</p>
+
+
+<h1 id="required-questions">Required Questions</h1>
+
+
+<br />
+
+<br/>
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Getting Started Videos<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+
+<h2 id="getting-started-videos" class="no-toc">Getting Started Videos</h2>
+
+
+<p>These videos may provide some helpful direction for tackling the coding
+problems on this assignment.</p>
+
+<blockquote><p>To see these videos, you should be logged into your berkeley.edu email.</p></blockquote>
+
+
+            <iframe width="560" height="315" src="https://youtube.com/embed/videoseries?list=PLx38hZJ5RLZcEFm0zQF3292_HHg371oEw"
+                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" aria-label = "hw10-getstarted"
+                allowfullscreen></iframe><p><a href='https://youtu.be/playlist?list=PLx38hZJ5RLZcEFm0zQF3292_HHg371oEw'> YouTube link </a></p>
+
+</div>
+
+
+<h2 id="sql">SQL</h2>
+
+
+
+<h3 id="dog-data">Dog Data</h3>
+
+
+<p>In each question below, you will define a new table based on the following
+tables.</p>
+
+<pre><code>CREATE TABLE parents AS
+  SELECT &quot;ace&quot; AS parent, &quot;bella&quot; AS child UNION
+  SELECT &quot;ace&quot;          , &quot;charlie&quot;        UNION
+  SELECT &quot;daisy&quot;        , &quot;hank&quot;           UNION
+  SELECT &quot;finn&quot;         , &quot;ace&quot;            UNION
+  SELECT &quot;finn&quot;         , &quot;daisy&quot;          UNION
+  SELECT &quot;finn&quot;         , &quot;ginger&quot;         UNION
+  SELECT &quot;ellie&quot;        , &quot;finn&quot;;
+
+CREATE TABLE dogs AS
+  SELECT &quot;ace&quot; AS name, &quot;long&quot; AS fur, 26 AS height UNION
+  SELECT &quot;bella&quot;      , &quot;short&quot;      , 52           UNION
+  SELECT &quot;charlie&quot;    , &quot;long&quot;       , 47           UNION
+  SELECT &quot;daisy&quot;      , &quot;long&quot;       , 46           UNION
+  SELECT &quot;ellie&quot;      , &quot;short&quot;      , 35           UNION
+  SELECT &quot;finn&quot;       , &quot;curly&quot;      , 32           UNION
+  SELECT &quot;ginger&quot;     , &quot;short&quot;      , 28           UNION
+  SELECT &quot;hank&quot;       , &quot;curly&quot;      , 31;
+
+CREATE TABLE sizes AS
+  SELECT &quot;toy&quot; AS size, 24 AS min, 28 AS max UNION
+  SELECT &quot;mini&quot;       , 28       , 35        UNION
+  SELECT &quot;medium&quot;     , 35       , 45        UNION
+  SELECT &quot;standard&quot;   , 45       , 60;</code></pre>
+
+<p>Your tables should still perform correctly <em>even if the values in these tables
+change</em>. For example, if you are asked to list all dogs with a name that starts
+with <code>h</code>, you should write:</p>
+
+<pre><code>SELECT name FROM dogs WHERE &quot;h&quot; &lt;= name AND name &lt; &quot;i&quot;;</code></pre>
+
+<p>In other words, you should not assume that the <code>dogs</code> table has only the data in the table above by writing:</p>
+
+<pre><code>SELECT &quot;hank&quot;;</code></pre>
+
+<p>The former query would still be correct if the name <code>ginger</code> were changed to
+<code>gigi</code> or a row was added with the name <code>harry</code>. Contrastingly, writing <code>SELECT &quot;hank&quot;;</code> would not.</p>
+
+
+<h3 id="q1-by-parent-height">Q1: By Parent Height</h3>
+
+<p>Create a table <code>by_parent_height</code> that has a column of the names of all dogs that have
+a <code>parent</code>, ordered by the height of the parent dog from tallest parent to shortest
+parent.</p>
+
+<pre><code>&#x2d;&#x2d; All dogs with parents ordered by decreasing height of their parent
+CREATE TABLE by_parent_height AS
+  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+</code></pre>
+
+<p>For example, <code>finn</code> has a parent <code>ellie</code> with height 35, and so
+should appear before <code>ginger</code> who has a parent <code>finn</code> with height 32.
+The names of dogs with parents of the same height should appear together in any
+order. For example, <code>bella</code> and <code>charlie</code> should both appear at the end, but
+either one can come before the other.</p>
+
+<p>The <code>by_parent_height</code> table should look like this:</p>
+
+<pre><code>+&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+
+| chil     |
++&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+
+| hank     |
+| finn     |
+| ace      |
+| daisy    |
+| ginger   |
+| bella    |
+| charlie  |
++&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+</code></pre>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q by_parent_height<button id="copy-code-python3ok-qby_parent_height" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qby_parent_height").onclick = () => copyCode('python3 ok -q by_parent_height', "copy-code-python3ok-qby_parent_height");
+        </script>
+        <br/>
+<!--
+            <iframe width="560" height="315" src="https://youtube.com/embed/wRRI2tn4zdo"
+                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" aria-label = "sql-dogs-by-parent-height"
+                allowfullscreen></iframe><p><a href='https://youtu.be/wRRI2tn4zdo'> YouTube link </a></p>-->
+
+
+
+
+<h3 id="q2-size-of-dogs">Q2: Size of Dogs</h3>
+
+<p>The Fédération Cynologique Internationale classifies a standard poodle as over
+45 cm and up to 60 cm. The <code>sizes</code> table describes this and other such
+classifications, where a dog must be over the <code>min</code> and less than or equal to
+the <code>max</code> in <code>height</code> to qualify as <code>size</code>.</p>
+
+<p>Create a <code>size_of_dogs</code> table with two columns, one for each dog's <code>name</code> and
+another for its <code>size</code>.</p>
+
+<pre><code>&#x2d;&#x2d; The size of each dog
+CREATE TABLE size_of_dogs AS
+  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+</code></pre>
+
+<p>The <code>size_of_dogs</code> table should look like this:</p>
+
+<pre><code>+&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+
+| name     | size     |
++&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+
+| ace      | toy      |
+| bella    | standard |
+| charlie  | standard |
+| daisy    | standard |
+| ellie    | mini     |
+| finn     | mini     |
+| ginger   | toy      |
+| hank     | mini     |
++&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+</code></pre>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q size_of_dogs<button id="copy-code-python3ok-qsize_of_dogs" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qsize_of_dogs").onclick = () => copyCode('python3 ok -q size_of_dogs', "copy-code-python3ok-qsize_of_dogs");
+        </script>
+        <br/>
+
+<!--
+            <iframe width="560" height="315" src="https://youtube.com/embed/d9EPid-MJes"
+                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" aria-label = "sql-dogs-size"
+                allowfullscreen></iframe><p><a href='https://youtu.be/d9EPid-MJes'> YouTube link </a></p>-->
+
+
+
+
+<h3 id="q3-sentences">Q3: Sentences</h3>
+
+<p>There are two pairs of siblings that have the same size. Create a table that
+contains a row with a string for each of these pairs.  Each string should be a
+sentence describing the siblings by their size.</p>
+
+<pre><code>&#x2d;&#x2d; [Optional] Filling out this helper table is recommended
+CREATE TABLE siblings AS
+  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+
+&#x2d;&#x2d; Sentences about siblings that are the same size
+CREATE TABLE sentences AS
+  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+</code></pre>
+
+<p>Each sibling pair should appear only once in the output, and siblings should be
+listed in alphabetical order (e.g. <code>&quot;bella and charlie...&quot;</code> instead of
+<code>&quot;charlie and bella...&quot;</code>), as follows:</p>
+
+<pre><code>sqlite&gt; SELECT * FROM sentences;
+The two siblings, bella and charlie, have the same size: standard
+The two siblings, ace and ginger, have the same size: toy</code></pre>
+
+<blockquote><p><strong>Hint</strong>: First, create a helper table containing each pair of siblings. This
+will make comparing the sizes of siblings when constructing the main table
+easier.</p>
+
+<p><strong>Hint</strong>: If you join a table with itself, use <code>AS</code> within the <code>FROM</code> clause to
+give each table an alias.</p>
+
+<p><strong>Hint</strong>: In order to concatenate two strings into one, use the <code>||</code> operator, e.g. <code>SELECT &quot;hello&quot; || &quot;world&quot;;</code> will return <code>helloworld</code>.</p></blockquote>
+
+<!--
+            <iframe width="560" height="315" src="https://youtube.com/embed/DiS4IzSohkc"
+                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" aria-label = "sql-dogs-sentences"
+                allowfullscreen></iframe><p><a href='https://youtu.be/DiS4IzSohkc'> YouTube link </a></p>-->
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q sentences<button id="copy-code-python3ok-qsentences" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qsentences").onclick = () => copyCode('python3 ok -q sentences', "copy-code-python3ok-qsentences");
+        </script>
+        <br/>
+
+
+
+
+<h3 id="q4-low-variance">Q4: Low Variance</h3>
+
+
+<p>We want to create a table that contains the <em>height range</em> (defined as the difference between maximum and minimum <code>height</code>) of all dogs that share a <code>fur</code> type. However, we'll only
+consider <code>fur</code> types where each dog with that <code>fur</code> type is within 30% of the average <code>height</code> of all dogs with that <code>fur</code> type; we call this the <em>low variance</em> criterion.</p>
+
+<p>For example, if the average <code>height</code> for short-haired dogs is 10, then in order to be included in our
+output, all dogs with short hair must have a <code>height</code> of at most 13 and at least 7 (<em>inclusive</em>).</p>
+
+<blockquote><p><strong>Hint</strong>: <code>MIN</code>, <code>MAX</code>, and <code>AVG</code> will be useful here.
+<strong>Hint</strong>: You may want to first find the average height and make sure that:</p>
+
+<pre><code>* There are no heights smaller than 0.7 (i.e. 70%) of the average.
+* There are no heights greater than 1.3 (i.e. 130%) of the average.</code></pre></blockquote>
+
+<!-- break line -->
+
+<pre><code>&#x2d;&#x2d; Height range for each fur type where all of the heights differ by no more than 30% from the average height
+CREATE TABLE low_variance AS
+  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+</code></pre>
+
+<p>Your output should have two columns, in this order: the <code>fur</code> type and the <code>height_range</code> for the <code>fur</code> types that meet this criteria. It should look like this:</p>
+
+<pre><code>+&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+
+| fur        | height_range |
++&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+
+| Curly      | 1            |
++&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;&#x2d;+</code></pre>
+
+
+        <button id='toggle-2' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Explanation<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+
+<p>The average height of long-haired dogs is 39.7, so the low variance criterion requires the height of each long-haired dog to be between 27.8 and 51.6. However, <code>ace</code> is a long-haired dog with height 26, which is outside this range. For short-haired dogs, <code>bella</code> falls outside the valid range (check!). Thus, neither short nor long haired dogs are included in the output. There are two curly haired dogs: <code>finn</code> with height 32 and <code>hank</code> with height 31. This gives a height range of 1.</p>
+
+</div>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q low_variance<button id="copy-code-python3ok-qlow_variance" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qlow_variance").onclick = () => copyCode('python3 ok -q low_variance', "copy-code-python3ok-qlow_variance");
+        </script>
+        <br/>
+
+
+<h1 id="submit-assignment">Submit Assignment</h1>
+
+
+<p>Submit this assignment by uploading any files you've edited <strong>to the appropriate Gradescope assignment.</strong> <a href="../../lab/lab00.html#submit-with-gradescope">Lab 00</a> has detailed instructions.</p>
+
+<p>Make sure to submit <code>hw10.sql</code> to the autograder!</p>
+
+
+<h2 id="exam-practice">Exam Practice</h2>
+
+
+<p>The following are some SQL exam problems from previous semesters that you may find useful as additional exam practice.</p>
+
+<ol>
+  <li><a href="../../exam/fa19/final/61a-fa19-final.pdf#page=11">Fall 2019 Final, Question 10: Big Game</a></li>
+  <li><a href="../../exam/su19/final/61a-su19-final.pdf#page=11">Summer 2019 Final, Question 8: The Big SQL</a></li>
+  <li><a href="https://inst.eecs.berkeley.edu/~cs61a/fa18/assets/pdfs/61a-fa18-final.pdf#page=9">Fall 2018 Final, Question 7: SQL of Course</a></li>
+</ol>
+
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#visualizing-sql">Visualizing SQL</a></li>
+  <li><a href="index.html#required-questions">Required Questions</a></li>
+  <ul>
+    <li><a href="index.html#sql">SQL</a></li>
+    <ul>
+      <li><a href="index.html#dog-data">Dog Data</a></li>
+      <li><a href="index.html#q1-by-parent-height">Q1: By Parent Height</a></li>
+      <li><a href="index.html#q2-size-of-dogs">Q2: Size of Dogs</a></li>
+      <li><a href="index.html#q3-sentences">Q3: Sentences</a></li>
+      <li><a href="index.html#q4-low-variance">Q4: Low Variance</a></li>
+    </ul>
+  </ul>
+  <li><a href="index.html#submit-assignment">Submit Assignment</a></li>
+  <ul>
+    <li><a href="index.html#exam-practice">Exam Practice</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

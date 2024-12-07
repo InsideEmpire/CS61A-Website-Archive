@@ -1,0 +1,694 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/disc.css">
+
+
+    <title>
+Discussion 8 | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Discussion 8: Linked Lists
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="disc08.pdf" class="label label-outline">disc08.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<!-- <div class="alert storable-login-status"></div> -->
+
+
+    
+<p>Switch to Pensieve:</p>
+
+<ul>
+  <li><strong>Everyone</strong>: Go to <a href="https://tutor.pensieve.co/schools/berkeley/all/cs61a/cs61a_fa24/5a1dfd94-63f2-4aa9-a859-a989e604ef53/open">pensieve.co</a>, log in with your @berkeley.edu email, and <strong>enter your group number</strong> (which was in the email that assigned you to this lab).</li>
+</ul>
+
+<p>Once you're on Pensieve, you don't need to return to this page; Pensieve has all the same content (but more features). If for some reason Penseive doesn't work, return to this page and continue with the discussion.</p>
+
+
+<h1 id="getting-started">Getting Started</h1>
+
+
+<p><strong>To get help from a TA</strong>, If you do not have an in-person TA, you can reach your TA using this <a href="https://berkeley.zoom.us/j/91340395124?pwd=7Lqljf1tslL0QlufLz6HrBtSCB8Ojv.1">Zoom link</a>.</p>
+
+<p>If there are fewer than 3 people in your group, feel free to merge your group with another group in the room.</p>
+
+<p>Everybody say your name and your birthday and then tell the group about your
+favorite birthday party you've attended (either for your birthday or someone
+else's).</p>
+
+<p><strong>Pro tip:</strong> Groups tend not to ask for help unless they've been stuck for a
+looooooong time. Try asking for help sooner. We're pretty helpful! You might
+learn something.</p>
+
+
+<h1 id="linked-lists">Linked Lists</h1>
+
+
+<p>A linked list is a <code>Link</code> object or <code>Link.empty</code>.</p>
+
+<p>You can mutate a <code>Link</code> object <code>s</code> in two ways:</p>
+
+<ul>
+  <li>Change the first element with <code>s.first = ...</code></li>
+  <li>Change the rest of the elements with <code>s.rest = ...</code></li>
+</ul>
+
+<p>You can make a new <code>Link</code> object by calling <code>Link</code>:</p>
+
+<ul>
+  <li><code>Link(4)</code> makes a linked list of length 1 containing 4.</li>
+  <li><code>Link(4, s)</code> makes a linked list that starts with 4 followed by the elements of linked list <code>s</code>.</li>
+</ul>
+
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Link Class<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<pre><code>class Link:
+    &quot;&quot;&quot;A linked list is either a Link object or Link.empty
+
+    &gt;&gt;&gt; s = Link(3, Link(4, Link(5)))
+    &gt;&gt;&gt; s.rest
+    Link(4, Link(5))
+    &gt;&gt;&gt; s.rest.rest.rest is Link.empty
+    True
+    &gt;&gt;&gt; s.rest.first * 2
+    8
+    &gt;&gt;&gt; print(s)
+    &lt;3 4 5&gt;
+    &quot;&quot;&quot;
+    empty = ()
+
+    def __init__(self, first, rest=empty):
+        assert rest is Link.empty or isinstance(rest, Link)
+        self.first = first
+        self.rest = rest
+
+    def __repr__(self):
+        if self.rest:
+            rest_repr = &#x27;, &#x27; + repr(self.rest)
+        else:
+            rest_repr = &#x27;&#x27;
+        return &#x27;Link(&#x27; + repr(self.first) + rest_repr + &#x27;)&#x27;
+
+    def __str__(self):
+        string = &#x27;&lt;&#x27;
+        while self.rest is not Link.empty:
+            string += str(self.first) + &#x27; &#x27;
+            self = self.rest
+        return string + str(self.first) + &#x27;&gt;&#x27;</code></pre>
+
+
+</div>
+
+<p><strong>Drawing time:</strong> Pick a way for your group to draw diagrams. Paper, a
+whiteboard, or a tablet, are all fine. If you don't have anything like that, ask
+another group in the room if they have extra paper.</p>
+
+
+<h3 id="q1-strange-loop">Q1: Strange Loop</h3>
+
+
+<p>In lab, there was a <code>Link</code> object with a cycle that represented an infinite repeating list of 1's.</p>
+
+<pre><code>&gt;&gt;&gt; ones = Link(1)
+&gt;&gt;&gt; ones.rest = ones
+&gt;&gt;&gt; [ones.first, ones.rest.first, ones.rest.rest.first, ones.rest.rest.rest.first]
+[1, 1, 1, 1]
+&gt;&gt;&gt; ones.rest is ones
+True</code></pre>
+
+
+
+<p>Implement <code>strange_loop</code>, which takes no arguments and returns a <code>Link</code> object
+<code>s</code> for which <code>s.rest.first.rest</code> is <code>s</code>.</p>
+
+<p>Draw a picture of the linked list you want to create, then write code to create
+it.</p>
+
+
+        <button id='toggle-2' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Nested Linked Lists<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-2">
+For <code>s.rest.first.rest</code> to exist at all, the second element of <code>s</code>, called
+<code>s.rest.first</code>, must itself be a linked list.
+</div>
+
+
+        <button id='toggle-3' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: A Picture<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-3">
+<img class="img-responsive center-block" src="https://i.imgur.com/e7qhrNQ.png" alt="Strange loop" width="" height="">
+</div>
+
+
+        <button id='toggle-4' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Code<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-4">
+Making a cycle requires two steps: making
+a linked list without a cycle, then modifying it. First create, for example, <code>s
+= Link(6, Link(Link(1)))</code>, then change <code>s.rest.first.rest</code> to create the cycle.
+</div>
+
+
+            <div class="monaco-storable" id="strange_loop-input" style="height:234px;"></div>
+            <a href="javascript:void" id="modal-link-strange_loop-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-strange_loop-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-strange_loop-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def strange_loop():\n    &quot;&quot;&quot;Return a Link s for which s.rest.first.rest is s.\n\n    &gt;&gt;&gt; s = strange_loop()\n    &gt;&gt;&gt; s.rest.first.rest is s\n    True\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "strange_loop-input"));
+            </script>
+        
+
+<div class="page-break"></div>
+
+
+<h3 id="q2-sum-two-ways">Q2: Sum Two Ways</h3>
+
+
+<p>Implement both <code>sum_rec</code> and <code>sum_iter</code>. Each one takes a linked list of numbers
+<code>s</code> and a non-negative integer <code>k</code> and returns the sum of the first <code>k</code> elements
+of <code>s</code>. If there are fewer than <code>k</code> elements in <code>s</code>, all of them are summed. If
+<code>k</code> is 0 or <code>s</code> is empty, the sum is 0.</p>
+
+<p>Use recursion to implement <code>sum_rec</code>. Don't use recursion to implement
+<code>sum_iter</code>; use a <code>while</code> loop instead.</p>
+
+
+            <div class="monaco-storable" id="sum_two_ways-input" style="height:648px;"></div>
+            <a href="javascript:void" id="modal-link-sum_two_ways-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-sum_two_ways-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-sum_two_ways-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def sum_rec(s, k):\n    &quot;&quot;&quot;Return the sum of the first k elements in s.\n\n    &gt;&gt;&gt; a = Link(1, Link(6, Link(8)))\n    &gt;&gt;&gt; sum_rec(a, 2)\n    7\n    &gt;&gt;&gt; sum_rec(a, 5)\n    15\n    &gt;&gt;&gt; sum_rec(Link.empty, 1)\n    0\n    &quot;&quot;&quot;\n    # Use a recursive call to sum_rec; don&#x27;t call sum_iter\n    "*** YOUR CODE HERE ***"\n\ndef sum_iter(s, k):\n    &quot;&quot;&quot;Return the sum of the first k elements in s.\n\n    &gt;&gt;&gt; a = Link(1, Link(6, Link(8)))\n    &gt;&gt;&gt; sum_iter(a, 2)\n    7\n    &gt;&gt;&gt; sum_iter(a, 5)\n    15\n    &gt;&gt;&gt; sum_iter(Link.empty, 1)\n    0\n    &quot;&quot;&quot;\n    # Don&#x27;t call sum_rec or sum_iter\n    "*** YOUR CODE HERE ***"\n\n', "python", "sum_two_ways-input"));
+            </script>
+        
+
+
+        <button id='toggle-5' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Recursive Version<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-5">
+Add <code>s.first</code> to the sum of the first <code>k&#x2d;1</code> elements in <code>s.rest</code>. Your base case
+condition should include <code>s is Link.empty</code> so that you're checking whether <code>s</code>
+is empty before ever evaluating <code>s.first</code> or <code>s.rest</code>.
+</div>
+
+
+        <button id='toggle-6' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Iterative Version<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-6">
+Introduce a new name, such as <code>total</code>, then repeatedly (in a <code>while</code> loop) add
+<code>s.first</code> to <code>total</code>, set <code>s = s.rest</code> to advance through the linked list, and reduce <code>k</code> by one.
+</div>
+
+<p><strong>Discussion time:</strong> When adding up numbers, the intermediate sums depend on the
+order. <code>(1 + 3) + 5</code> and <code>1 + (3 + 5)</code> both equal 9, but the first one makes 4
+along the way while the second makes 8 along the way. For the same linked list
+<code>s</code> and length <code>k</code>, will <code>sum_rec</code> and <code>sum_iter</code> both make the same
+intermediate sums along the way?</p>
+
+<p>For a summation, the order of additions doesn't affect the result, but for other
+operations this ordering matters. If you're not sure why, spend a few minutes
+talking to your TA about when it might make a difference.</p>
+
+<div class="page-break"></div>
+
+
+<h3 id="q3-overlap">Q3: Overlap</h3>
+
+
+<p>Implement <code>overlap</code>, which takes two linked lists of numbers called <code>s</code> and <code>t</code>
+that are sorted in increasing order and have no repeated elements within each
+list. It returns the count of how many numbers appear in both lists.</p>
+
+<p>This can be done in <em>linear</em> time in the combined length of <code>s</code> and <code>t</code> by
+always advancing forward in the linked list whose first element is smallest
+until both first elements are equal (add one to the count and advance both) or
+one list is empty (time to return). Here's a
+<a href="https://youtu.be/UZ9nOiyMQ8A?si=W0N2ecsTHR5p8c2z&t=137">lecture video clip</a>
+about this (but the video uses Python lists instead of linked lists).</p>
+
+<p>Take a vote to decide whether to use recursion or iteration.
+Either way works (and the solutions are about the same complexity/difficulty).</p>
+
+
+            <div class="monaco-storable" id="overlap-input" style="height:846px;"></div>
+            <a href="javascript:void" id="modal-link-overlap-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-overlap-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-overlap-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def overlap(s, t):\n    &quot;&quot;&quot;For increasing s and t, count the numbers that appear in both.\n\n    &gt;&gt;&gt; a = Link(3, Link(4, Link(6, Link(7, Link(9, Link(10))))))\n    &gt;&gt;&gt; b = Link(1, Link(3, Link(5, Link(7, Link(8)))))\n    &gt;&gt;&gt; overlap(a, b)  # 3 and 7\n    2\n    &gt;&gt;&gt; overlap(a.rest, b)  # just 7\n    1\n    &gt;&gt;&gt; overlap(Link(0, a), Link(0, b))\n    3\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "overlap-input"));
+            </script>
+        
+
+
+        <button id='toggle-7' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Template for Recursion<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-7">
+
+<pre><code>    if s is Link.empty or t is Link.empty:
+        return 0
+    if s.first == t.first:
+        return __________________
+    elif s.first &lt; t.first:
+        return __________________
+    elif s.first &gt; t.first:
+        return __________________</code></pre>
+
+
+</div>
+
+
+        <button id='toggle-8' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Template for Iteration<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-8">
+
+<pre><code>    k = 0
+    while s is not Link.empty and t is not Link.empty:
+        if s.first == t.first:
+            __________________
+        elif s.first &lt; t.first:
+            __________________
+        elif s.first &gt; t.first:
+            __________________
+    return k</code></pre>
+
+
+</div>
+
+<div class="page-break"></div>
+
+
+<h1 id="document-the-occasion">Document the Occasion</h1>
+
+
+<p>Please all fill out the <a href="https://forms.gle/UCYakosihNmKSuZE9">attendance form</a> (one submission per person per week).</p>
+
+<p><strong>Important:</strong> Please help put the furniture in the room back where you found it before you leave. Thanks!</p>
+
+
+<h1 id="extra-challenge">Extra Challenge</h1>
+
+
+<p>This last question is similar in complexity to an A+ question on an exam. Feel free to skip it, but it's a fun one, so try it if you have time.</p>
+
+
+<h3 id="q4-decimal-expansion">Q4: Decimal Expansion</h3>
+
+
+<p><strong>Definition.</strong> The <em>decimal expansion</em> of a fraction <code>n/d</code> with <code>n &lt; d</code> is an
+infinite sequence of digits starting with the 0 before the decimal point and
+followed by digits that represent the tenths, hundredths, and thousands place
+(and so on) of the number <code>n/d</code>. E.g., the decimal expansion of 2/3 is a zero
+followed by an infinite sequence of 6's: 0.6666666....</p>
+
+<p>Implement <code>divide</code>, which takes positive integers <code>n</code> and <code>d</code> with <code>n &lt; d</code>. It
+returns a linked list with a cycle containing the digits of the infinite decimal
+expansion of <code>n/d</code>. The provided <code>display</code> function prints the first <code>k</code> digits
+after the decimal point.</p>
+
+<p>For example, 1/22 would be represented as <code>x</code> below:</p>
+
+<pre><code>&gt;&gt;&gt; 1/22
+0.045454545454545456
+&gt;&gt;&gt; x = Link(0, Link(0, Link(4, Link(5))))
+&gt;&gt;&gt; x.rest.rest.rest.rest = x.rest.rest
+&gt;&gt;&gt; display(x, 20)
+0.04545454545454545454...</code></pre>
+
+
+
+
+            <div class="monaco-storable" id="display-input" style="height:324px;"></div>
+            <a href="javascript:void" id="modal-link-display-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-display-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-display-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def display(s, k=10):\n    &quot;&quot;&quot;Print the first k digits of infinite linked list s as a decimal.\n\n    &gt;&gt;&gt; s = Link(0, Link(8, Link(3)))\n    &gt;&gt;&gt; s.rest.rest.rest = s.rest.rest\n    &gt;&gt;&gt; display(s)\n    0.8333333333...\n    &quot;&quot;&quot;\n    assert s.first == 0, f&#x27;{s.first} is not 0&#x27;\n    digits = f&#x27;{s.first}.&#x27;\n    s = s.rest\n    for _ in range(k):\n        assert s.first &gt;= 0 and s.first &lt; 10, f&#x27;{s.first} is not a digit&#x27;\n        digits += str(s.first)\n        s = s.rest\n    print(digits + &#x27;...&#x27;)\n', "python", "display-input"));
+            </script>
+        
+
+
+            <div class="monaco-storable" id="divide-input" style="height:558px;"></div>
+            <a href="javascript:void" id="modal-link-divide-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-divide-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-divide-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def divide(n, d):\n    &quot;&quot;&quot;Return a linked list with a cycle containing the digits of n/d.\n\n    &gt;&gt;&gt; display(divide(5, 6))\n    0.8333333333...\n    &gt;&gt;&gt; display(divide(2, 7))\n    0.2857142857...\n    &gt;&gt;&gt; display(divide(1, 2500))\n    0.0004000000...\n    &gt;&gt;&gt; display(divide(3, 11))\n    0.2727272727...\n    &gt;&gt;&gt; display(divide(3, 99))\n    0.0303030303...\n    &gt;&gt;&gt; display(divide(2, 31), 50)\n    0.06451612903225806451612903225806451612903225806451...\n    &quot;&quot;&quot;\n    assert n &gt; 0 and n &lt; d\n    result = Link(0)  # The zero before the decimal point\n    "*** YOUR CODE HERE ***"\n    return result\n', "python", "divide-input"));
+            </script>
+        
+
+
+        <button id='toggle-9' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Hint: Approach<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-9">
+Place the division pattern from the example above in a <code>while</code> statement:
+
+<pre><code>&gt;&gt;&gt; q, r = 10 * n // d, 10 * n % d
+&gt;&gt;&gt; tail.rest = Link(q)
+&gt;&gt;&gt; tail = tail.rest
+&gt;&gt;&gt; n = r</code></pre>
+
+
+
+<p>While constructing the decimal expansion, store the <code>tail</code> for each <code>n</code> in a
+dictionary keyed by <code>n</code>. When some <code>n</code> appears a second time, instead of
+constructing a new <code>Link</code>, set its original link as the rest of the previous
+link. That will form a cycle of the appropriate length.
+</div></p>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#getting-started">Getting Started</a></li>
+  <li><a href="index.html#linked-lists">Linked Lists</a></li>
+  <ul>
+    <li><a href="index.html#q1-strange-loop">Q1: Strange Loop</a></li>
+    <li><a href="index.html#q2-sum-two-ways">Q2: Sum Two Ways</a></li>
+    <li><a href="index.html#q3-overlap">Q3: Overlap</a></li>
+  </ul>
+  <li><a href="index.html#document-the-occasion">Document the Occasion</a></li>
+  <li><a href="index.html#extra-challenge">Extra Challenge</a></li>
+  <ul>
+    <li><a href="index.html#q4-decimal-expansion">Q4: Decimal Expansion</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

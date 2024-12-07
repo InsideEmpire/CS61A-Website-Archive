@@ -1,0 +1,2334 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../../../assets/js/hl.js"></script>
+    <script src="../../../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../../../assets/css/style.css">
+    <link rel="stylesheet" href="../../../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../../../assets/images/favicon.ico">
+
+    
+
+    <title>
+Midterm 2 Walkthrough | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../../../index.html">Lectures</a></li>
+            
+            <li><a href="../../../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>Midterm 2 Walkthrough</h1>
+    </header>
+     <h2 id="tuple-trouble">Tuple Trouble</h2>
+
+
+
+<h3 id="question">Question</h3>
+
+
+<p>Consider this partially implemented two-line program:</p>
+
+<pre><code>greeting_from_staff = (&quot;Good Luck&quot;, &quot;You Got This&quot;, &quot;Just Breathe&quot;)
+______ = &quot;Once More with Feeling&quot;</code></pre>
+
+
+
+<p>The full program results in this error:</p>
+
+<pre><code>AttributeError: &#x27;tuple&#x27; object has no attribute &#x27;__setitem__&#x27;</code></pre>
+
+
+
+
+<h3 id="walkthrough">Walkthrough</h3>
+
+
+<p>To understand this question, you need to have an idea of how
+Python implements object attribute access and the assignment operator.</p>
+
+<p>First, the error talks about a 'tuple' object. That's referring to
+the <code>greeting_from_staff</code> variable, a 3-item tuple.</p>
+
+<p>Then it says that the tuple has no attribute <code>__setitem__</code>.
+That indicates that some code is somehow trying to access
+<code>greeting_from_staff.__setitem__</code> and Python cannot find
+a <code>__setitem__</code> attribute anywhere on the object.</p>
+
+<p>So that leads us to one valid solution, a line of code
+that attempts to set the attribute with that name:</p>
+
+<p><code>greeting_from_staff.__setitem__ = &quot;Once More with Feeling&quot;</code></p>
+
+<p>However, this was the more common solution:</p>
+
+<p><code>greeting_from_staff[0] = &quot;Once More with Feeling&quot;</code></p>
+
+<p>That line of code does not mention <code>__setitem__</code> anywhere,
+but as it turns out, the Python interpreter calls <code>__setitem__</code>
+when it sees the bracket notation being used for assignment.
+The syntax <code>tuple[0] = value</code> is really a bit of
+syntactic sugar for <code>tuple.__setitem__(0, value)</code>.</p>
+
+<p>Any index in the brackets results in the same error.
+In fact, any valid expression in the brackets results in that error.</p>
+
+<p>There are a few other interesting valid solutions:</p>
+
+<p><code>greeting_from_staff.__class__.__setitem__</code>
+<code>tuple.__setitem__</code></p>
+
+<p>Both of those call <code>__setitem__</code> on the global <code>tuple</code> class itself,
+which happens to result in the same error message.</p>
+
+
+<h3 id="related-content">Related Content</h3>
+
+
+<ul>
+  <li><a href="https://www.composingprograms.com/pages/27-object-abstraction.html#special-methods]">Composing Programs 2.7: Special Methods</a></li>
+  <li><a href="https://cs61a.org/assets/slides/18-Special_Object_Methods.html">Lecture 18: Special Object Methods</a></li>
+</ul>
+
+
+<h2 id="teenage-mutant-ninja-lists">Teenage Mutant Ninja Lists</h2>
+
+
+
+<h3 id="question-2">Question</h3>
+
+
+<p>A program starts with two list assignments:</p>
+
+<pre><code>team1 = [13, 15]
+team2 = [12, 14]</code></pre>
+
+
+
+<p>That code corresponds to this environment diagram:</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/xaMqRIq.png" alt="Screenshot of environment diagram" width="" height=""></p>
+
+<p>In this question, you'll suggest ways of mutating the lists
+to result in different environment diagrams.</p>
+
+
+<h3 id="part-a">Part A</h3>
+
+
+<pre><code>team1 = [13, 15]
+team2 = [12, 14]
+mega = _____________</code></pre>
+
+
+
+<p>This modified program corresponds to this diagram:</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/qTPhMp2.png" alt="Screenshot of environment diagram" width="" height=""></p>
+
+<p>Which of these could fill in the blank?</p>
+
+
+<h3 id="part-a-walkthrough">Part A Walkthrough</h3>
+
+
+<p>Here are the things that we can observe in the diagram:</p>
+
+<ul>
+  <li>The <code>mega</code> name is assigned to a list of lists. Each index (0, 1) points at another list.</li>
+  <li>The pointed lists are the same lists assigned to <code>team1</code> and <code>team2</code>.</li>
+  <li>The numbers only exist in the original <code>team1</code> and <code>team2</code> lists, they are not repeated in any new lists.</li>
+</ul>
+
+<p>Based on those observations, we can realize that <code>mega</code> is a list
+that consists of the <code>team1</code> and <code>team2</code> lists. So how can we create such a list, in code?</p>
+
+<p>The most straightforward approach is this one:</p>
+
+<p><code>[team1, team2]</code></p>
+
+<p>That creates a list with the two elements, and each of those elements is itself a list object.</p>
+
+<p>There is one additional way to make such a list:</p>
+
+<p><code>[team1] + [team2]</code></p>
+
+<p>When two lists are added together using the <code>+</code> operator, Python makes a list that consists
+of the elements from the first list and then the elements of the second lists.</p>
+
+<p>When you are struggling with a question like this, you can try entering all of the
+possible options in PythonTutor. Of course, that could take a long time, so it's nice
+to be able to reason about the options as well.</p>
+
+<p>There was one option that resulted in a very similar diagram:</p>
+
+<p><code>team1, team2</code></p>
+
+<p>However, that code makes a tuple, not a list. You can see the type of the object
+written in the text above the boxes. In the diagram above, all of the objects are lists.</p>
+
+
+<h3 id="part-b">Part B</h3>
+
+
+<pre><code>team1 = [13, 15]
+team2 = [12, 14]
+ultra = _____________</code></pre>
+
+
+
+<p>This modified program corresponds to this diagram:</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/QJZ3keO.png" alt="Screenshot of environment diagram" width="" height=""></p>
+
+<p>Which of these could fill in the blank?</p>
+
+
+<h3 id="part-b-walkthrough">Part B Walkthrough</h3>
+
+
+<p>Some observations on the diagram:</p>
+
+<ul>
+  <li>The <code>ultra</code> name is assigned to a list of numbers (notably <em>not</em> a list of lists).</li>
+  <li>The list of numbers starts with the two numbers in <code>team1</code> and ends with the two numbers in <code>team2</code>.</li>
+  <li>The <code>team1</code> and <code>team2</code> lists don't appear to be changed from the original diagram.</li>
+</ul>
+
+<p>Based on those observations, it looks like <code>ultra</code> is a list constructed by copying the elements of <code>team1</code>
+followed by copying the elements of <code>team2</code>.</p>
+
+<p>This is the most straightforward way to do that:</p>
+
+<p><code>team1 + team2</code></p>
+
+<p>That looks very similar to the code from Part A, but it lacks brackets around each of the list variables,
+which accounts for the difference in the result. It's the same as:</p>
+
+<p><code>[13, 15] + [12, 14]</code></p>
+
+<p>And that results in <code>[13, 15, 12, 14]</code>.</p>
+
+<p>There are three other options that work:</p>
+
+<p><code>team1[:] + team2[:]</code>
+<code>team1 + team2[:]</code>
+<code>team1[:] + team2</code></p>
+
+<p>Those options all use slice notation to make a copy of the list(s), using <code>[:]</code>
+to slice the entire list. The slicing isn't actually necessary in this
+situation, so these options aren't as nice stylistically as the first option,
+but they do produce the same result.</p>
+
+
+<h3 id="part-c">Part C</h3>
+
+
+<pre><code>team1 = [13, 15]
+team2 = [12, 14]
+alpha = _____________</code></pre>
+
+
+
+<p>This modified program corresponds to this diagram:</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/V3LD8hr.png" alt="Screenshot of environment diagram" width="" height=""></p>
+
+<p>Which of these could fill in the blank?</p>
+
+
+<h3 id="part-c-walkthrough">Part C Walkthrough</h3>
+
+
+<p>Some observations on the diagram:</p>
+
+<ul>
+  <li>The <code>alpha</code> name is assigned to a list of two lists.</li>
+  <li>The two lists have the same values as <code>team1</code> and <code>team2</code>.</li>
+  <li>The <code>team1</code> and <code>team2</code> lists don't appear to be changed from the original diagram,
+  and there are no new arrows pointing to them.</li>
+</ul>
+
+<p>So we need an approach that will create a nested list where the sublists are
+copes of <code>team1</code> and <code>team2</code>.</p>
+
+<p>Here are two equally clear ways of doing that:</p>
+
+<pre><code>[list(team1), list(team2)]
+[team1[0:], team2[0:]]</code></pre>
+
+
+
+<p>The first uses the <code>list()</code> constructor to make a new list,
+the second uses the slicing notation to make a new list
+by slicing from the 0 index to the end of the list.
+Note that <code>[0:]</code> is the same as <code>[:]</code> since 0 is the default index.</p>
+
+
+<h2 id="higher-order-shopping">Higher Order Shopping</h2>
+
+
+
+<h3 id="question-3">Question</h3>
+
+
+<p>The following environment diagram was generated by a program:</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/KOOjHws.png" alt="Screenshot of environment diagram" width="" height=""></p>
+
+<p><a href="https://i.imgur.com/KOOjHws.png">Click here to open the diagram in a new window</a></p>
+
+<p>In this series of questions, you'll fill in the blanks of the program that follows
+so that its execution matches the environment diagram.</p>
+
+<pre><code>def shop(groceries):
+
+    def aisle(n):
+        ________
+        #  (a)
+        ________
+        #  (b)
+
+    return aisle
+
+def store(supplies):
+
+    def pantry(cans):
+        ________
+        #  (c)
+        ________
+        #  (d)
+
+    return pantry
+
+shop([&quot;pineapple&quot;, &quot;pizza&quot;])(3)
+store([&quot;peanut butter&quot;])([&quot;beans&quot;])</code></pre>
+
+
+
+
+<h3 id="walkthrough-2">Walkthrough</h3>
+
+
+<p>Let's start with the <code>aisle</code> functions and its blanks. Some observations:</p>
+
+<ul>
+  <li>The <code>aisle</code> function is inside the <code>shop</code> function, so it can access the
+  <code>groceries</code> variable in its environment.</li>
+  <li>The <code>shop</code> function is called initially with the list <code>[&quot;pineapple&quot;, &quot;pizza&quot;]</code>
+  which should get assigned to the <code>groceries</code> parameter.</li>
+  <li>The <code>groceries</code> list ends up with the values <code>[&quot;pineapple&quot;, &quot;pizza&quot;, 3, [&quot;pen&quot;, &quot;pen&quot;, &quot;pen&quot;]]</code></li>
+  <li>The <code>store</code> function does not have any way of accessing that list.</li>
+</ul>
+
+<p>That leads to the conclusion that the code inside <code>shop</code> turned <code>[&quot;pineapple&quot;, &quot;pizza&quot;]</code>
+into <code>[&quot;pineapple&quot;, &quot;pizza&quot;, 3, [&quot;pen&quot;, &quot;pen&quot;, &quot;pen&quot;]]</code>.</p>
+
+<p>For blank (a), we can immediately eliminate a bunch of options that aren't valid Python:</p>
+
+<ul>
+  <li><code>nonlocal groceries += n</code></li>
+  <li><code>nonlocal groceries.extend([n])</code></li>
+  <li><code>nonlocal groceries.append(n)</code></li>
+  <li><code>nonlocal groceries.extend(n)</code></li>
+  <li><code>nonlocal groceries + n</code></li>
+</ul>
+
+<p>The <code>nonlocal</code> keyword can only be used in front of names, not expressions or calls.</p>
+
+<p>That leads us to the next question: do we need to specify <code>nonlocal groceries</code> or <code>nonlocal n</code>?
+We definitely don't need <code>nonlocal n</code> since <code>n</code> is actually local inside <code>aisle()</code>.
+However, it's possible we need <code>nonlocal groceries</code> if we're running any code after that
+reassigns <code>groceries</code>.</p>
+
+<p>So first we need to look ahead to the options for blank (b). Only two of them
+involve reassignment, the ones using the <code>+=</code> operator.</p>
+
+<ul>
+  <li><code>groceries += &quot;pen&quot; * n</code></li>
+  <li><code>groceries += [&quot;pen&quot; for x in n]</code></li>
+</ul>
+
+<p>Neither of those options correspond to the diagram, however. The first one would
+construct the string "penpenpen" and then add each letter as a separate element.
+The second one isn't valid Python syntax, since <code>n</code> is a number and not iterable.
+All the other options use list methods that mutate the list but don't do a reassignment,
+so we now know we don't need to declare <code>nonlocal groceries</code>.</p>
+
+<p>The options for blank (a) are all about adding the value of <code>n</code> to the list,
+so we just need to find options that will add <code>n</code> as an additional element at the end.</p>
+
+<p>Here's the most straightforward way:</p>
+
+<p><code>groceries.append(n)</code></p>
+
+<p>However, there's one more option that has the same effect:</p>
+
+<p><code>groceries.extend([n])</code></p>
+
+<p>The remaining ones don't work:</p>
+
+<ul>
+  <li><code>groceries.extend(n)</code>: This results in an error, since <code>extend()</code> expects a list.</li>
+  <li><code>groceries.append([n])</code>: This would append a list containing <code>n</code>, but we just want <code>n</code>.</li>
+</ul>
+
+<p>Blank (b) must somehow add a final element to the list that is itself a list, <code>[&quot;pen&quot;, &quot;pen&quot;, &quot;pen&quot;]</code>.</p>
+
+<p>This is the only code that does that:</p>
+
+<p><code>groceries.append([&quot;pen&quot;] * n)</code></p>
+
+<p>The <code>*</code> operator, when operating on a list, creates a new list with the original values repeated
+the number of times specified by the second operand.</p>
+
+<p>Let's move on to the <code>pantry</code> function, starting with some observations:</p>
+
+<ul>
+  <li>The <code>pantry</code> function is inside the <code>store</code> function, so it can access the
+  <code>supplies</code> variable in its environment.</li>
+  <li>The <code>store</code> function is called with the list <code>[&quot;peanut butter&quot;]</code>
+  which should get assigned to the <code>supplies</code> parameter.</li>
+  <li>The returned <code>pantry</code> function is called with the list <code>[&quot;beans&quot;]</code>,
+  which should get assigned to the <code>cans</code> parameter.</li>
+  <li>The <code>supplies</code> list ends up with the values <code>[&quot;peanut butter&quot;, &quot;beans&quot;]</code></li>
+  <li>The <code>cans</code> list remains as  <code>[&quot;beans&quot;]</code>.</li>
+</ul>
+
+<p>So it seems like the blanks are somehow mutating <code>[&quot;peanut butter&quot;]</code> into
+<code>[&quot;peanut butter&quot;, &quot;beans&quot;]</code>.</p>
+
+<p>We can start off by eliminating the syntactically incorrect options:</p>
+
+<ul>
+  <li><code>nonlocal supplies = list(cans)</code></li>
+  <li><code>nonlocal supplies = list()</code></li>
+  <li><code>nonlocal list supplies</code></li>
+  <li><code>nonlocal(supplies)</code></li>
+</ul>
+
+<p>The remaining options include these assignments:</p>
+
+<ul>
+  <li><code>supplies = list(supplies)</code></li>
+  <li><code>supplies = supplies[:]</code></li>
+</ul>
+
+<p>However, those would result in an error, since <code>supplies</code> is defined in the parent frame,
+and we can only reassign to a name in the parent frame if we have declared it with <code>nonlocal</code>.</p>
+
+<p>The remaining options are all <code>nonlocal</code> statements. If we look ahead to the options
+for the next blank, we see that every single option involves the <code>supplies</code> variable,
+so that means this first blank will be <code>nonlocal supplies</code>.</p>
+
+<p>For the next blank, we start by eliminating the syntactically incorrect options:</p>
+
+<ul>
+  <li><code>nonlocal supplies += cans</code></li>
+  <li><code>nonlocal supplies.append(cans)</code></li>
+  <li><code>nonlocal supplies[:] = cans</code></li>
+  <li><code>nonlocal supplies = cans</code></li>
+  <li><code>nonlocal supplies.extend([cans])</code></li>
+</ul>
+
+<p>We can also eliminate the two options that completely replace the contents of the list:</p>
+
+<ul>
+  <li><code>supplies[:] = cans</code></li>
+  <li><code>supplies = cans</code></li>
+</ul>
+
+<p>These next options also don't quite do what we want (and also would not require <code>nonlocal</code>)</p>
+
+<ul>
+  <li><code>supplies.append(cans)</code>: This results in <code>[&quot;pineapple&quot;, [&quot;beans&quot;]]</code></li>
+  <li><code>supplies.extend([cans])</code>: Ditto!</li>
+</ul>
+
+<p>That leaves the correct option:</p>
+
+<p><code>supplies += cans</code></p>
+
+<p>That line of code adds the elements of <code>cans</code> to the end of <code>supplies</code>, resulting
+in the desired list. It also requires <code>nonlocal</code> since it uses the <code>+=</code> operator,
+an operation which involves reassignment.</p>
+
+<p>We could have instead used <code>supplies.extend(cans)</code> and avoided the need for <code>nonlocal</code> alltogether,
+but that wasn't an option here. It's an option for your own programs, however!</p>
+
+
+<h2 id="gotta-keep-em-separated">Gotta Keep 'Em Separated</h2>
+
+
+
+<h3 id="question-4">Question</h3>
+
+
+<p>Implement <code>separate()</code>, a function that accepts two parameters (separator and lnk) and returns a new linked
+list where any two consecutive repeated numbers in lnk are separated by a link with the value of separator.
+All values in lnk will be numbers.</p>
+
+<p>The function should assume the standard CS61A Link definition, viewable here: <a href="https://cs61a.org/exam/sp21/mt2/guide/code.cs61a.org/link_class">code.cs61a.org/link_class</a></p>
+
+<pre><code>def separate(separator, lnk):
+    &quot;&quot;&quot;Returns a new linked list (using Link) that separates
+    any two consecutive repeated numbers in non&#x2d;empty LNK
+    by inserting a Link with the value of SEPARATOR.
+    All values in LNK will be numbers.
+
+    # Case 1: Separates list that starts with pair
+    &gt;&gt;&gt; separate(999, Link(1, Link(1)))
+    Link(1, Link(999, Link(1)))
+
+    # Case 2: Separates list with overlapping pairs
+    &gt;&gt;&gt; separate(999, Link(1, Link(1, Link(1))))
+    Link(1, Link(999, Link(1, Link(999, Link(1)))))
+
+    # Case 3: Doesn&#x27;t mutate the input list
+    &gt;&gt;&gt; link = Link(1, Link(1))
+    &gt;&gt;&gt; separate(999, link)
+    Link(1, Link(999, Link(1)))
+    &gt;&gt;&gt; link
+    Link(1, Link(1))
+
+    # Case 4: Only separates pairs, not non&#x2d;pairs
+    &gt;&gt;&gt; separate(&#x2d;999, Link(2, Link(2, Link(4, Link(5)))))
+    Link(2, Link(&#x2d;999, Link(2, Link(4, Link(5)))))
+
+    # Case 5: Separates pairs at end of list
+    &gt;&gt;&gt; separate(&#x2d;1, Link(2, Link(3, Link(4, Link(4)))))
+    Link(2, Link(3, Link(4, Link(&#x2d;1, Link(4)))))
+
+    # Case 6: Returns same&#x2d;valued list if no pairs found
+    &gt;&gt;&gt; separate(999, Link(1, Link(2)))
+    Link(1, Link(2))
+
+    # Case 7: Handles single element lists correctly
+    &gt;&gt;&gt; lnk = Link(1)
+    &gt;&gt;&gt; lnk2 = separate(999, lnk)
+    &gt;&gt;&gt; lnk
+    Link(1)
+    &gt;&gt;&gt; lnk is not lnk2
+    True
+    &quot;&quot;&quot;</code></pre>
+
+
+
+<p>Here’s an approximate structure of a recursive solution, if that helps guide your implementation. It does
+not reflect the exact number of lines or indentation. Your solution must use a recursive approach,
+not an iterative approach. <strong>An iterative approach will receive 0 points.</strong></p>
+
+<pre><code>if ______:
+_____________
+elif ____:
+_____________
+elif ____:
+_____________
+_______________</code></pre>
+
+
+
+
+<h3 id="walkthrough-3">Walkthrough</h3>
+
+
+<p>First of all, let's try to rephrase the prompt in our own words: "each time we see two equal values, we should put <code>separator</code> value between them".</p>
+
+<p>Now, let's examine each doctest and take a note of what we learn from it:</p>
+
+<pre><code># Case 1: Separates list that starts with pair
+    &gt;&gt;&gt; separate(999, Link(1, Link(1)))
+    Link(1, Link(999, Link(1)))</code></pre>
+
+
+
+<p>This one is quite straightforward. We put <code>999</code> in-between because there are two consecutive <code>1</code>-s.</p>
+
+<pre><code># Case 2: Separates list with overlapping pairs
+    &gt;&gt;&gt; separate(999, Link(1, Link(1, Link(1))))
+    Link(1, Link(999, Link(1, Link(999, Link(1)))))</code></pre>
+
+
+
+<p>Okay, so when there are multiple consecutive values, we put <code>separator</code> between each pair.</p>
+
+<pre><code># Case 3: Doesn&#x27;t mutate the input list
+    &gt;&gt;&gt; link = Link(1, Link(1))
+    &gt;&gt;&gt; separate(999, link)
+    Link(1, Link(999, Link(1)))
+    &gt;&gt;&gt; link
+    Link(1, Link(1))</code></pre>
+
+
+
+<p>This one is pretty important. <code>separate</code> should return a <em>new</em> linked list and does <em>not</em> mutate the original one.</p>
+
+<pre><code># Case 4: Only separates pairs, not non&#x2d;pairs
+    &gt;&gt;&gt; separate(&#x2d;999, Link(2, Link(2, Link(4, Link(5)))))
+    Link(2, Link(&#x2d;999, Link(2, Link(4, Link(5)))))</code></pre>
+
+
+
+<p>Non-equal consecutive elements should remain the same, but we still return a new linked list.</p>
+
+<pre><code># Case 5: Separates pairs at end of list
+    &gt;&gt;&gt; separate(&#x2d;1, Link(2, Link(3, Link(4, Link(4)))))
+    Link(2, Link(3, Link(4, Link(&#x2d;1, Link(4)))))</code></pre>
+
+
+
+<p>Perhaps we should handle the case somehow differently when we separate the pair at the very end of the linked list.</p>
+
+<pre><code># Case 6: Returns same&#x2d;valued list if no pairs found
+    &gt;&gt;&gt; separate(999, Link(1, Link(2)))
+    Link(1, Link(2))</code></pre>
+
+
+<p>If there are no pairs, we simply return a new linked list with the same elements.</p>
+
+<pre><code># Case 7: Handles single element lists correctly
+    &gt;&gt;&gt; lnk = Link(1)
+    &gt;&gt;&gt; lnk2 = separate(999, lnk)
+    &gt;&gt;&gt; lnk
+    Link(1)
+    &gt;&gt;&gt; lnk is not lnk2
+    True</code></pre>
+
+
+<p>If there is one element (i.e. no possible pairs), we also return a new linked list with only this element.</p>
+
+<p>Let's make a summary. Alongside with "each time we see two equal values, we should put <code>separator</code> value between them", we've learned that:</p>
+
+<p>1) we return a <em>new</em> linked list and do <em>not</em> modify the original one. (Case #3)</p>
+
+<p><strong>Takeaway:</strong> somewhere in our code, we will call <code>Link()</code> constructor and will never perform an assignment with our argument, like <code>link.rest = ...</code></p>
+
+<p>2) if we meet more than 2 equal elements consecutively, work with each pair separately (Case #1,2)</p>
+
+<p><strong>Takeaway:</strong> after we put <code>separator</code>, we should not jump over two elements, because there might be another element right after with the same value</p>
+
+<p>3) the end of the linked list should also be changed (Case #5)</p>
+
+<p><strong>Takeaway:</strong> be prepared that after putting <code>separator</code> between a pair, the next element might be <code>Link.empty</code></p>
+
+<p>4) everything else in the list should be simply copied to a new linked list (Case #4,6,7)</p>
+
+<p>We will refer to this list whenever we write some code to check if it meets our correctness requirements.</p>
+
+<p>Since we are working with linked lists, we know we can only access the current element (<code>link.first</code>) and the remaining elements in the form of a linked list (<code>link.rest</code>).
+Let's try writing some code!</p>
+
+
+<h4 id="first-draft">First draft</h4>
+
+<p>The first question that comes to mind is: "how do we know that there is a pair of equal elements?". A good way to express that might be:</p>
+
+<pre><code>if lnk.first == lnk.rest.first:
+    # put separator</code></pre>
+
+
+
+<p>This diagram might help to understand why we do <code>lnk.first == lnk.rest.first</code>:
+<img class="img-responsive center-block" src="../../../../assets/images/sp21-mt2guide-linkedlist.png" alt="Case #1" width="" height=""></p>
+
+<p>We should create a link with <code>separator</code> value, which should come after link with value <code>lnk.first</code>, but should be followed by <code>lnk.rest</code> link.</p>
+
+<pre><code>Link(separator, lnk.rest)</code></pre>
+
+
+<p>This handles the latter part of the statement above. What about preceding it with <code>lnk.first</code>?
+We can just create a new link with the value <code>lnk.first</code> and specify the rest as the linked list that starts with the <code>separator</code>.</p>
+
+<pre><code>Link(lnk.first, Link(separator, lnk.rest))</code></pre>
+
+
+<p>It might look like we are done here. But what about the rest (pun intended) of the linked list? At this point, our code would only work for the first two links of the list, and only if they are equal.</p>
+
+<p>We would like to continue putting <code>separator</code> between any remaining pairs in the linked list (<code>lnk.rest</code>). Do we have a function for that? Yes! It is <code>separate()</code>, which means we need a recursive call.</p>
+
+<pre><code>Link(lnk.first, Link(separator, separate(separator, lnk.rest)))</code></pre>
+
+
+<p>Observe that we preserve the <code>separator</code> value, but pass the rest of current linked list to the recursive call of <code>separate()</code>, since we already have dealt with the current element.
+To sum up, if we had our base cases handled, this would be a valid logic:</p>
+
+<pre><code>if lnk.first == lnk.rest.first:
+    return Link(lnk.first, Link(separator, separate(separator, lnk.rest)))</code></pre>
+
+
+
+
+<h4 id="almost-there-but-we-need-base-cases">Almost there, but we need base cases</h4>
+
+<p>Speaking of base cases, what will we do if the <code>lnk.rest</code> is <code>Link.empty</code>? It would mean that our linked list has only one link. According to Case #7,
+all we do is just return a new link with that value, because there is nothing to separate. The code would be something like this:</p>
+
+<pre><code>if lnk.rest is Link.empty:
+    return Link(lnk.first) # by default, the rest argument will be Link.empty</code></pre>
+
+
+<p>Combining the two above, our overall code looks like:</p>
+
+<pre><code>if lnk.rest is Link.empty:
+    return Link(lnk.first)
+if lnk.first == lnk.rest.first:
+    return Link(lnk.first, Link(separator, separate(separator, lnk.rest)))</code></pre>
+
+
+<p>Looks pretty good. Wait, but what if we do not enter any of the if-statements? According to our takeaways, we should still create a new linked list
+with the contents of the original one.</p>
+
+<pre><code>return Link(lnk.first, lnk.rest)</code></pre>
+
+
+<p>You might have already caught an error you have seen before. We still should <code>separate</code> the rest of the list (by calling <code>separate()</code> on <code>lnk.rest</code>). So it should be:</p>
+
+<pre><code>return Link(lnk.first, separate(separator, lnk.rest))</code></pre>
+
+
+
+
+<h4 id="we-did-it">We did it!</h4>
+
+<p>The final solution would be:</p>
+
+<pre><code>if lnk.rest is Link.empty:
+    return Link(lnk.first)
+if lnk.first == lnk.rest.first:
+    return Link(lnk.first, Link(separator, separate(separator, lnk.rest)))
+return Link(lnk.first, separate(separator, lnk.rest))</code></pre>
+
+
+
+<p>Oh, we can also see that it almost perfectly suits the structure provided to us! :)</p>
+
+<p>P.S. In the solution PDF, there is another base case, at the very top:</p>
+
+<pre><code>if lnk is Link.empty:
+    return Link.empty</code></pre>
+
+
+<p>Since the docstring specifies that the linked lists are "non-empty" and none of the doctests pass in an empty Link, this base case is not strictly required.
+However, it is generally a good practice to have this check whenever you are working with linked lists.</p>
+
+
+<h3 id="related-content-2">Related Content</h3>
+
+
+<ul>
+  <li><a href="https://cs61a.org/assets/slides/19-Recursive_Objects.html#/12">Lecture 19: Recursive Objects, Slides 13+</a>: This is where we introduced the Link class.</li>
+</ul>
+
+
+<h2 id="online-classes">Online Classes</h2>
+
+
+
+<h3 id="question-5">Question</h3>
+
+
+<p>This question is inspired by online education websites that
+offer a range of materials such as videos, articles, exercises, and quizzes.</p>
+
+<p>We will represent two kinds of educational content as a Python class:
+<code>Video</code> and <code>Exercise</code>. Each of those classes inherits from the base class <code>LearnableContent</code>.</p>
+
+<p>The partially implemented classes are shown below. You'll fill out the class definitions
+using inheritance and attributes. Always use the definition from
+the base class if it's reasonable to do so.</p>
+
+<pre><code>class LearnableContent:
+    &quot;&quot;&quot;A base class for specific kinds of learnable content.
+    All kinds have title and author attributes,
+    but each kind may have additional attributes.
+    &quot;&quot;&quot;
+
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
+
+    def __str__(self):
+        return f&quot;{self.title} by {self.author}&quot;
+
+class Exercise(LearnableContent):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; lambda_calc = Exercise(&quot;Lambda Calculus&quot;, &quot;Rosie F&quot;, 5)
+    &gt;&gt;&gt; lambda_calc.title
+    &#x27;Lambda Calculus&#x27;
+    &gt;&gt;&gt; lambda_calc.author
+    &#x27;Rosie F&#x27;
+    &gt;&gt;&gt; lambda_calc.num_questions
+    5
+    &gt;&gt;&gt; str(lambda_calc)
+    &#x27;Lambda Calculus by Rosie F&#x27;
+    &quot;&quot;&quot;
+
+    def __init__(self, title, author, num_questions):
+        ________________________
+        #          (a)
+        ________________________
+        #          (b)
+
+class Video(LearnableContent):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; vid = Video(&quot;The Golden Ratio&quot;, &quot;Sal Khan&quot;, 881)
+    &gt;&gt;&gt; Video.license
+    &#x27;CC&#x2d;BY&#x2d;NC&#x2d;SA&#x27;
+    &gt;&gt;&gt; vid.title
+    &#x27;The Golden Ratio&#x27;
+    &gt;&gt;&gt; vid.author
+    &#x27;Sal Khan&#x27;
+    &gt;&gt;&gt; vid.num_seconds
+    881
+    &gt;&gt;&gt; str(vid)
+    &#x27;The Golden Ratio by Sal Khan (881 seconds)&#x27;
+    &quot;&quot;&quot;
+    ____________________
+    #      (c)
+
+    def __init__(self, title, author, num_seconds):
+        ________________________
+        #          (d)
+        ________________________
+        #          (e)
+
+    def __str__(self):
+        ________________________
+        #          (f)</code></pre>
+
+
+
+<p>What line of code could go in blank (a)?</p>
+
+<p>What line of code could go in blank (b)?</p>
+
+<p>What line of code could go in blank (c)?</p>
+
+<p>What line of code could go in blank (d)?</p>
+
+<p>What line of code could go in blank (e)?</p>
+
+<p>What line of code could go in blank (f)? <em>You may use any form of string formatting that you are comfortable with,
+but your solution must use <code>super()</code>.</em></p>
+
+
+<h3 id="walkthrough-4">Walkthrough</h3>
+
+
+<p>In this question, we're implementing two subclasses that inherit from a base class.
+The <code>LearnableContent</code> class stores two instance variables, <code>title</code> and <code>author</code>, and
+it returns a string representation of the title and author when <code>__str__</code> is called.</p>
+
+<p>The first class that we implement is the <code>Exercise</code> subclass. There are two indications
+that <code>Exercise</code> instances must store an additional instance variable. First, the doctest
+shows that <code>lambda_calc.num_questions</code> stores 5:</p>
+
+<pre><code>&gt;&gt;&gt; lambda_calc.num_questions
+5</code></pre>
+
+
+
+<p>Second, the <code>__init__</code> method takes a fourth parameter, <code>num_questions</code>:</p>
+
+<p><code>def __init__(self, title, author, num_questions):</code></p>
+
+<p>So here's our plan: we can use <code>LearnableContent.__init__</code> to store the
+<code>title</code> and <code>author</code> parameters, and then add one more line of code
+to store the instance variable that's unique to the subclass, <code>num_questions</code>.</p>
+
+<pre><code>super().__init__(title, author)
+self.num_questions = num_questions</code></pre>
+
+
+
+<p>We could technically write those lines in any order, but it's generally
+better style to call <code>super()</code> first, unless we have a strong reason to call it last.</p>
+
+<p>Next up is the <code>Video</code> subclass. There are two indications that it also
+stores a <em>class</em> variable. First this doctests shows that <code>Video.license</code> stores a string:</p>
+
+<pre><code>&gt;&gt;&gt; Video.license
+&#x27;CC&#x2d;BY&#x2d;NC&#x2d;SA&#x27;</code></pre>
+
+
+
+<p>Then there's a line of code directly inside the class definition and not inside
+any method definition, and that's exactly where a class variable would be defined.</p>
+
+<p>So we can start by defining the class variable in blank (c):</p>
+
+<p><code>license = &#x27;CC&#x2d;BY&#x2d;NC&#x2d;SA&#x27;</code></p>
+
+<p>Next up is the <code>__init__</code>, and we're going to write code similar to what we wrote for <code>Exercise</code>,
+since there are the same two clues that <code>Video</code> stores an additional instance variable.
+The only difference is that the additional variable is called <code>num_seconds</code>, not <code>num_questions</code>.</p>
+
+<pre><code>super().__init__(title, author)
+self.num_seconds = num_seconds</code></pre>
+
+
+
+<p>Finally, we need to implement <code>Video.__str__</code>. According to the doctests, the string
+representation of <code>Exercise</code> is very similar to the string representation of <code>Video</code>:</p>
+
+<pre><code>&gt;&gt;&gt; str(lambda_calc)
+&#x27;Lambda Calculus by Rosie F&#x27;
+&gt;&gt;&gt; str(vid)
+&#x27;The Golden Ratio by Sal Khan (881 seconds)&#x27;</code></pre>
+
+
+
+<p>In fact, the first part of the string is the same: the title, followed by " by ", followed by
+the author. The video string just adds an additional part, the number of seconds in parentheses.</p>
+
+<p>That's why the question tells us that we must use <code>super()</code>. The base class has already
+defined a useful string representation for the title and author, so we should reuse
+that in order to build the longer representation with the number of seconds.</p>
+
+<p>Here's one way to implement that by calling <code>super().__str__()</code> and then adding
+an f string for the additional part:</p>
+
+<p><code>return super().__str__() + f&quot; ({self.num_seconds} seconds)&quot;</code></p>
+
+<p>We could also incorporate our call to <code>super().__str__</code> inside the f string:</p>
+
+<p><code>return f&quot;{super().__str__()} ({self.num_seconds} seconds)&quot;</code></p>
+
+<p>Other string formatting methods are also valid, like <code>.format()</code> and <code>+</code>,
+but f strings are generally cleaner and clearer.</p>
+
+
+<h3 id="related-content-3">Related Content</h3>
+
+
+<ul>
+  <li><a href="https://cs61a.org/assets/slides/17-Inheritance_+_Composition.html">Lecture 17: Inheritance + Composition</a></li>
+  <li><a href="../../../../proj/ants/index.html">Ants project</a>: Many of the problems involved inheritance.</li>
+  <li><a href="../../../../disc/disc06/index.html#inheritance">Discussion 6: Inheritance</a>: The <code>Cat</code> and <code>NoisyCat</code> problems are very similar.</li>
+  <li><a href="https://cs61a.org/assets/slides/18-Special_Object_Methods.html#/10">Lecture 18: Special Object Methods, Slides 12-15</a>: This is where we first discussed <code>__str__</code>.</li>
+  <li><a href="https://cs61a.org/assets/slides/22-Generics.html#/4">Lecture 22: Generics, Slides 3-6</a>: This is where we introduced f strings and reviewed other string formatting methods.</li>
+  <li><a href="../../../../disc/disc07/index.html#representation---repr-and-str">Discussion 7: Representation Explanation</a></li>
+  <li><a href="../../../../disc/disc07/index.html#q1">Discussion 7: Repr-esentation WWPD</a></li>
+</ul>
+
+
+<h2 id="the-tree-of-l-i-f-e">The Tree of L-I-F-E</h2>
+
+
+
+<h3 id="question-6">Question</h3>
+
+<p>Implement <code>word_finder</code>, a generator function that yields each word that can be formed by following a path in
+a tree from the root to a leaf, where the words are specified in a list.
+When given the tree shown in the diagram below and a word list that includes ‘SO’ and ‘SAW’, the function
+should first yield ‘SO’ and then yield ‘SAW’.</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/GFke9CT.png" alt="Diagram of tree" width="" height=""></p>
+
+<pre><code>def word_finder(letter_tree, words_list):
+    &quot;&quot;&quot; Generates each word that can be formed by following a path
+    in TREE_OF_LETTERS from the root to a leaf,
+    where WORDS_LIST is a list of allowed words (with no duplicates).
+    # Case 1: 2 words found
+    &gt;&gt;&gt; words = [&#x27;SO&#x27;, &#x27;SAT&#x27;, &#x27;SAME&#x27;, &#x27;SAW&#x27;, &#x27;SOW&#x27;]
+    &gt;&gt;&gt; t = Tree(&quot;S&quot;, [Tree(&quot;O&quot;), Tree(&quot;A&quot;, [Tree(&quot;Q&quot;), Tree(&quot;W&quot;)]), Tree(&quot;C&quot;, [Tree(&quot;H&quot;)])])
+    &gt;&gt;&gt; gen = word_finder(t, words)
+    &gt;&gt;&gt; next(gen)
+    &#x27;SO&#x27;
+    &gt;&gt;&gt; next(gen)
+    &#x27;SAW&#x27;
+    &gt;&gt;&gt; list(word_finder(t, words))
+    [&#x27;SO&#x27;, &#x27;SAW&#x27;]
+    # Case 2: No words found
+    &gt;&gt;&gt; t = Tree(&quot;S&quot;, [Tree(&quot;I&quot;), Tree(&quot;A&quot;, [Tree(&quot;Q&quot;), Tree(&quot;E&quot;)]), Tree(&quot;C&quot;, [Tree(&quot;H&quot;)])])
+    &gt;&gt;&gt; list(word_finder(t, words))
+    []
+    # Case 3: Same word twice
+    &gt;&gt;&gt; t = Tree(&quot;S&quot;, [Tree(&quot;O&quot;), Tree(&quot;O&quot;)] )
+    &gt;&gt;&gt; list(word_finder(t, words))
+    [&#x27;SO&#x27;, &#x27;SO&#x27;]
+    # Case 4: Words that start the same
+    &gt;&gt;&gt; words = [&#x27;TAB&#x27;, &#x27;TAR&#x27;, &#x27;BAT&#x27;, &#x27;BAR&#x27;, &#x27;RAT&#x27;]
+    &gt;&gt;&gt; t = Tree(&quot;T&quot;, [Tree(&quot;A&quot;, [Tree(&quot;R&quot;), Tree(&quot;B&quot;)])])
+    &gt;&gt;&gt; list(word_finder(t, words))
+    [&#x27;TAR&#x27;, &#x27;TAB&#x27;]
+    # Case 5: Single letter words
+    &gt;&gt;&gt; words = [&#x27;A&#x27;, &#x27;AN&#x27;, &#x27;AH&#x27;]
+    &gt;&gt;&gt; t = Tree(&quot;A&quot;)
+    &gt;&gt;&gt; list(word_finder(t, words))
+    [&#x27;A&#x27;]
+    # Case 6: Words end in leaf
+    &gt;&gt;&gt; words = [&#x27;A&#x27;, &#x27;AN&#x27;, &#x27;AH&#x27;]
+    &gt;&gt;&gt; t = Tree(&quot;A&quot;, [Tree(&quot;H&quot;), Tree(&quot;N&quot;)])
+    &gt;&gt;&gt; list(word_finder(t, words))
+    [&#x27;AH&#x27;, &#x27;AN&#x27;]
+    # Case 7: Words start at root
+    &gt;&gt;&gt; words = [&#x27;GO&#x27;, &#x27;BEARS&#x27;, &#x27;GOB&#x27;, &#x27;EARS&#x27;]
+    &gt;&gt;&gt; t = Tree(&quot;B&quot;, [Tree(&quot;E&quot;, [Tree(&quot;A&quot;, [Tree(&quot;R&quot;, [Tree(&quot;S&quot;)])])])])
+    &gt;&gt;&gt; list(word_finder(t, words))
+    [&#x27;BEARS&#x27;]
+    # Case 8: This special test ensures that your solution does *not*
+    # pre&#x2d;compute all the words before yielding the first one.
+    # If done correctly, your solution should error only when it
+    # tries to find the second word in this tree.
+    &gt;&gt;&gt; words = [&#x27;SO&#x27;, &#x27;SAM&#x27;, &#x27;SAT&#x27;, &#x27;SAME&#x27;, &#x27;SAW&#x27;, &#x27;SOW&#x27;]
+    &gt;&gt;&gt; t = Tree(&quot;S&quot;, [Tree(&quot;O&quot;), Tree(&quot;A&quot;, [Tree(&quot;Q&quot;), Tree(1)]), Tree(&quot;C&quot;, [Tree(1)])])
+    &gt;&gt;&gt; gen = word_finder(t, words)
+    &gt;&gt;&gt; next(gen)
+    &#x27;SO&#x27;
+    &gt;&gt;&gt; try:
+    ... next(gen)
+    ... except TypeError:
+    ... print(&quot;Got a TypeError!&quot;)
+    ... else:
+    ... print(&quot;Expected a TypeError!&quot;)
+    Got a TypeError!
+    &quot;&quot;&quot;</code></pre>
+
+
+
+<p>Please read through the function header and doctests below. We have provided quite a few doctests to test
+different situations and demonstrate how the function should work. You can always call <code>draw(t)</code> on a particular
+tree object on code.cs61a.org to help you visualize its structure and understand the results of a doctest.</p>
+
+<p>Here is a skeleton of a correct solution:</p>
+
+<pre><code>def word_finder(letter_tree, words_list):
+    def _________(____):
+        _______________ # Optional
+        if ____________:
+            yield ______________
+        for ___________:
+            yield from _________
+    yield from __________</code></pre>
+
+
+<p>We highly encourage you to follow the skeleton. You may diverge from the skeleton if your approach is
+correct and passes the doctests, but a non-working solution that doesn’t follow the skeleton will not receive
+partial credit.</p>
+
+<p>A correct solution should not first find all the words and then yield them; it should instead yield whenever
+it finds a new word. <strong>Your solution may receive 0 points if it pre-computes the words.</strong></p>
+
+<p>Your function should use the standard CS61A Tree definition, viewable here: <a href="https://cs61a.org/exam/sp21/mt2/guide/code.cs61a.org/tree_class">code.cs61a.org/tree_class</a></p>
+
+
+<h3 id="walkthrough-5">Walkthrough</h3>
+
+
+<p>I have heard once that if you don't know how to start a problem, start by rewriting its statement. So here's one way we might rewrite it:</p>
+
+<ul>
+  <li>We should return a <em>generator</em>, so perhaps we will not have any <code>return</code> statements in our solution</li>
+  <li>A valid word can be formed only by starting at the root node and ending at the leaf. Probably when I check the condition <code>t.is_leaf()</code> somewhere in code, I will already have a valid word</li>
+  <li>Each time we have a word (or in other words, stumble upon a leaf), we check if it exists in the <code>words_list</code>. If yes, we yield it. If not, we seem to not do anything.</li>
+</ul>
+
+<p>Let's walk through the doctests to verify/extend our understanding of the problem:</p>
+
+<pre><code># Case 1: 2 words found
+&gt;&gt;&gt; words = [&#x27;SO&#x27;, &#x27;SAT&#x27;, &#x27;SAME&#x27;, &#x27;SAW&#x27;, &#x27;SOW&#x27;]
+&gt;&gt;&gt; t = Tree(&quot;S&quot;, [Tree(&quot;O&quot;), Tree(&quot;A&quot;, [Tree(&quot;Q&quot;), Tree(&quot;W&quot;)]), Tree(&quot;C&quot;, [Tree(&quot;H&quot;)])])
+&gt;&gt;&gt; gen = word_finder(t, words)
+&gt;&gt;&gt; next(gen)
+&#x27;SO&#x27;
+&gt;&gt;&gt; next(gen)
+&#x27;SAW&#x27;
+&gt;&gt;&gt; list(word_finder(t, words))
+[&#x27;SO&#x27;, &#x27;SAW&#x27;]</code></pre>
+
+
+
+<p>Looking at the diagram, we see that <code>SO</code> and <code>SAW</code> are indeed the words that both "end" at the leaf, hence they are valid.
+They are also in our <code>words_list</code> argument, so our generator should yield them.</p>
+
+<pre><code># Case 2: No words found
+&gt;&gt;&gt; t = Tree(&quot;S&quot;, [Tree(&quot;I&quot;), Tree(&quot;A&quot;, [Tree(&quot;Q&quot;), Tree(&quot;E&quot;)]), Tree(&quot;C&quot;, [Tree(&quot;H&quot;)])])
+&gt;&gt;&gt; list(word_finder(t, words))
+[]</code></pre>
+
+
+
+<p>If there are no words, we do nothing, which is equivalent to not yielding anything.</p>
+
+<pre><code># Case 3: Same word twice
+&gt;&gt;&gt; t = Tree(&quot;S&quot;, [Tree(&quot;O&quot;), Tree(&quot;O&quot;)] )
+&gt;&gt;&gt; list(word_finder(t, words))
+[&#x27;SO&#x27;, &#x27;SO&#x27;]</code></pre>
+
+
+
+<p>Interesting, if we can build the same word twice using different paths, we yield that word twice.</p>
+
+<pre><code># Case 4: Words that start the same
+&gt;&gt;&gt; words = [&#x27;TAB&#x27;, &#x27;TAR&#x27;, &#x27;BAT&#x27;, &#x27;BAR&#x27;, &#x27;RAT&#x27;]
+&gt;&gt;&gt; t = Tree(&quot;T&quot;, [Tree(&quot;A&quot;, [Tree(&quot;R&quot;), Tree(&quot;B&quot;)])])
+&gt;&gt;&gt; list(word_finder(t, words))
+[&#x27;TAR&#x27;, &#x27;TAB&#x27;]</code></pre>
+
+
+
+<p>I think this test just highlights the fact that we should check all possible ways to get to the leaves.
+Nothing too special.</p>
+
+<pre><code> # Case 5: Single letter words
+&gt;&gt;&gt; words = [&#x27;A&#x27;, &#x27;AN&#x27;, &#x27;AH&#x27;]
+&gt;&gt;&gt; t = Tree(&quot;A&quot;)
+&gt;&gt;&gt; list(word_finder(t, words))
+[&#x27;A&#x27;]</code></pre>
+
+
+
+<p>If the root is the only node in the tree, then it is also a leaf. A good candidate for a base case.</p>
+
+<pre><code># Case 6: Words end in leaf
+&gt;&gt;&gt; words = [&#x27;A&#x27;, &#x27;AN&#x27;, &#x27;AH&#x27;]
+&gt;&gt;&gt; t = Tree(&quot;A&quot;, [Tree(&quot;H&quot;), Tree(&quot;N&quot;)])
+&gt;&gt;&gt; list(word_finder(t, words))
+[&#x27;AH&#x27;, &#x27;AN&#x27;]</code></pre>
+
+
+
+<p>Another test to highlight that we should only consider words that end in a leaf, so 'A' isn't a valid word here (because that would require ending the word before we got to a leaf)</p>
+
+<pre><code># Case 7: Words start at root
+&gt;&gt;&gt; words = [&#x27;GO&#x27;, &#x27;BEARS&#x27;, &#x27;GOB&#x27;, &#x27;EARS&#x27;]
+&gt;&gt;&gt; t = Tree(&quot;B&quot;, [Tree(&quot;E&quot;, [Tree(&quot;A&quot;, [Tree(&quot;R&quot;, [Tree(&quot;S&quot;)])])])])
+&gt;&gt;&gt; list(word_finder(t, words))
+[&#x27;BEARS&#x27;]</code></pre>
+
+
+
+<p>Since we have to start from the root, only "BEARS" is a valid word. "EARS" is unfortunately not.</p>
+
+<pre><code># Case 8: This special test ensures that your solution does *not*
+# pre&#x2d;compute all the words before yielding the first one.
+# If done correctly, your solution should error only when it
+# tries to find the second word in this tree.
+&gt;&gt;&gt; words = [&#x27;SO&#x27;, &#x27;SAM&#x27;, &#x27;SAT&#x27;, &#x27;SAME&#x27;, &#x27;SAW&#x27;, &#x27;SOW&#x27;]
+&gt;&gt;&gt; t = Tree(&quot;S&quot;, [Tree(&quot;O&quot;), Tree(&quot;A&quot;, [Tree(&quot;Q&quot;), Tree(1)]), Tree(&quot;C&quot;, [Tree(1)])])
+&gt;&gt;&gt; gen = word_finder(t, words)
+&gt;&gt;&gt; next(gen)
+&#x27;SO&#x27;
+&gt;&gt;&gt; try:
+... next(gen)
+... except TypeError:
+... print(&quot;Got a TypeError!&quot;)
+... else:
+... print(&quot;Expected a TypeError!&quot;)
+Got a TypeError!</code></pre>
+
+
+
+<p>This one is long, but vital for our understanding of why we can't pre-compute. If we quickly draw the tree, we get something like this:
+<img class="img-responsive center-block" src="../../../../assets/images/sp21-mt2guide-trie.png" alt="Case #8" width="" height=""></p>
+
+<p>Only 'SO' is possible to form, but why does the test expect a <code>TypeError</code>? If we look closely, we see that there are also numbers in the tree.
+Technically, the possible paths in this tree would form the list <code>[&quot;SO&quot;, &quot;SAQ&quot;, &quot;SA1&quot;, &quot;SAC1&quot;]</code>. However, the last two elements would not qualify as words, as they contain numbers.
+This might be the root (pun intended) of the <code>TypeError</code>.</p>
+
+<p>Perhaps, in a correct solution, when the code tries to add a number to a string variable, it throws an exception of TypeError, since Python doesn't allow simply adding a number to a string.</p>
+
+<p>What's the difference between what a correct lazy solution would yield, versus an incorrect pre-computed solution?
+A pre-computed solution would first find all of the words <code>[&quot;SO&quot;, &quot;SAQ&quot;, &quot;SA1&quot;, &quot;SAC1&quot;]</code> before yielding anything and only afterwards yield the words that matched <code>words_list</code>.
+A pre-computed solution would either immediately run into a TypeError on this tree, before yielding anything, or it would never run into a <code>TypeError</code>.
+A correct lazy solution first yields the initial word <code>&quot;SO&quot;</code> and then, when asked to generate the next word, it runs into a <code>TypeError</code>.</p>
+
+<p>This test suggests that the process of forming the words should happen as we yield, not strictly before.</p>
+
+<p>Our research of doctests and the prompt yields these additional results:</p>
+
+<ul>
+  <li>We can yield the same word multiple times, as long as it can be formed through multiple paths</li>
+  <li>Single root tree = leaf, so it would form a valid word of length 1</li>
+  <li>We can <em>not</em> pre-compute the words</li>
+</ul>
+
+<p>So conceptually, we start at the root and "collect" the letters in some variable as we traverse the tree, checking the variable against the <code>words_list</code> as we reach each leaf.</p>
+
+<p>Finally, let's start by examining the provided skeleton.</p>
+
+<pre><code>def word_finder(letter_tree, words_list):
+    def _________(____):
+        _______________ # Optional
+        if ____________:
+            yield ______________
+        for ___________:
+            yield from _________
+    yield from __________</code></pre>
+
+
+
+<p>The first thing we can observe is that <code>word_finder</code> has only a HOF declaration and <code>yield from</code> statement. The latter only works with generator functions/iterables.
+So we can either put a call to <code>word_finder</code> after <code>yield from</code> (we can't since it does not have any arguments to "collect" the letters during tree traversal) or we can call some other built-in generator/put an iterable.</p>
+
+<p>Do we have a good candidate? What about our HOF? We can define it as a generator and use it with <code>yield from</code>! So our first attempt would look like the following:</p>
+
+<pre><code>def word_finder(letter_tree, words_list):
+    def some_generator(____):
+        _______________ # Optional
+        if ____________:
+            yield ______________
+        for ___________:
+            yield from _________
+    yield from some_generator(____)</code></pre>
+
+
+
+<p>What about the arguments? Well, as we planned, we need some variable to "collect" the letters as we move along the tree. When we just start, we have an empty word or <code>&quot;&quot;</code>. So we can try doing this:</p>
+
+<pre><code>def word_finder(letter_tree, words_list):
+    def some_generator(word_so_far): # the word that we&#x27;ve formed so far
+        _______________ # Optional
+        if ____________:
+            yield ______________
+        for ___________:
+            yield from _________
+    yield from some_generator(&quot;&quot;)</code></pre>
+
+
+
+<p>We can access both the tree and words list from the outer function, so let's proceed to the body of the inner function.
+No idea on what to do with the optional line, so let's skip it for now. We see an <code>if</code> statement right after.
+It looks like a nice place to put our logic of checking whether we are at the leaf and yielding the word we've formed so far. Remember that in order to be able to <code>yield</code> the word,
+we require it to finish at the leaf and be present in <code>words_list</code>. With this in mind, let's try the following:</p>
+
+<pre><code>if letter_tree.is_leaf() and word_so_far in words_list:
+    yield word_so_far</code></pre>
+
+
+
+<p>Looks good, except the fact that <code>letter_tree</code> will always point to the root, since we never change it. This suggests us that our HOF should keep track of the current node,
+so we introduce another variable <code>t</code> to make that possible.</p>
+
+<pre><code>def some_generator(t, word_so_far): # we&#x27;ve added `t` here to keep track of the current node
+    _______________ # Optional
+    if t.is_leaf() and word_so_far in words_list:
+        yield word_so_far</code></pre>
+
+
+
+<p>Our last <code>yield from</code> would then begin at <code>letter_tree</code>:</p>
+
+<pre><code>yield from some_generator(letter_tree, &quot;&quot;)</code></pre>
+
+
+
+<p>So far, we have this code:</p>
+
+<pre><code>def word_finder(letter_tree, words_list):
+    def some_generator(t, word_so_far): # the word that we&#x27;ve formed so far
+        _______________ # Optional
+        if t.is_leaf() and word_so_far in words_list:
+            yield word_so_far
+        for ___________:
+            yield from _________
+    yield from some_generator(letter_tree, &quot;&quot;)</code></pre>
+
+
+
+<p>Since we traverse the tree and keep track of the current node, the next <code>for</code> loop suits the classic <code>for b in t.branches</code>. But what about the <code>yield from</code>?
+If it makes matters simple, recall that <code>yield from</code> is equivalent to:</p>
+
+<pre><code>for item in ______: # some generator here
+    yield item</code></pre>
+
+
+
+<p>So let's add our <code>b in t.branches</code> and rewrite <code>yield from</code>:</p>
+
+<pre><code>for b in t.branches:
+    for item in ______:
+        yield item</code></pre>
+
+
+
+<p>Conceptually, we are going over each branch and in that branch, we need to create some generator from which we will yield.</p>
+
+<p><code>b</code> is just another tree that starts from <code>b</code> as a root, right? Do we have a function that given a tree would return a generator with words? Yes!
+In fact we have two: both <code>word_finder</code> and our new-born <code>some_generator</code> suit that description. Which one should we pick?</p>
+
+<p>Probably <code>some_generator</code>, since it has an argument to keep track of the word we have so far. Since we did not pass the check for leaf and now going through a for-loop,
+it means we should collect the current node's letter and pass it to all our branches, in hope that one of them can form a valid word. Let's try this code then:</p>
+
+<pre><code>for b in t.branches:
+    for item in some_generator(b, word_so_far + t.label):
+        yield item</code></pre>
+
+
+
+<p>Let's have another look on our overall code:</p>
+
+<pre><code>def word_finder(letter_tree, words_list):
+    def some_generator(t, word_so_far):
+        _______________ # Optional
+        if t.is_leaf() and word_so_far in words_list:
+            yield word_so_far
+        for b in t.branches:
+            for item in some_generator(b, word_so_far + t.label): # we can replace this back with yield from, but later
+                yield item
+    yield from some_generator(letter_tree, &quot;&quot;)</code></pre>
+
+
+
+<p>Looks good, right? We start at the root from <code>&quot;&quot;</code> as our <code>word_so_far</code>, skip the check for leaf if we have more branches and then enter the for loop.
+There, we add our current letter to <code>&quot;&quot;</code> and proceed to the next level of branches. That level will perform a check for leaf, add its letter to the word and pass it to the next level.
+All of that will happen until we reach the leaf and yield that word... Wait! We do not take into account the letter at the leaf! Our if statement should look like:</p>
+
+<pre><code>if t.is_leaf() and (word_so_far + t.label) in words_list:
+    yield word_so_far</code></pre>
+
+
+<p>Since we are repeating <code>word_so_far + t.label</code> twice, let's utilize the optional line for that and put <code>word_so_far += t.label</code> there. So overall:</p>
+
+<pre><code>def word_finder(letter_tree, words_list):
+    def some_generator(t, word_so_far):
+        word_so_far += t.label # utilizing optional line
+        if t.is_leaf() and word_so_far in words_list:
+            yield word_so_far
+        for b in t.branches:
+            for item in some_generator(b, word_so_far):
+                yield item
+    yield from some_generator(letter_tree, &quot;&quot;)</code></pre>
+
+
+<p>So our <code>some_generator</code> is not any random generator, but actually something that builds words. So let's honor it by giving a proper name:</p>
+
+<pre><code>def word_finder(letter_tree, words_list):
+    def word_builder(t, word_so_far):
+        word_so_far += t.label
+        if t.is_leaf() and word_so_far in words_list:
+            yield word_so_far
+        for b in t.branches:
+            for word in word_builder(b, word_so_far):
+                yield word
+    yield from word_builder(letter_tree, &quot;&quot;)</code></pre>
+
+
+<p>Finally, it is time to revert our <code>for loop + yield</code> hack back to <code>yield from</code> and we are done! Good job!</p>
+
+<pre><code>def word_finder(letter_tree, words_list):
+    def word_builder(t, word_so_far):
+        word_so_far += t.label
+        if t.is_leaf() and word_so_far in words_list:
+            yield word_so_far
+        for b in t.branches:
+            yield from word_builder(b, word_so_far):
+    yield from word_builder(letter_tree, &quot;&quot;)</code></pre>
+
+
+
+
+<h3 id="related-content-4">Related Content</h3>
+
+
+<ul>
+  <li><a href="https://cs61a.org/assets/slides/15-Iterators_+_Generators.html#/14">Lecture 15: Iterators and Generators, Slides 14-21</a>: where we learn about tree traversal generator</li>
+  <li><a href="../../../../hw/hw04/index.html#q5">Homework 4: Problem 5, Has Path</a>: very similar problem, just without generating the words</li>
+</ul>
+
+
+<h2 id="gas-composition">Gas Composition</h2>
+
+
+
+<h3 id="question-7">Question</h3>
+
+
+<p>This question is inspired by research projects that are tracking the emissions
+of greenhouse gases into the environment so that they can identify the
+biggest sources of greenhouse gases and find ways to sustainably reduce them.</p>
+
+<p>We have written two classes to help track gas emissions: <code>EmissionSource</code> and <code>EmissionsTracker</code>.</p>
+
+<p>The <code>EmissionSource</code> class is fully implemented. Each instance stores a name, a dictionary
+of emission rates per hour per gas type, and the number of hours it's been running (initialized to 0).
+Read through the implementation below:</p>
+
+<pre><code>class EmissionSource:
+
+    def __init__(self, name, co2, ch4, n2o):
+        self.name = name
+        self.emissions = {
+            &quot;carbon dioxide&quot;: co2,  # kg CO2/ton/hour
+            &quot;methane&quot;: ch4,         # g CH4/ton/hour
+            &quot;nitrous oxide&quot;: n2o,   # g N2O/ton/hour
+        }
+        self.hours = 0
+
+    def run_for(self, num_hours):
+        self.hours += num_hours
+
+    def calc_emissions(self, gas):
+        return self.emissions.get(gas, 0) * self.hours</code></pre>
+
+
+
+<p>The <code>EmissionsTracker</code> class is partially implemented, but has doctests that demonstrate how it should work.
+It's job is to track sources and calculate statistics about their emissions.
+Read through the doctests, docstrings, and partial implementation below:</p>
+
+<pre><code>class EmissionsTracker:
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; tracker = EmissionsTracker()
+    &gt;&gt;&gt; pp1 = EmissionSource(&quot;Anthracite Coal&quot;, 2602, 276, 40)
+    &gt;&gt;&gt; pp2 = EmissionSource(&quot;Lignite Coal&quot;, 1389, 156, 23)
+    &gt;&gt;&gt; tracker.add_sources([pp1, pp2])
+    &gt;&gt;&gt; pp1.run_for(5)
+    &gt;&gt;&gt; pp2.run_for(6)
+
+    # Case 1: Calculate max for 2 added so far
+    &gt;&gt;&gt; tracker.calc_emissions(&quot;methane&quot;)
+    [(&#x27;Anthracite Coal&#x27;, 1380), (&#x27;Lignite Coal&#x27;, 936)]
+    &gt;&gt;&gt; tracker.calc_max_source(&quot;methane&quot;)
+    (&#x27;Anthracite Coal&#x27;, 1380)
+
+    # Case 3: Calculate emissions for all 3
+    &gt;&gt;&gt; pp3 = EmissionSource(&quot;Plastics&quot;, 2850, 1216, 160)
+    &gt;&gt;&gt; pp3.run_for(3)
+    &gt;&gt;&gt; tracker.add_sources([pp3])
+    &gt;&gt;&gt; tracker.calc_emissions(&quot;carbon dioxide&quot;)
+    [(&#x27;Anthracite Coal&#x27;, 13010), (&#x27;Lignite Coal&#x27;, 8334), (&#x27;Plastics&#x27;, 8550)]
+    &gt;&gt;&gt; tracker.calc_emissions(&quot;methane&quot;)
+    [(&#x27;Anthracite Coal&#x27;, 1380), (&#x27;Lignite Coal&#x27;, 936), (&#x27;Plastics&#x27;, 3648)]
+    &gt;&gt;&gt; tracker.calc_emissions(&quot;nitrous oxide&quot;)
+    [(&#x27;Anthracite Coal&#x27;, 200), (&#x27;Lignite Coal&#x27;, 138), (&#x27;Plastics&#x27;, 480)]
+
+    # Case 4: Calculate max for all 3
+    &gt;&gt;&gt; tracker.calc_max_source(&quot;carbon dioxide&quot;)
+    (&#x27;Anthracite Coal&#x27;, 13010)
+    &gt;&gt;&gt; tracker.calc_max_source(&quot;methane&quot;)
+    (&#x27;Plastics&#x27;, 3648)
+    &gt;&gt;&gt; tracker.calc_max_source(&quot;nitrous oxide&quot;)
+    (&#x27;Plastics&#x27;, 480)
+    &quot;&quot;&quot;
+    def __init__(self):
+        self.sources = []
+
+    def add_sources(self, sources):
+        &quot;&quot;&quot; Adds the list of SOURCES to the end of self.sources&quot;&quot;&quot;
+        __________________________
+        #         (a)
+
+    def calc_emissions(self, gas):
+        &quot;&quot;&quot; Returns a list of tuples where the first element is the name of
+        the source and the second element is the total amount of emissions
+        from that type of GAS.&quot;&quot;&quot;
+        __________________________
+        #         (b)
+
+    def calc_max_source(self, gas):
+        &quot;&quot;&quot; Returns a tuple where the first element is the name of the source
+        with the highest emissions and the second element is the total amount
+        of emissions from that source for that type of GAS.&quot;&quot;&quot;
+        return max(______________)
+        #               (c)</code></pre>
+
+
+
+<p>The following questions will ask you to fill in the blanks for <code>EmissionsTracker</code>.</p>
+
+<p>What line of code could go in blank (a)?</p>
+
+<p>What line of code could go in blank (b)? Your code must use methods from the <code>EmissionSource</code> class if it's reasonable to do so.</p>
+
+<p>What expression could go in blank (c)? You may want to consult the Python documentation for
+<a href="https://docs.python.org/3/library/functions.html#max">the max function</a>.</p>
+
+
+<h2 id="walkthrough-6">Walkthrough</h2>
+
+
+<p>The <code>EmissionTracker</code> class is an example of composition: it creates objects that are composed of other objects, <code>EmissionSource</code> instances.</p>
+
+<p>Each instance of <code>EmissionTracker</code> stores an instance variable <code>sources</code>, which is initialized to an empty list.
+We can see from the doctests how sources are added:</p>
+
+<pre><code>&gt;&gt;&gt; tracker = EmissionsTracker()
+&gt;&gt;&gt; pp1 = EmissionSource(&quot;Anthracite Coal&quot;, 2602, 276, 40)
+&gt;&gt;&gt; pp2 = EmissionSource(&quot;Lignite Coal&quot;, 1389, 156, 23)
+&gt;&gt;&gt; tracker.add_sources([pp1, pp2])</code></pre>
+
+
+
+<p>The first thing we need to do is define <code>add_sources</code>, which includes a docstring that says it "adds the list of SOURCES to the end of self.sources".
+There are a few ways we could add a list to another list:</p>
+
+<ul>
+  <li>Add the list itself as an element in the list, so that the list is actually a nested list.</li>
+  <li>Add each element in the list to the list, so that the length of the list increases by the number of elements in the added list.</li>
+</ul>
+
+<p>We could actually implement it either way, as there's no doctest that checks whether <code>self.sources</code> is a 1-dimensional list
+or a 2-dimensional list. However, we don't see any indication in the later doctests and methods
+that <code>self.sources</code> is a nested list, and it's much simpler to store a 1-dimensional list, so we'll go with that approach:</p>
+
+<p><code>self.sources.extend(sources_to_add)</code></p>
+
+<p>We could also write it one of these ways:</p>
+
+<ul>
+  <li><code>self.sources += sources</code></li>
+  <li><code>self.sources = self.sources + sources</code></li>
+</ul>
+
+<p>Next up, we need to implement <code>EmissionsTracker.calc_emissions()</code>. There are two places we can look for
+indications of how that works: the doctests and the docstring.</p>
+
+<p>The relevant doctests:</p>
+
+<pre><code>&gt;&gt;&gt; tracker.calc_emissions(&quot;carbon dioxide&quot;)
+[(&#x27;Anthracite Coal&#x27;, 13010), (&#x27;Lignite Coal&#x27;, 8334), (&#x27;Plastics&#x27;, 8550)]
+&gt;&gt;&gt; tracker.calc_emissions(&quot;methane&quot;)
+[(&#x27;Anthracite Coal&#x27;, 1380), (&#x27;Lignite Coal&#x27;, 936), (&#x27;Plastics&#x27;, 3648)]
+&gt;&gt;&gt; tracker.calc_emissions(&quot;nitrous oxide&quot;)
+[(&#x27;Anthracite Coal&#x27;, 200), (&#x27;Lignite Coal&#x27;, 138), (&#x27;Plastics&#x27;, 480)]</code></pre>
+
+
+
+<p>The docstring: "Returns a list of tuples where the first element is the name of
+the source and the second element is the total amount of emissions from that type of GAS."</p>
+
+<p>There are two tricky aspects here: 1) how to create a list of tuples based on a list of objects,
+2) how to calculate the emissions.</p>
+
+<p>If we only needed the tuple to contain the name and hours of each source, we could write
+this list comprehension:</p>
+
+<p><code>return [ (source.name, source.hours) for source in self.sources]</code></p>
+
+<p>However, we want to calculate the gas emitted for each source, and we're encouraged to
+use methods from <code>EmissionSource</code> when it makes sense to do so. There's a <code>calc_emissions(gas)</code>
+on that class, and that gives us the output we want. Here's a final solution:</p>
+
+<p><code>return [ (source.name, source.calc_emissions(gas)) for source in self.sources]</code></p>
+
+<p>That gives us the emissions for each source for the type of <code>gas</code> passed in to
+<code>EmissionsTracker.calc_emissions</code>.</p>
+
+<p>Finally, we need to implement <code>calc_max_source</code>, a function that is partially defined for us.</p>
+
+<p>The relevant doctests:</p>
+
+<pre><code>&gt;&gt;&gt; tracker.calc_max_source(&quot;carbon dioxide&quot;)
+(&#x27;Anthracite Coal&#x27;, 13010)
+&gt;&gt;&gt; tracker.calc_max_source(&quot;methane&quot;)
+(&#x27;Plastics&#x27;, 3648)
+&gt;&gt;&gt; tracker.calc_max_source(&quot;nitrous oxide&quot;)
+(&#x27;Plastics&#x27;, 480)</code></pre>
+
+
+
+<p>The docstring: "Returns a tuple where the first element is the name of the source
+with the highest emissions and the second element is the total amount
+of emissions from that source for that type of GAS."</p>
+
+<p>It sounds very similar to the docstring from the last function, except that it only
+wants the source with the maximum emission amount from that list of tuples.</p>
+
+<p>What happens if we just pass <code>self.calc_emissions(gas)</code> to the <code>max()</code> function?
+Unfortunately, that won't quite work- it results in the wrong tuple returned.
+That's because Python uses its default method of comparing tuples, which involves
+comparing the values of the first element in each tuple. However, we want it to compare
+the <em>second</em> element of each tuple.</p>
+
+<p>We need to use the optional <code>key</code> argument to tell Python how to compare each
+element. That argument should be a function that receives an element and returns
+some value that can be compared (like a number). In this case, the function
+receives each tuple, and should return the second element of each tuple. Like so:</p>
+
+<p><code>max(self.calc_emissions(gas), key=lambda tup: tup[1])</code></p>
+
+<p>And then our class is complete, with all tests passing!</p>
+
+
+<h4 id="alternatives">Alternatives</h4>
+
+
+<p>Imagine if we had stored sources as 2-dimensional list, appending a list each time:</p>
+
+<p><code>self.sources.append(sources_to_add)</code></p>
+
+<p>We would then need this much more complex list comprehension that iterates through all the sources
+in the nested lists and flattens them into one list using <code>sum()</code>:</p>
+
+<pre><code>def calc_emissions(self, gas):
+    return sum([ [(source.name, source.calc_emissions(gas)) for source in source_list] for source_list in self.sources], start=[])</code></pre>
+
+
+
+<p>That is valid code and passes all the tests, but we probably would not want to do that
+unless we had another reason for wanting to store a nested list, like if we wanted to
+keep track of which sources were added together.</p>
+
+
+<h3 id="related-content-5">Related Content</h3>
+
+
+<ul>
+  <li><a href="https://cs61a.org/assets/slides/17-Inheritance_+_Composition.html#/27">Lecture 17: Composition, Slides 28-35</a>: This is where we first introduced composition.</li>
+  <li><a href="https://cs61a.org/assets/slides/18-Special_Object_Methods.html#/1">Lecture 18: Special Object Methods, Slides 2-6</a>: We revisited composition again in the lecture after.</li>
+  <li><a href="https://cs61a.org/assets/slides/23-Fun_with_Iterables.html#/9">Lecture 23: Fun with Iterables, Slide 10</a>: We showed how to use key functions.</li>
+  <li><a href="../../../../proj/ants/index.html">Ants project</a>: We used composition in this project quite a bit, since every Place contained an Ant and multiple Bee(s).</li>
+</ul>
+
+
+<h2 id="business-as-usual">Business as Usual</h2>
+
+
+
+<h3 id="question-8">Question</h3>
+
+
+<p>Modern office supplies companies use software to track their sales inventory
+and can use object oriented programming to represent the types of products they sell.</p>
+
+<p>We will represent one type of product as a Python class: <code>PaperReam</code>.</p>
+
+<p>The class is partially implemented below. Please read through the code and doctests.</p>
+
+<pre><code>class PaperReam:
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; ream = PaperReam(&quot;red&quot;, 200)
+    &gt;&gt;&gt; ream.color_name
+    &#x27;red&#x27;
+    &gt;&gt;&gt; ream.num_sheets
+    200
+    &gt;&gt;&gt; ream
+    PaperReam(&#x27;red&#x27;, 200)
+    &quot;&quot;&quot;
+
+    def __init__(self, color_name, num_sheets):
+        self.color_name = color_name
+        self.num_sheets = num_sheets
+
+    ____________________
+    #          (a)
+        ________________
+        #      (b)</code></pre>
+
+
+
+<p>The following questions will ask you to fill in the blanks
+for <code>PaperReam</code>.</p>
+
+<p>What line of code could go in blank (a)?</p>
+
+<p>What line of code could go in blank (b)?</p>
+
+
+<h3 id="walkthrough-7">Walkthrough</h3>
+
+
+<p>The question claims that the class is partially implemented,
+yet the doctests seem straightforward. However, if we actually run
+the doctests with the partial code in code.cs61a.org, we will
+see an error:</p>
+
+<pre><code>Failed example:
+    &gt;&gt;&gt; ream
+Expected:
+    PaperReam(&#x27;red&#x27;, 200)
+Received:
+    __main__.PaperReam object</code></pre>
+
+
+
+<p>The reported failure is with the very last test, which checks the output
+when typing the object name in the interpreter. The test runner gets the following
+output:</p>
+
+<pre><code>__main__.PaperReam object</code></pre>
+
+
+
+<p>That is the standard output when we ask the Python interpreter to display
+an instance of a user-defined class, either by typing it in a shell or calling <code>repr()</code> on it.
+It will always look something like <code>__module__.UserClass object</code>.</p>
+
+<p>If we want Python to represent the object differently, we have to explicitly
+tell it how. We can do that by overriding the <code>__repr__</code> method in the class definition.</p>
+
+<p>So the first thing we do is add the function header:</p>
+
+<p><code>def __repr__(self):</code></p>
+
+<p>The method takes a single parameter, <code>self</code>, and must return a string with
+the desired representation. Typically we try to return a string that
+looks like the object constructor, such that we could paste that output
+into Python and re-construct a same-valued object. That's why the doctest
+is looking for <code>PaperReam(&#x27;red&#x27;, 200)</code>.</p>
+
+<p>Here's one way to return such a string:</p>
+
+<p><code>return f&quot;PaperReam(&#x27;{self.color_name}&#x27;, {self.num_sheets})&quot;</code></p>
+
+<p>That uses an f string to format a string that has the class name,
+parentheses, the color name (in quotes, since it's a string),
+and the number of sheets (with no quotes, since it's a number).</p>
+
+<p>It's also possible to use other string formatting methods, like <code>+</code>
+or <code>.format()</code>, but f strings are generally the cleanest and clearest.</p>
+
+<p>An even nicer approach is to use <code>repr()</code> on each instance attribute:</p>
+
+<p><code>return f&quot;PaperReam({repr(self.color_name)}, {repr(self.num_sheets)})&quot;</code></p>
+
+<p>With this approach, we don't need to worry about whether an attribute
+is a string, a number, or even a complex type like a list. We instead
+rely on the <code>__repr__</code> of each type to return with the appropriate
+representation.</p>
+
+
+<h4 id="common-mistakes">Common mistakes</h4>
+
+
+<p>Many students defined the <code>__str__</code> method instead. That method is called
+by Python when we call <code>str()</code> or <code>print()</code> on an object, but it is <em>not</em> called
+when we simply write the name of an object in the Python shell.
+In those situations, if <code>__str__</code> is not defined, Python will call <code>__repr__</code> instead.</p>
+
+<p>However, it doesn't go the other way: if <code>__str__</code> is defined but not <code>__repr__</code>,
+Python will <em>not</em> call <code>__str__</code> when we call <code>repr()</code> on an object. That's why
+it's generally better to start off by defining <code>__repr__</code> in a user defined class,
+and then define <code>__str__</code> after if needed.</p>
+
+<p>Here's a diagram that visually shows the relationship:</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/SVt2Xng.png" alt="Diagram of string representation" width="" height=""></p>
+
+
+<h3 id="related-content-6">Related Content</h3>
+
+
+<ul>
+  <li><a href="https://cs61a.org/assets/slides/18-Special_Object_Methods.html#/14">Lecture 18: Special Object Methods, Slides 14-16</a>: This is where we first discussed <code>__repr__</code>.</li>
+  <li><a href="https://cs61a.org/assets/slides/22-Generics.html#/4">Lecture 22: Generics, Slides 3-6</a>: This is where we introduced f strings and reviewed other string formatting methods.</li>
+  <li><a href="../../../../disc/disc07/index.html#q1">Discussion 7: Repr-esentation WWPD</a></li>
+</ul>
+
+
+<h2 id="light-it-up">Light It Up</h2>
+
+
+
+<h3 id="question-9">Question</h3>
+
+
+<p>An individually addressed LED light strip allows programmers to write programs
+to change the color of each individual LED light.</p>
+
+<p>We could represent a strip of lights using a <code>SingleLED</code> class and an <code>LEDLightStrip</code> class:</p>
+
+<pre><code>class SingleLED:
+
+    def __init__(self, brightness, color):
+        self.brightness = brightness
+        self.color = color
+
+class LEDLightStrip:
+
+    def __init__(self, leds):
+        self.leds = leds
+        self.length = len(leds)
+        self.is_on = False
+
+    def toggle(self):
+        self.is_on = not self.is_on</code></pre>
+
+
+
+<p>Then a short 3-light strip could be constructed like so:</p>
+
+<pre><code>light_strip = LEDLightStrip([SingleLED(0, &quot;blue&quot;), SingleLED(0, &quot;red&quot;), SingleLED(0, &quot;green&quot;)])</code></pre>
+
+
+
+<p>We would like to be able to iterate through the light object, one light at a time, like so:</p>
+
+<pre><code>for led in light_strip:
+    led.brightness += 20</code></pre>
+
+
+
+<p>But with our current code, we see this error:</p>
+
+<p><code>TypeError: &#x27;LEDLightStrip&#x27; object is not iterable</code></p>
+
+<p>We need to define a new method on <code>LEDLightStrip</code> to make it iterable. Here's a skeleton of that method:</p>
+
+<pre><code>    def ______________(self):
+        #     (a)
+        ______________
+        ______________
+        #     (b)</code></pre>
+
+
+
+<p>What method name should go in blank (a)?</p>
+
+<p>What code could go in blank (b) such that the for loop works?
+<em>You can use a single line of code or multiple lines of code, as long as the code is correct.</em></p>
+
+
+<h3 id="walkthrough-8">Walkthrough</h3>
+
+
+<p>This question is asking us to make a custom object <a href="https://docs.python.org/3/glossary.html#term-iterable">iterable</a>.
+Python has many buit-in iterable objects: <code>list</code>, <code>str</code>, <code>tuple</code>, <code>dict</code>, <code>range</code>, <code>set</code>.
+That means we can iterate through instances of those type in a for loop.</p>
+
+<p>However, an instance of a custom class is not iterable by default,
+which means Python has no idea how to iterate through it with a for loop
+and outputs the error shown above.</p>
+
+<p>What makes an object iterable? Its class must define the <code>__iter__</code> method.
+The built-in iterables all define <code>__iter__</code>, but <code>LEDLightStrip</code> doesn't,
+and it doesn't inherit an <code>__iter__</code> from its implicit base class <code>object</code>.</p>
+
+<p>So the first thing we do is add a function header for the method (blank a):</p>
+
+<p><code>def __iter__(self):</code></p>
+
+<p>The method takes no additional arguments besides <code>self</code>.</p>
+
+<p>Python expects <a href="https://docs.python.org/3/reference/datamodel.html#object.__iter__"><code>__iter__</code></a>
+to return an iterator object, and an iterator object is any object on which we can call <code>next()</code>.
+(If you're getting muddled between iterables and iterators, <a href="https://ka-perseus-images.s3.amazonaws.com/82d13f0c94418c233ba3146e33cd4064d941a80d.svg">this diagram from Lecture 23</a> may help.)</p>
+
+<p>One way to make an iterator is to write a generator function, since a generator is a type of iterator.
+A generator is a function that uses yield instead of return, yielding a value everytime <code>next()</code> is called on it.</p>
+
+<p>Here's one way to implement a generator that yields each light in the light strip:</p>
+
+<pre><code>for led in self.leds:
+    yield led</code></pre>
+
+
+
+<p>A while loop can also be used, but the above for loop is cleaner and shorter than the while.</p>
+
+<p>An even shorter version of that approach uses the <code>yield from</code> shorthand:</p>
+
+<pre><code>yield from(self.leds)</code></pre>
+
+
+
+<p>Another way to make an iterator is to call <code>iter()</code> on an iterable
+and return the result:</p>
+
+<pre><code>return iter(self.leds)</code></pre>
+
+
+
+<p>All of these solutions return an iterator that will yield each light,
+one at a time, and raise <code>StopIteration</code> when there are no more left.</p>
+
+
+<h3 id="related-content-7">Related Content</h3>
+
+
+<ul>
+  <li><a href="https://cs61a.org/assets/slides/23-Fun_with_Iterables.html">Lecture 23: Fun with Iterables</a>, especially the Icon example at the end.</li>
+</ul>
+
+
+<h2 id="may-i-take-your-order">May I Take Your Order?</h2>
+
+
+
+<h3 id="question-10">Question</h3>
+
+
+<p>The following two functions can be used for inserting items into a linked list.
+The first function <code>insert_front()</code> always inserts at the front of the list
+while the second function <code>insert_back()</code> always inserts at the back of the list.
+Both functions use the standard CS61A Link definition, viewable here:
+<a href="https://code.cs61a.org/link_class">code.cs61a.org/link_class</a></p>
+
+<pre><code>def insert_front(link, new_val):
+    &quot;&quot;&quot;Add NEW_VAL to the front of non&#x2d;empty LINK, mutating the list.
+
+    &gt;&gt;&gt; link = Link(&#x2d;1, Link(&#x2d;3, Link(&#x2d;5)))
+    &gt;&gt;&gt; insert_front(link, &#x2d;0)
+    &gt;&gt;&gt; link
+    Link(&#x2d;0, Link(&#x2d;1, Link(&#x2d;3, Link(&#x2d;5))))
+    &gt;&gt;&gt; insert_front(link, &#x2d;3)
+    &gt;&gt;&gt; link
+    Link(&#x2d;3, Link(&#x2d;0, Link(&#x2d;1, Link(&#x2d;3, Link(&#x2d;5)))))
+    &quot;&quot;&quot;
+    original_first = link.first
+    link.first = new_val
+    link.rest = Link(original_first, link.rest)
+
+def insert_back(link, new_val):
+    &quot;&quot;&quot;Add NEW_VAL to the end of non&#x2d;empty LINK, mutating the list.
+
+    &gt;&gt;&gt; link = Link(&#x2d;1, Link(&#x2d;3, Link(&#x2d;5)))
+    &gt;&gt;&gt; insert_back(link, &#x2d;0)
+    &gt;&gt;&gt; link
+    Link(&#x2d;1, Link(&#x2d;3, Link(&#x2d;5, Link(&#x2d;0))))
+    &gt;&gt;&gt; insert_back(link, &#x2d;3)
+    &gt;&gt;&gt; link
+    Link(&#x2d;1, Link(&#x2d;3, Link(&#x2d;5, Link(&#x2d;0, Link(&#x2d;3)))))
+    &quot;&quot;&quot;
+    while link.rest is not Link.empty:
+        link = link.rest
+    link.rest = Link(new_val)</code></pre>
+
+
+
+<p>What is the order of growth of <code>insert_front()</code> as the input list size changes?</p>
+
+<p>What is the order of growth of <code>insert_back()</code> as the input list size changes?</p>
+
+<p>Which of the following correctly describes the two functions?</p>
+
+
+<h3 id="walkthrough-9">Walkthrough</h3>
+
+
+<p>The order of growth of a function describes the number of operations performed
+as its input increases in size and approaches very large numbers (infinity).</p>
+
+<p>Let's consider how many operations are required by <code>insert_front()</code> for a
+linked list of size 1:</p>
+
+<pre><code>link = Link(1)
+insert_front(link, Link(0))</code></pre>
+
+
+
+<p>The function would execute the following operations just once:</p>
+
+<pre><code>original_first = link.first
+link.first = new_val
+link.rest = Link(original_first, link.rest)</code></pre>
+
+
+
+<p>And result in this linked list:</p>
+
+<p><code>Link(0, Link(1))</code></p>
+
+<p>What about a linked list of size 5?</p>
+
+<pre><code>link = Link(1, Link(2, Link(3, Link(4, Link(5)))))
+insert_front(link, Link(0))</code></pre>
+
+
+
+<p>It would still execute the same number of operations, just these three:</p>
+
+<pre><code>original_first = link.first
+link.first = new_val
+link.rest = Link(original_first, link.rest)</code></pre>
+
+
+
+<p>And result in this linked list:</p>
+
+<p><code>Link(0, Link(1, Link(2, Link(3, Link(4, Link(5))))))</code></p>
+
+<p>In fact, no matter the length of the input linked list, this function
+will always require only 3 operations to insert a value at the front.
+That's because the function never needs to look beyond the very first
+link in the list, so it's not affected by how many links come after.</p>
+
+<p>Here's what that looks like as a graph:</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/WA99AHq.png" alt="Graph of f(3)" width="" height=""></p>
+
+<p>As <code>n</code> increases, where <code>n</code> represents the length of the input list,
+the graph remains the same. That is called constant growth,
+and corresponds to Θ(1) in Big Theta notation.</p>
+
+<p>Why is it Θ(1) and not Θ(3)? Well, in this notation, we don't care
+about constant multipliers and we just drop them, for simplicity.
+So if the function always grows at Θ(1 * constant), where constant
+is some integer, then we simplify to Θ(1). The constant multiplier
+might matter in some practical situations, but it's not as useful
+in describing the way in which a function grows. What's much more
+important is knowing whether a function is Θ(1), Θ(n) Θ(2^n), etc.</p>
+
+<p>That brings us to the next function, <code>insert_back()</code>.</p>
+
+<p>Let's consider how many operations are required by <code>insert_back()</code> for a
+linked list of size 1:</p>
+
+<pre><code>link = Link(1)
+insert_back(link, Link(0))</code></pre>
+
+
+
+<p>The while loop condition would be false, so
+the function would immediately execute the following operation:</p>
+
+<pre><code>link.rest = Link(new_val)</code></pre>
+
+
+
+<p>And result in:</p>
+
+<p><code>Link(1, Link(0))</code></p>
+
+<p>What about the linked list of size 5?</p>
+
+<pre><code>link = Link(1, Link(2, Link(3, Link(4, Link(5)))))
+insert_back(link, Link(0))</code></pre>
+
+
+
+<p>That would execute the while loop operation 4 times:</p>
+
+<pre><code>while link.rest is not Link.empty:
+    link = link.rest</code></pre>
+
+
+
+<p>Then the final operation 1 time:</p>
+
+<pre><code>link.rest = Link(new_val)</code></pre>
+
+
+
+<p>Thus resulting in:</p>
+
+<pre><code>Link(1, Link(2, Link(3, Link(4, Link(5, Link(0))))))</code></pre>
+
+
+
+<p>So, for a linked list of size 1, there was 1 check of the loop condition
+and 1 final operation, and for a linked list of size 5, there were 5 checks
+of the loop condition, 4 operations inside, and 1 final operation.
+The while loop is responsible for the difference between the two functions,
+since it has to be checked for every element in the list, until it gets to the final link.</p>
+
+<p>If the list was 1000 items long, there'd be 1000 checks of the loop condition
+and 999 operations inside. The number of checks increases as the input list size increases.</p>
+
+<p>Here's what that looks like as a graph:</p>
+
+<p><img class="img-responsive center-block" src="https://i.imgur.com/nl9Cvez.png" alt="Graph of linear growth" width="" height=""></p>
+
+<p>As <code>n</code> increases, where <code>n</code> represents the length of the input list,
+the graph increases steadily. That is called linear growth,
+and corresponds to Θ(n) in Big Theta notation.</p>
+
+<p>In this case, the actual number of operations is more like (2n + 1),
+to account for the operation inside the while loop. However, once again,
+when expressing orders of growth in Big Theta notation, we simplify
+the function by dropping constants and lower orders.</p>
+
+<p>The final question for this problem asked for a description of the two functions.
+The correct answer is: "Both functions perform destructive operations on the input parameter, a mutable object."</p>
+
+<p>The operations are <strong>destructive</strong> because they change the input list.
+Here are the destructive operations from <code>insert_front()</code>:</p>
+
+<pre><code>link.first = new_val
+link.rest = Link(original_first, link.rest)</code></pre>
+
+
+
+<p>And the destructive operation from <code>insert_front()</code>:</p>
+
+<pre><code>link.rest = Link(new_val)</code></pre>
+
+
+
+<p>They were only able to change the input list size because the <code>Link</code> object is mutable,
+meaning that its contents can be changed over the course of computation.</p>
+
+<p>It would be possible, by the way, to write non-destructive versions of the methods that returned
+entirely new Link objects. They would not necessarily have the same orders of growth, however. Try it out!</p>
+
+
+<h3 id="related-content-8">Related Content</h3>
+
+
+<ul>
+  <li><a href="https://cs61a.org/assets/slides/13-Mutable_Values.html#/9">Lecture 13: Mutable Values, Slides 10+</a>: This discusses destructive/non-destructive and mutable/immutable.</li>
+  <li><a href="../../../../study-guide/orders-of-growth.html">Study Guide: Orders of Growth</a></li>
+  <li><a href="../../../../disc/disc07/index.html#efficiency">Discussion 7: Efficiency</a>: Some practice problems on orders of growth.</li>
+  <li><a href="https://cs61a.org/assets/slides/19-Recursive_Objects.html#/12">Lecture 19: Recursive Objects, Slides 13+</a>: This is where we introduced the Link class.</li>
+</ul>
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#tuple-trouble">Tuple Trouble</a></li>
+  <ul>
+    <li><a href="index.html#question">Question</a></li>
+    <li><a href="index.html#walkthrough">Walkthrough</a></li>
+    <li><a href="index.html#related-content">Related Content</a></li>
+  </ul>
+  <li><a href="index.html#teenage-mutant-ninja-lists">Teenage Mutant Ninja Lists</a></li>
+  <ul>
+    <li><a href="index.html#question-2">Question</a></li>
+    <li><a href="index.html#part-a">Part A</a></li>
+    <li><a href="index.html#part-a-walkthrough">Part A Walkthrough</a></li>
+    <li><a href="index.html#part-b">Part B</a></li>
+    <li><a href="index.html#part-b-walkthrough">Part B Walkthrough</a></li>
+    <li><a href="index.html#part-c">Part C</a></li>
+    <li><a href="index.html#part-c-walkthrough">Part C Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#higher-order-shopping">Higher Order Shopping</a></li>
+  <ul>
+    <li><a href="index.html#question-3">Question</a></li>
+    <li><a href="index.html#walkthrough-2">Walkthrough</a></li>
+  </ul>
+  <li><a href="index.html#gotta-keep-em-separated">Gotta Keep 'Em Separated</a></li>
+  <ul>
+    <li><a href="index.html#question-4">Question</a></li>
+    <li><a href="index.html#walkthrough-3">Walkthrough</a></li>
+    <ul>
+      <li><a href="index.html#first-draft">First draft</a></li>
+      <li><a href="index.html#almost-there-but-we-need-base-cases">Almost there, but we need base cases</a></li>
+      <li><a href="index.html#we-did-it">We did it!</a></li>
+    </ul>
+    <li><a href="index.html#related-content-2">Related Content</a></li>
+  </ul>
+  <li><a href="index.html#online-classes">Online Classes</a></li>
+  <ul>
+    <li><a href="index.html#question-5">Question</a></li>
+    <li><a href="index.html#walkthrough-4">Walkthrough</a></li>
+    <li><a href="index.html#related-content-3">Related Content</a></li>
+  </ul>
+  <li><a href="index.html#the-tree-of-l-i-f-e">The Tree of L-I-F-E</a></li>
+  <ul>
+    <li><a href="index.html#question-6">Question</a></li>
+    <li><a href="index.html#walkthrough-5">Walkthrough</a></li>
+    <li><a href="index.html#related-content-4">Related Content</a></li>
+  </ul>
+  <li><a href="index.html#gas-composition">Gas Composition</a></li>
+  <ul>
+    <li><a href="index.html#question-7">Question</a></li>
+  </ul>
+  <li><a href="index.html#walkthrough-6">Walkthrough</a></li>
+  <ul>
+    <li><a href="index.html#alternatives">Alternatives</a></li>
+  </ul>
+  <ul>
+    <li><a href="index.html#related-content-5">Related Content</a></li>
+  </ul>
+  <li><a href="index.html#business-as-usual">Business as Usual</a></li>
+  <ul>
+    <li><a href="index.html#question-8">Question</a></li>
+    <li><a href="index.html#walkthrough-7">Walkthrough</a></li>
+    <ul>
+      <li><a href="index.html#common-mistakes">Common mistakes</a></li>
+    </ul>
+    <li><a href="index.html#related-content-6">Related Content</a></li>
+  </ul>
+  <li><a href="index.html#light-it-up">Light It Up</a></li>
+  <ul>
+    <li><a href="index.html#question-9">Question</a></li>
+    <li><a href="index.html#walkthrough-8">Walkthrough</a></li>
+    <li><a href="index.html#related-content-7">Related Content</a></li>
+  </ul>
+  <li><a href="index.html#may-i-take-your-order">May I Take Your Order?</a></li>
+  <ul>
+    <li><a href="index.html#question-10">Question</a></li>
+    <li><a href="index.html#walkthrough-9">Walkthrough</a></li>
+    <li><a href="index.html#related-content-8">Related Content</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../../../assets/js/network_storage.js"></script>
+    <script src="../../../../assets/js/code_tabindex.js"></script>
+    <script src="../../../../assets/js/storable.js"></script>
+    <script src="../../../../assets/js/editor.js"></script>
+    <script src="../../../../assets/js/copy-button.js"></script>
+    <script src="../../../../assets/js/env-diagram.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+<script src="../../../../assets/js/storable.js"></script>
+<script src="../../../../assets/js/env-diagram.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+</script>
+
+  </body>
+</html>

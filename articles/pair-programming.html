@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../assets/js/hl.js"></script>
+    <script src="../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/mono-blue.css">
+    <link rel="icon" href="../assets/images/favicon.ico">
+
+    
+
+    <title>
+Pair Programming | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../index.html">Lectures</a></li>
+            
+            <li><a href="about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="pair-programming.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="pair-programming.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="pair-programming.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../instructor.html">Instructors</a></li>
+                
+                <li><a href="../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>Pair Programming</h1>
+    </header>
+     <p>Pair programming is a way to program collaboratively with a partner.
+It's a great approach when you're learning how to program,
+plus it's used by many companies in the tech industry.</p>
+
+<p>In pair programming, partners are working together <em>at the same time</em>.
+One partner is the "driver," who actually types the code.
+The other partner is the "navigator," who observes, asks questions, suggests solutions,
+and thinks about slightly longer-term strategies.</p>
+
+<p>It's very important for partners to switch roles throughout an assignment,
+either every 10-20 minutes or alternating each problem.</p>
+
+
+<h2 id="pairing-setup">Pairing Setup</h2>
+
+
+
+<h3 id="pairing-in-person">Pairing in Person</h3>
+
+
+<p>This is the traditional approach to pair programming.
+Partners sit together at the same computer, ideally one with a large or double monitor.
+The driver controls the keyboard and mouse, while the navigator
+looks at the code and assignment description.</p>
+
+
+<h3 id="remote-pairing">Remote Pairing</h3>
+
+
+<p>Fortunately, it is also very possible to do pair programming online,
+thanks to the wide range of collaborative cloud applications.</p>
+
+<p>You'll need two things:</p>
+
+<ul>
+  <li>A way to hear each other.</li>
+  <li>A way to share code and the command line.</li>
+</ul>
+
+<p>For hearing each other, you can set up a Zoom call, Google Meet, or Discord call.</p>
+
+<p>For sharing code, you can follow the <a href="https://cs61a.org/articles/pair-programming/vscode/#pair-programming">instructions for the VS Code editor</a>.</p>
+
+<p>You'll generally want to both be using the same editor, so you'll either want to find a partner using the same editor or be willing to try a new editor. That can be a part of the learning experience, too!</p>
+
+<p>There are also online editors that support collaboration. Our own code.cs61a.org includes a <a href="61a-code-docs/index.html#sharing-code">sharing option</a>. Another option is Repl.it, as long as you use private repls (learn how to get a <a href="https://cs61a.org/articles/pair-programming/(https://repl.it/site/github-students">free account</a>). In both cases, you will still need to run the Ok commands on your computer.</p>
+
+<p>If for some reason you're unable to do actual pairing in an editor, you can always fall back to a shared Google Doc. Just make sure to turn off the auto-correct in your document, or your code will get infused with new and exciting syntax errors.</p>
+
+
+<h2 id="pairing-faq">Pairing FAQ</h2>
+
+
+
+<h3 id="when-is-pairing-permitted">When is pairing permitted?</h3>
+
+
+<p>We encourage pair programming in projects. You're also permitted to pair program on a lab problem, especially if you are stuck.
+Just make sure that you are always alternating between roles so that you are both learning from the experience. You should <strong>not</strong> be pair programming on homework assignments, however, since you are required to write your own code for them.</p>
+
+<p>See the <a href="https://cs61a.org/articles/about/#learning-cooperatively">course policies</a> for more information.</p>
+
+
+<h3 id="finding-a-partner">Finding a partner</h3>
+
+
+<p>We recommend finding a partner in your tutorial group,
+but course staff will also provide a partner matching form at various points in the semester.
+Keep your eyes peeled for a Piazza post announcing the partner matching form.</p>
+
+<p>You're not required to have the same partner for every project. Pair programming is as much about communication styles as it is about coding styles, so it's important to find a partner that you are able to communicate well with.</p>
+
+
+<h3 id="how-do-we-submit-get-grades-as-a-pair">How do we submit/get grades as a pair?</h3>
+
+
+<p>For non-project assignments, you should submit your work <strong>individually</strong>.</p>
+
+<p>If you're working on a <strong>project</strong> together with a partner,
+<strong>only ONE</strong> of you should needs to submit the assignment to Ok. Once the
+assignment has been submitted, you must then add your partner by inviting them
+by email. Make sure to accept the invitation or the partnership won't be
+official. See <a href="using-ok.html">Using Ok</a> for more information.</p>
+
+
+<h3 id="what-are-the-expectations-of-each-partner-in-a-pair">What are the expectations of each partner in a pair?</h3>
+
+
+<p>We expect partners to communicate with each other, arrange times to meet for pairing,
+and participate equally in the process of pair programming.
+If one of you would like to work separately on particular parts of a project,
+you should communicate that with your partner.</p>
+
+<p><strong>NOTE</strong>: If you agree verbally (or via email) to work with a given partner on
+a given assignment, you are expected to work through that assignment with that
+partner to completion. You can't abandon your partner in the middle of an
+assignment unless the decision to unpair is mutual for both of you. Please be
+considerate for your partner and don't leave them hanging without an easy way
+to find a new partner in mid-assignment. If you are planning to end your
+partnership and do the next assignment alone, please tell your partner this as
+soon as possible when the assignment is given out, so that they can make other
+arrangements.</p>
+
+
+<h3 id="my-partner-and-i-didn-t-work-well-together">My partner and I didn't work well together...</h3>
+
+
+<p>We sometimes see feedback like:</p>
+
+<blockquote><p>My partner didn't do any work, or didn't do their share of the work, or didn't
+communicate or meet with me, etc. What can I do?</p></blockquote>
+
+<p>Or:</p>
+
+<blockquote><p>My partner did too much! They hogged the
+keyboard, or they did the whole assignment without waiting for me, or they
+didn't communicate with me, etc. I feel that I didn't get a real chance to
+help in solving the assignment. What can I do?</p></blockquote>
+
+<p>Have you tried speaking to your partner about your expectations beforehand? Many
+group issues can be resolved by better communication and setting expectations.</p>
+
+<p>If talking to your partner does not resolve the situation, speak to course staff and
+explain the details of what has happened. We will try to help you resolve the
+issue. If it is an ongoing problem, staff can help you find you a partner or allow
+you to dissolve your partnership and submit individually.</p>
+
+
+<h3 id="how-do-we-get-help-if-our-pair-is-stuck-on-an-assignment">How do we get help if our pair is stuck on an assignment?</h3>
+
+
+<p>You can go ask for help from the course staff in office hours.
+We ask that <strong>only one of you</strong> enqueue for help at a time.
+That is, please don't try to "double up" by
+enqueuing both of your names in the line. If we find that a pair is doing
+this, we will remove both of their names and move one of them to the very back
+of the queue. Thank you for your cooperation.</p>
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="pair-programming.html#pairing-setup">Pairing Setup</a></li>
+  <ul>
+    <li><a href="pair-programming.html#pairing-in-person">Pairing in Person</a></li>
+    <li><a href="pair-programming.html#remote-pairing">Remote Pairing</a></li>
+  </ul>
+  <li><a href="pair-programming.html#pairing-faq">Pairing FAQ</a></li>
+  <ul>
+    <li><a href="pair-programming.html#when-is-pairing-permitted">When is pairing permitted?</a></li>
+    <li><a href="pair-programming.html#finding-a-partner">Finding a partner</a></li>
+    <li><a href="pair-programming.html#how-do-we-submit-get-grades-as-a-pair">How do we submit/get grades as a pair?</a></li>
+    <li><a href="pair-programming.html#what-are-the-expectations-of-each-partner-in-a-pair">What are the expectations of each partner in a pair?</a></li>
+    <li><a href="pair-programming.html#my-partner-and-i-didn-t-work-well-together">My partner and I didn't work well together...</a></li>
+    <li><a href="pair-programming.html#how-do-we-get-help-if-our-pair-is-stuck-on-an-assignment">How do we get help if our pair is stuck on an assignment?</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../assets/js/network_storage.js"></script>
+    <script src="../assets/js/code_tabindex.js"></script>
+    <script src="../assets/js/storable.js"></script>
+    <script src="../assets/js/editor.js"></script>
+    <script src="../assets/js/copy-button.js"></script>
+    <script src="../assets/js/env-diagram.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+<script src="../assets/js/storable.js"></script>
+<script src="../assets/js/env-diagram.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+</script>
+
+  </body>
+</html>

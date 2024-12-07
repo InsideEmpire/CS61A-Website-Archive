@@ -1,0 +1,666 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/hw.css">
+
+
+    <title>
+Homework 6 Solutions | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Homework 6 Solutions
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="hw06.zip" class="label label-outline">hw06.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+<h2>Solution Files</h2>
+<p>You can find the solutions in <a href="hw06.py">hw06.py</a>.</p>
+
+    
+<h1 id="required-questions">Required Questions</h1>
+
+
+<br>
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Getting Started Videos<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<h2 id="getting-started-videos" class="no-toc">Getting Started Videos</h2>
+
+
+<p>These videos may provide some helpful direction for tackling the coding
+problems on this assignment.</p>
+
+<blockquote><p>To see these videos, you should be logged into your berkeley.edu email.</p></blockquote>
+
+
+            <iframe width="560" height="315" src="https://youtube.com/embed/videoseries?list=PLx38hZJ5RLZfxjdMd1d7NFVcfLyRK-uLg"
+                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" aria-label = "hw6-getstarted"
+                allowfullscreen></iframe><p><a href='https://youtu.be/playlist?list=PLx38hZJ5RLZfxjdMd1d7NFVcfLyRK-uLg'> YouTube link </a></p>
+</div>
+
+
+<h2 id="midsemester-survey">Midsemester Survey</h2>
+
+
+
+<h3 id="q1-mid-semester-feedback">Q1: Mid-Semester Feedback</h3>
+
+
+<p>As part of this assignment, fill out the
+<a href="https://forms.gle/HgHnpLj1SC4jRAxE9">Mid-Semester Feedback</a> form.</p>
+
+<p>Once you finish the survey, you will be presented with a passphrase. Put
+this passphrase, as a string, on the line that says
+<code>passphrase = &#x27;REPLACE_THIS_WITH_PASSPHRASE&#x27;</code> in the Python file for this assignment.
+E.g. if the passphrase is <code>abc</code>, then the line should be <code>passphrase = &#x27;abc&#x27;</code>.</p>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q midsem_survey<button id="copy-code-python3ok-qmidsem_survey" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qmidsem_survey").onclick = () => copyCode('python3 ok -q midsem_survey', "copy-code-python3ok-qmidsem_survey");
+        </script>
+        <br/>
+
+
+<h2 id="oop">OOP</h2>
+
+
+<h3 id="q2-vending-machine">Q2: Vending Machine</h3>
+
+
+<p>In this question you'll create a <a href="https://en.wikipedia.org/wiki/Vending_machine">vending machine</a> that sells a single product and provides change when needed.</p>
+
+<p>Implement the <code>VendingMachine</code> class, which models a vending machine for one specific product.
+The methods of a <code>VendingMachine</code> object return strings to describe the machine’s status and operations.
+Ensure that your output matches <em>exactly</em> with the strings provided in the doctests, including punctuation and spacing.</p>
+
+<blockquote><p>You may find Python's formatted string literals, or <a href="https://docs.python.org/3/tutorial/inputoutput.html#fancier-output-formatting">f-strings</a> useful.
+A quick example:</p>
+
+<pre><code>&gt;&gt;&gt; feeling = &#x27;love&#x27;
+&gt;&gt;&gt; course = &#x27;61A!&#x27;
+&gt;&gt;&gt; combined_string = f&#x27;I {feeling} {course}&#x27;
+&gt;&gt;&gt; combined_string
+&#x27;I love 61A!&#x27;</code></pre></blockquote>
+
+<solution>
+
+<pre><code>class VendingMachine:
+    &quot;&quot;&quot;A vending machine that vends some product for some price.
+
+    &gt;&gt;&gt; v = VendingMachine(&#x27;candy&#x27;, 10)
+    &gt;&gt;&gt; v.vend()
+    &#x27;Nothing left to vend. Please restock.&#x27;
+    &gt;&gt;&gt; v.add_funds(15)
+    &#x27;Nothing left to vend. Please restock. Here is your $15.&#x27;
+    &gt;&gt;&gt; v.restock(2)
+    &#x27;Current candy stock: 2&#x27;
+    &gt;&gt;&gt; v.vend()
+    &#x27;Please add $10 more funds.&#x27;
+    &gt;&gt;&gt; v.add_funds(7)
+    &#x27;Current balance: $7&#x27;
+    &gt;&gt;&gt; v.vend()
+    &#x27;Please add $3 more funds.&#x27;
+    &gt;&gt;&gt; v.add_funds(5)
+    &#x27;Current balance: $12&#x27;
+    &gt;&gt;&gt; v.vend()
+    &#x27;Here is your candy and $2 change.&#x27;
+    &gt;&gt;&gt; v.add_funds(10)
+    &#x27;Current balance: $10&#x27;
+    &gt;&gt;&gt; v.vend()
+    &#x27;Here is your candy.&#x27;
+    &gt;&gt;&gt; v.add_funds(15)
+    &#x27;Nothing left to vend. Please restock. Here is your $15.&#x27;
+
+    &gt;&gt;&gt; w = VendingMachine(&#x27;soda&#x27;, 2)
+    &gt;&gt;&gt; w.restock(3)
+    &#x27;Current soda stock: 3&#x27;
+    &gt;&gt;&gt; w.restock(3)
+    &#x27;Current soda stock: 6&#x27;
+    &gt;&gt;&gt; w.add_funds(2)
+    &#x27;Current balance: $2&#x27;
+    &gt;&gt;&gt; w.vend()
+    &#x27;Here is your soda.&#x27;
+    &quot;&quot;&quot;
+    def __init__(self, product, price):
+        &quot;&quot;&quot;Set the product and its price, as well as other instance attributes.&quot;&quot;&quot;
+<div class="sol-highlight">        self.product = product
+        self.price = price
+        self.stock = 0
+        self.balance = 0</div>
+    def restock(self, n):
+        &quot;&quot;&quot;Add n to the stock and return a message about the updated stock level.
+
+        E.g., Current candy stock: 3
+        &quot;&quot;&quot;
+<div class="sol-highlight">        self.stock += n
+        return f&#x27;Current {self.product} stock: {self.stock}&#x27;</div>
+    def add_funds(self, n):
+        &quot;&quot;&quot;If the machine is out of stock, return a message informing the user to restock
+        (and return their n dollars).
+
+        E.g., Nothing left to vend. Please restock. Here is your $4.
+
+        Otherwise, add n to the balance and return a message about the updated balance.
+
+        E.g., Current balance: $4
+        &quot;&quot;&quot;
+<div class="sol-highlight">        if self.stock == 0:
+            return f&#x27;Nothing left to vend. Please restock. Here is your ${n}.&#x27;
+            # Alternatively, we could have:
+            # return self.vend() + f&#x27; Here is your ${n}.&#x27;
+        self.balance += n
+        return f&#x27;Current balance: ${self.balance}&#x27;</div>
+    def vend(self):
+        &quot;&quot;&quot;Dispense the product if there is sufficient stock and funds and
+        return a message. Update the stock and balance accordingly.
+
+        E.g., Here is your candy and $2 change.
+
+        If not, return a message suggesting how to correct the problem.
+
+        E.g., Nothing left to vend. Please restock.
+              Please add $3 more funds.
+        &quot;&quot;&quot;
+<div class="sol-highlight">        if self.stock == 0:
+            return &#x27;Nothing left to vend. Please restock.&#x27;
+        difference = self.price &#x2d; self.balance
+        if difference &gt; 0:
+            return f&#x27;Please add ${difference} more funds.&#x27;
+        message = f&#x27;Here is your {self.product}&#x27;
+        if difference != 0:
+            message += f&#x27; and ${&#x2d;difference} change&#x27;
+        self.balance = 0
+        self.stock &#x2d;= 1
+        return message + &#x27;.&#x27;</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q VendingMachine<button id="copy-code-python3ok-qVendingMachine" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qVendingMachine").onclick = () => copyCode('python3 ok -q VendingMachine', "copy-code-python3ok-qVendingMachine");
+        </script>
+        <br/>
+
+
+<h2 id="linked-lists">Linked Lists</h2>
+
+
+<h3 id="q3-store-digits">Q3: Store Digits</h3>
+
+
+<p>Write a function <code>store_digits</code> that takes in an integer <code>n</code> and returns
+a linked list containing the digits of <code>n</code> in the same order (from left to right).</p>
+
+<blockquote><p><strong>Important</strong>: Do not use any string manipulation functions, such as <code>str</code> or <code>reversed</code>.</p></blockquote>
+
+<solution>
+
+<pre><code>def store_digits(n):
+    &quot;&quot;&quot;Stores the digits of a positive number n in a linked list.
+
+    &gt;&gt;&gt; s = store_digits(1)
+    &gt;&gt;&gt; s
+    Link(1)
+    &gt;&gt;&gt; store_digits(2345)
+    Link(2, Link(3, Link(4, Link(5))))
+    &gt;&gt;&gt; store_digits(876)
+    Link(8, Link(7, Link(6)))
+    &gt;&gt;&gt; store_digits(2450)
+    Link(2, Link(4, Link(5, Link(0))))
+    &gt;&gt;&gt; store_digits(20105)
+    Link(2, Link(0, Link(1, Link(0, Link(5)))))
+    &gt;&gt;&gt; # a check for restricted functions
+    &gt;&gt;&gt; import inspect, re
+    &gt;&gt;&gt; cleaned = re.sub(r&quot;#.*\\n&quot;, &#x27;&#x27;, re.sub(r&#x27;&quot;{3}[\s\S]*?&quot;{3}&#x27;, &#x27;&#x27;, inspect.getsource(store_digits)))
+    &gt;&gt;&gt; print(&quot;Do not use str or reversed!&quot;) if any([r in cleaned for r in [&quot;str&quot;, &quot;reversed&quot;]]) else None
+    &quot;&quot;&quot;
+<div class="sol-highlight">    result = Link.empty
+    while n &gt; 0:
+        result = Link(n % 10, result)
+        n //= 10
+    return result</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q store_digits<button id="copy-code-python3ok-qstore_digits" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qstore_digits").onclick = () => copyCode('python3 ok -q store_digits', "copy-code-python3ok-qstore_digits");
+        </script>
+        <br/>
+
+
+<h3 id="q4-mutable-mapping">Q4: Mutable Mapping</h3>
+
+
+<p>Implement <code>deep_map_mut(func, s)</code>, which applies the function <code>func</code> to each
+element in the linked list <code>s</code>. If an element is itself a linked list,
+recursively apply <code>func</code> to its elements as well.</p>
+
+<p>Your implementation should <em>mutate</em> the original linked list. <strong>Do not
+create any new linked lists.</strong> The function returns <code>None</code>.</p>
+
+<blockquote><p><strong>Hint</strong>: You can use the built-in <code>isinstance</code> function to determine if an element is a linked list.</p>
+
+<pre><code>&gt;&gt;&gt; s = Link(1, Link(2, Link(3, Link(4))))
+&gt;&gt;&gt; isinstance(s, Link)
+True
+&gt;&gt;&gt; isinstance(s, int)
+False</code></pre></blockquote>
+
+<!-- separator for the indent blocks -->
+
+<blockquote><p><strong>Construct Check</strong>: The final test case for this problem checks
+that your function does not create any new linked lists.
+If you are failing this doctest, make sure that you are not
+creating link lists by calling the constructor, i.e.</p>
+
+<pre><code>s = Link(1)</code></pre></blockquote>
+
+<solution>
+
+<pre><code>def deep_map_mut(func, s):
+    &quot;&quot;&quot;Mutates a deep link s by replacing each item found with the
+    result of calling func on the item. Does NOT create new Links (so
+    no use of Link&#x27;s constructor).
+
+    Does not return the modified Link object.
+
+    &gt;&gt;&gt; link1 = Link(3, Link(Link(4), Link(5, Link(6))))
+    &gt;&gt;&gt; print(link1)
+    &lt;3 &lt;4&gt; 5 6&gt;
+    &gt;&gt;&gt; # Disallow the use of making new Links before calling deep_map_mut
+    &gt;&gt;&gt; Link.__init__, hold = lambda *args: print(&quot;Do not create any new Links.&quot;), Link.__init__
+    &gt;&gt;&gt; try:
+    ...     deep_map_mut(lambda x: x * x, link1)
+    ... finally:
+    ...     Link.__init__ = hold
+    &gt;&gt;&gt; print(link1)
+    &lt;9 &lt;16&gt; 25 36&gt;
+    &quot;&quot;&quot;
+<div class="sol-highlight">    if s is Link.empty:
+        return None
+    elif isinstance(s.first, Link):
+        deep_map_mut(func, s.first)
+    else:
+        s.first = func(s.first)
+    deep_map_mut(func, s.rest)</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q deep_map_mut<button id="copy-code-python3ok-qdeep_map_mut" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qdeep_map_mut").onclick = () => copyCode('python3 ok -q deep_map_mut', "copy-code-python3ok-qdeep_map_mut");
+        </script>
+        <br/>
+
+
+<h2 id="check-your-score-locally">Check Your Score Locally</h2>
+
+<p>You can locally check your score on each question of this assignment by running</p>
+
+<pre><code>python3 ok &#x2d;&#x2d;score</code></pre>
+
+<p><strong>This does NOT submit the assignment!</strong> When you are satisfied with your score, submit the assignment to Gradescope to receive credit for it.</p>
+
+<h1 id="submit-assignment">Submit Assignment</h1>
+
+
+<p>Submit this assignment by uploading any files you've edited <strong>to the appropriate Gradescope assignment.</strong> <a href="../../lab/lab00.html#submit-with-gradescope">Lab 00</a> has detailed instructions.</p>
+
+
+<h1 id="optional-questions">Optional Questions</h1>
+
+
+<h3 id="q5-two-list">Q5: Two List</h3>
+
+
+<p>Implement a function <code>two_list</code> that takes in two lists and returns a linked list. The first list contains the
+values that we want to put in the linked list, and the second list contains the number of each corresponding value.
+Assume both lists are the same size and have a length of 1 or greater. Assume all elements in the second list
+are greater than 0.</p>
+
+<solution>
+
+<pre><code>def two_list(vals, counts):
+    &quot;&quot;&quot;
+    Returns a linked list according to the two lists that were passed in. Assume
+    vals and counts are the same size. Elements in vals represent the value, and the
+    corresponding element in counts represents the number of this value desired in the
+    final linked list. Assume all elements in counts are greater than 0. Assume both
+    lists have at least one element.
+    &gt;&gt;&gt; a = [1, 3]
+    &gt;&gt;&gt; b = [1, 1]
+    &gt;&gt;&gt; c = two_list(a, b)
+    &gt;&gt;&gt; c
+    Link(1, Link(3))
+    &gt;&gt;&gt; a = [1, 3, 2]
+    &gt;&gt;&gt; b = [2, 2, 1]
+    &gt;&gt;&gt; c = two_list(a, b)
+    &gt;&gt;&gt; c
+    Link(1, Link(1, Link(3, Link(3, Link(2)))))
+    &quot;&quot;&quot;
+<div class="sol-highlight">    def helper(count, index):
+        if count == 0:
+            if index + 1 == len(vals):
+                return Link.empty
+            return Link(vals[index + 1], helper(counts[index + 1] &#x2d; 1, index + 1))
+        return Link(vals[index], helper(count &#x2d; 1, index))
+    return helper(counts[0], 0)
+
+#Iterative solution
+def two_list_iterative(vals, counts):
+    result = Link(None) 
+    p = result
+    for index in range(len(vals)):
+        item = vals[index]
+        for _ in range(counts[index]):
+            p.rest = Link(item)
+            p = p.rest
+    return result.rest</div></code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q two_list<button id="copy-code-python3ok-qtwo_list" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qtwo_list").onclick = () => copyCode('python3 ok -q two_list', "copy-code-python3ok-qtwo_list");
+        </script>
+        <br/>
+
+
+<h1 id="exam-practice">Exam Practice</h1>
+
+<p>Homework assignments will also contain prior exam questions for you to try.
+These questions have no submission component; feel free to attempt them if you'd like some practice!</p>
+
+<p>Object-Oriented Programming</p>
+
+<ol>
+  <li>Spring 2022 MT2 Q8: <a href="../../exam/sp22/mt2/61a-sp22-mt2.pdf#page=17">CS61A Presents The Game of Hoop.</a></li>
+  <li>Fall 2020 MT2 Q3: <a href="../../exam/fa20/mt2/61a-fa20-mt2.pdf#page=9">Sparse Lists</a></li>
+  <li>Fall 2019 MT2 Q7: <a href="../../exam/fa19/mt2/61a-fa19-mt2.pdf#page=8">Version 2.0</a></li>
+</ol>
+
+<p>Linked Lists</p>
+
+<ol>
+  <li>Fall 2020 Final Q3: <a href="../../exam/fa20/final/61a-fa20-final.pdf#page=9">College Party</a></li>
+  <li>Fall 2018 MT2 Q6: <a href="../../exam/fa18/mt2/61a-fa18-mt2.pdf#page=6">Dr. Frankenlink</a></li>
+  <li>Spring 2017 MT1 Q5: <a href="../../exam/sp17/mt1/61a-sp17-mt1.pdf#page=7">Insert</a></li>
+</ol>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#instructions">Instructions</a></li>
+  <li><a href="index.html#required-questions">Required Questions</a></li>
+  <ul>
+    <li><a href="index.html#midsemester-survey">Midsemester Survey</a></li>
+    <ul>
+      <li><a href="index.html#q1-mid-semester-feedback">Q1: Mid-Semester Feedback</a></li>
+    </ul>
+    <li><a href="index.html#oop">OOP</a></li>
+    <ul>
+      <li><a href="index.html#q2-vending-machine">Q2: Vending Machine</a></li>
+    </ul>
+    <li><a href="index.html#linked-lists">Linked Lists</a></li>
+    <ul>
+      <li><a href="index.html#q3-store-digits">Q3: Store Digits</a></li>
+      <li><a href="index.html#q4-mutable-mapping">Q4: Mutable Mapping</a></li>
+    </ul>
+    <li><a href="index.html#check-your-score-locally">Check Your Score Locally</a></li>
+  </ul>
+  <li><a href="index.html#submit-assignment">Submit Assignment</a></li>
+  <li><a href="index.html#optional-questions">Optional Questions</a></li>
+  <ul>
+    <li><a href="index.html#q5-two-list">Q5: Two List</a></li>
+  </ul>
+  <li><a href="index.html#exam-practice">Exam Practice</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

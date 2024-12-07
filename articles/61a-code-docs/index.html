@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+    <title>
+61A Code Documentation | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../../index.html">Lectures</a></li>
+            
+            <li><a href="../about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../../instructor.html">Instructors</a></li>
+                
+                <li><a href="../../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>61A Code Documentation</h1>
+    </header>
+     <p><a href="https://code.cs61a.org">code.cs61a.org</a> is an online interpreter for all three
+of the languages (Python 3.9, 61A Scheme, and the SQLite variant of SQL) taught
+in this course. Using this interpreter, you can edit, run, debug, visualize, and
+share programs with staff.</p>
+
+
+<h2 id="getting-started">Getting Started</h2>
+
+<p>The easiest way to get started with 61A Code is to visit
+<a href="https://code.cs61a.org">code.cs61a.org</a> and play around with the interpreters.
+Hit <code>Start Python Interpreter</code> on the launch screen, and start interacting with
+<code>python</code>!</p>
+
+<p>Note that the site may take a few seconds to load for the first time, since it's
+downloading interpreters for Python, Scheme, and SQL to your browser. In most
+modern browsers, these interpreters are cached, so subsequent loads should be a
+lot faster! In addition, the interpreters will all run offline after they enter
+your cache, so you can work even without an internet connection!</p>
+
+
+<h2 id="creating-files">Creating Files</h2>
+
+<p>Rather than running code straight in an interpreter, you may want to edit a
+program in a file. To do so, you can</p>
+
+<ul>
+  <li>Click <code>New</code> at the top menu bar</li>
+  <li>Click <code>Create new file</code> on the launch screen</li>
+  <li>Call the <code>editor</code> function in an interactive interpreter (<code>editor()</code> in
+  Python, <code>(editor)</code> in Scheme, and <code>.editor</code> in SQL)</li>
+</ul>
+
+<p>To run code in a file, hit the green <code>Run</code> icon at the top-right of the window.
+An interactive interpreter will open showing the printed output of your code,
+that will allow you to further interact with your program. You can use the red
+<code>Stop</code> icon to the left of the interactive interpreter to stop a program that is
+running for a long time.</p>
+
+<p>To save a file, hit <code>Ctrl/Cmd + S</code> or click the <code>Save</code> / <code>Save As</code> options at
+the top menu bar. You will be given the option to either download a copy of your
+code as a file, or to save it locally in your browser. If you choose to save it
+in your browser, you should give it a meaningful name. If you give two files the
+same name, the older file will be silently overridden, so be careful!</p>
+
+<p>Once you open an editor, you can write code in any of the three languages, and
+the editor will automatically detect the language. If you want to override the
+language detected, add a <code>lang</code> comment at the top of the file:</p>
+
+<ul>
+  <li><code>#lang python</code> will force the interpreter to use <code>python</code></li>
+  <li><code>;lang scheme</code> will force the interpreter to use <code>scheme</code></li>
+  <li><code>&#x2d;&#x2d;lang sql</code> will force the interpreter to use <code>sql</code></li>
+</ul>
+
+<p>Alternatively, you can save a file with a <code>.py</code>, <code>.scm</code>, or <code>.sql</code> extension to
+force it to run with the corresponding language.</p>
+
+
+<h2 id="loading-files">Loading Files</h2>
+
+<p>You may want to interact with programs written elsewhere using 61A Code. To do
+so, there are a number of options:</p>
+
+<ul>
+  <li>Click <code>Open</code> at the top menu bar, and upload a file to 61A code by dragging
+  it into the drop target or selecting it manually.</li>
+  <li>Click <code>Open existing file</code> on the launch screen, and upload a file using the
+  previously described dialog.</li>
+  <li>Select a file from <code>Recent Local Files</code> or <code>OKPy Backups</code>.</li>
+  <li>Open a file from the course homepage.</li>
+</ul>
+
+<p>When opening files, look in the <code>cs61a</code> directory to find your OKPy backups for
+the current semester. You will be prompted to log in the first time you try to
+perform an action that requires OKPy authentication. You can open, edit, run,
+and save backups, and they will be synchronized on OKPy and with your partner.
+However, you cannot run OKPy test cases.</p>
+
+<p>Files in the <code>home</code> folder are stored in your local browser storage. Some
+browsers may clear this storage periodically (Safari is known to do this), so
+don't rely on it! Files stored in the <code>cs61a</code> folder are saved as an OKPy
+backup, and so will be accessible even if you clear your browser data, but will
+be inaccessible from 61A Code after the semester ends (though they will remain
+on OKPy).</p>
+
+<p>To open a file already saved in 61A Code, you can either use the <code>Open</code> dialog
+described previously to open a previously saved file, or access a direct link to
+the file (such as those on the course homepage). Note that publicly accessible
+direct links can only be created by course staff.</p>
+
+
+<h2 id="formatting-code">Formatting Code</h2>
+
+<p>To make your code more readable, click the blue <code>Format</code> icon at the top right
+of the window. Especially for Scheme, this can make your code easier to read and
+debug, and will also catch simple syntax errors.</p>
+
+
+<h2 id="visualizing-data-structures">Visualizing Data Structures</h2>
+
+<p>To visualize data structures, call the <code>draw</code> function (<code>draw(...)</code> in Python,
+or <code>(draw ...)</code> in Scheme) with a data structure passed in as its only argument.
+Lists and linked lists will be drawn as box-and-pointer diagrams, while (both
+types of) trees will be drawn in the standard manner. The <code>Link</code> and <code>Tree</code> data
+structures, as well as the standard tree ADT functions, are already declared for
+use in the Python interpreter.</p>
+
+<p>You can also call the <code>autodraw</code> function to draw all data structures that are
+returned in the interactive interpreter. Call <code>disable_autodraw</code> to stop this
+behavior.</p>
+
+
+<h2 id="visualizing-programs">Visualizing Programs</h2>
+
+<p>To visualize code written in an editor, click the yellow <code>Debug</code> icon at the top
+right next to the <code>Run</code> icon.</p>
+
+<ul>
+  <li>If you are writing Python, the visualizer will use Python Tutor to draw an
+  environment diagram of your code.</li>
+  <li>If you are writing Scheme, the visualizer will show the tree-recursive
+  execution of your code, along with an environment diagram.</li>
+  <li>If you are writing SQL, the visualizer will let you interact with the tables
+  generated by your code, and step through the execution of most <code>SELECT</code>
+  statements.</li>
+</ul>
+
+<p>To visualize code run in an interactive interpreter, call the <code>visualize</code>
+function (<code>visualize()</code> in Python or <code>(visualize)</code> in Scheme) to view a similar
+visualization of all the code run in the interactive interpreter. In SQL, you
+can click the <code>Step&#x2d;By&#x2d;Step</code> button in the console to view the step-by-step
+execution of a particular <code>SELECT</code> statement.</p>
+
+<p>Tables from lecture are preloaded in the SQL interpreter, so you don't have to
+create them yourself. Run <code>.tables</code> or <code>.schema</code> to see all the currently
+available tables, and run <code>.open &#x2d;&#x2d;new</code> to drop all tables.</p>
+
+<p>Be aware that, while most code is run on your local machine, the Python and
+Scheme program visualizers run your code on the server, so there exist
+restrictions that prevent you from visualizing very long-running programs.</p>
+
+
+<h2 id="sharing-code">Sharing Code</h2>
+
+<p>Remember that sharing code related to 61A assignments with any student (even one
+not taking CS 61A!) aside from your project partner is a violation of course
+policies.</p>
+
+<p>However, you may wish to share code with staff members to help with debugging.
+To do so, click the <code>Share</code> button at the top menu bar to generate a unique URL
+for your code, that can be accessed by members of staff but not students.
+Members of staff should log in to share files with students. When a file is
+shared from the Share menu, edits will be visible to all collaborators.</p>
+
+
+<h2 id="advanced">Advanced</h2>
+
+<p>To mess with the internals of the interpreter, click <code>Console</code> at the top menu
+bar. You will be able to interact with a minimal terminal-esque interface. Type
+<code>help</code> to view the commands enabled. In particular, note that you can delete
+files using <code>rm</code>.</p>
+
+<p>To save files in a directory, write the full path in the <code>Save As</code> dialog,
+rather just the file name.</p>
+
+
+<h2 id="troubleshooting-reporting-bugs">Troubleshooting / Reporting Bugs</h2>
+
+<p>If you experience a bug, try using a different browser. This tool is most
+extensively tested in Google Chrome, but should work in most modern browsers.
+You should also consider clearing your browser's cache and localStorage. If the
+bug persists, make a post on Piazza or contact a member of staff.</p>
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#getting-started">Getting Started</a></li>
+  <li><a href="index.html#creating-files">Creating Files</a></li>
+  <li><a href="index.html#loading-files">Loading Files</a></li>
+  <li><a href="index.html#formatting-code">Formatting Code</a></li>
+  <li><a href="index.html#visualizing-data-structures">Visualizing Data Structures</a></li>
+  <li><a href="index.html#visualizing-programs">Visualizing Programs</a></li>
+  <li><a href="index.html#sharing-code">Sharing Code</a></li>
+  <li><a href="index.html#advanced">Advanced</a></li>
+  <li><a href="index.html#troubleshooting-reporting-bugs">Troubleshooting / Reporting Bugs</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/code_tabindex.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+<script src="../../assets/js/storable.js"></script>
+<script src="../../assets/js/env-diagram.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,914 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="Computer Science, Programming, Berkeley, EECS" />
+    <meta name="author" content ="John DeNero, Jedi Tsang (Guest Lecturer), Shm Almeda (GSI)" />
+    <!-- CHANGED CAREFUL -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../assets/js/hl.js"></script>
+    <script src="../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/mono-blue.css">
+    <link rel="icon" href="../assets/images/favicon.ico">
+
+    
+
+    <title>
+Study Guide: Orders of Growth | CS 61A Fall 2024
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section" aria-label="Toggle Navigation Bar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">
+            CS 61A
+            <!-- <img style="max-width:60px; margin-top: -20px;" class="logo" src="/assets/images/logo.png"/> -->
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+
+            
+            <li><a href="../index.html">Lectures</a></li>
+            
+            <li><a href="../articles/about-61a/index.html">Syllabus</a></li>
+            
+            <li><a href="https://edstem.org/us/courses/63971/discussion/">Ed</a></li>
+            
+            <li><a href="../office-hours.html">Office Hours</a></li>
+            
+            <li><a href="../articles/contact-61a/index.html">Contact</a></li>
+            
+
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="orders-of-growth.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Links
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="https://go.cs61a.org/61a-extensions">Request an Extension</a></li>
+                
+                <li><a href="https://go.cs61a.org/61a-regrades">Request a Regrade</a></li>
+                
+                <li><a href="https://oh.cs61a.org/">Office Hours Queue</a></li>
+                
+                <li><a href="https://www.gradescope.com/courses/843175">Gradescope</a></li>
+                
+                <li><a href="https://bcourses.berkeley.edu/courses/1538118/pages">Lecture Recordings</a></li>
+                
+                <li><a href="https://pythontutor.com/cp/composingprograms.html">Python Tutor</a></li>
+                
+                <li><a href="https://code.cs61a.org/scheme/">Scheme Editor</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="orders-of-growth.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../resources.html">Past Exams & Websites</a></li>
+                
+                <li><a href="https://www.composingprograms.com">Textbook</a></li>
+                
+                <li><a href="https://drive.google.com/file/d/1O72u0ml65pibcjz-PXKpqeJDKaVqQ3D8/view">Debugging Guide</a></li>
+                
+                <li><a href="../articles/studying/index.html">Studying Guide</a></li>
+                
+                <li><a href="../articles/composition/index.html">Composition Guide</a></li>
+                
+                <li><a href="../articles/campus-res/index.html">Campus Resources</a></li>
+                
+                <li><a href="../articles/advice/index.html">Advice from Students</a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="orders-of-growth.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <li><a href="../instructor.html">Instructors</a></li>
+                
+                <li><a href="../staff.html">TAs & Tutors</a></li>
+                
+                <li><a href="../academic-interns.html">Academic Interns</a></li>
+                
+              </ul>
+            </li>
+            
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Study Guide: Orders of Growth
+
+        
+        
+        
+      </h1>
+    </header>
+    
+<div class="alert storable-login-status"></div>
+
+<h2>Instructions</h2>
+
+<p>This is a study guide about orders of growth with links to past
+lectures, assignments, and handouts, as well as
+additional practice problems to assist you in learning the concepts.</p>
+
+
+  <p><strong>Assignments</strong></p>
+  <blockquote><p>Important:
+For solutions to these assignments once they have been released,
+see <a href="../index.html">the main website</a>.</p></blockquote>
+
+<ul>
+  <li><a href="../lab/lab09.html">Lab 9</a></li>
+</ul>
+
+
+
+
+
+  <p><strong>Lectures</strong></p>
+  <ul>
+  <li><a href="../lecture/lec24/index.html">Efficiency</a></li>
+</ul>
+
+
+
+  <p><strong>Readings</strong></p>
+  <ul>
+  <li><a href="https://www.composingprograms.com/pages/28-efficiency.html">Section 2.8</a></li>
+</ul>
+
+
+
+    
+<h1 id="orders-of-growth">Orders of growth</h1>
+
+
+<p>The order of growth of an algorithm is an approximation of the time required to run a computer program as the input size increases. The order of growth ignores the constant factor needed for fixed operations and focuses instead on the operations that increase proportional to input size. For example, a program with a linear order of growth generally requires double the time if the input doubles.</p>
+
+<p>The order of growth is often described using either <a href="https://www.khanacademy.org/computing/computer-science/algorithms/asymptotic-notation/a/big-big-theta-notation">Big-Theta</a> or <a href="https://www.khanacademy.org/computing/computer-science/algorithms/asymptotic-notation/a/big-o-notation">Big-O notation</a>,
+but that notation is out of scope for this course.</p>
+
+<p>This table summarizes the most common orders of growth:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <th>Order</th>
+    <th>Big-Theta</th>
+    <th>Example</th>
+  </tr>
+  <tr>
+    <td>Constant</td>
+    <td>Θ(1)</td>
+    <td>Indexing an item in a list</td>
+  </tr>
+  <tr>
+    <td>Logarithmic</td>
+    <td>Θ(lg N)</td>
+    <td>Repeatedly halving a number</td>
+  </tr>
+  <tr>
+    <td>Linear</td>
+    <td>Θ(n)</td>
+    <td>Summing a list</td>
+  </tr>
+  <tr>
+    <td>Quadratic</td>
+    <td>Θ(n^2)</td>
+    <td>Summing each pair of numbers in a list</td>
+  </tr>
+  <tr>
+    <td>Exponential</td>
+    <td>Θ(2^n)</td>
+    <td>Visiting each node in  a binary tree</td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+
+
+
+<h2 id="constant-time">Constant time</h2>
+
+
+<p>When an algorithm has a constant order of growth, it means that it always takes a fixed number of steps, no matter how large the input size increases.</p>
+
+<p>As an example, consider accessing the first element of a list:</p>
+
+<pre><code>first_post = posts[0]</code></pre>
+
+
+
+<p>Even if the list grows to be a million items long, that operation will always require a single step.</p>
+
+<p>We can visualize that relationship as a table:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <th>List size</th>
+    <th>Steps</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>100</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>1000</td>
+    <td>1</td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+
+
+<p>We can also visualize it as a graph:</p>
+
+<p><img class="img-responsive center-block" src="https://cs61a.org/study-guide/orders-of-growth/pZezyrD.png" alt="Constant graph" width="" height=""></p>
+
+<p>A constant run time is ideal, but is typically not possible for algorithms that process multiple pieces of data.</p>
+
+
+<h2 id="logarithmic-time">Logarithmic time</h2>
+
+
+<p>When an algorithm has a logarithmic order of growth, it increases proportionally to the <a href="https://www.khanacademy.org/math/algebra2/exponential-and-logarithmic-functions/introduction-to-logarithms/v/logarithms">logarithm</a> of the input size.</p>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Binary_search_algorithm">binary search algorithm</a> is an example of an algorithm that runs in logarithmic time.</p>
+
+<p>Here's the pseudocode:</p>
+
+<pre><code>def search_list(nums, target_num):
+    &quot;&quot;&quot; Returns the index of TARGET_NUM in sorted list NUMS or &#x2d;1 if not found.
+    &gt;&gt;&gt; search_list([1, 2, 3, 4], 3)
+    2
+    &gt;&gt;&gt; search_list([14, 23, 37, 48, 59], 23)
+    1
+    &gt;&gt;&gt; search_list([14, 23, 37, 48, 59], 47)
+    &#x2d;1
+    &quot;&quot;&quot;
+    min_index = 1
+    max_index = len(nums)
+    while min_index &lt;= max_index:
+        middle_index = (min_index + max_index) // 2
+        if target_num == nums[middle_index]:
+            return middle_index
+        elif target_num &gt; nums[middle_index]:
+            min_index = middle_index + 1
+        else:
+            max_index = middle_index &#x2d; 1
+    return &#x2d;1</code></pre>
+
+
+
+<p>The algorithm uses a loop to look at multiple items in the list, but crucially, it does not look at <em>every</em> item in the list. Specifically, it looks at lg2(n) items, where n is the number of items in the list.</p>
+
+<p>We can visualize that relationship in a table:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <th>List size</th>
+    <th>Steps</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>100</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td>1000</td>
+    <td>10</td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+
+
+<p>We can also see that as a graph:</p>
+
+<p><img class="img-responsive center-block" src="https://cs61a.org/study-guide/orders-of-growth/vIUXNHS.png" alt="Logarithmic graph" width="" height=""></p>
+
+<p>The number of steps is definitely increasing as input size increases, but at a very slow rate.</p>
+
+
+<h2 id="linear-time">Linear time</h2>
+
+
+<p>When an algorithm has a linear order of growth, its number of steps increases in direct proportion to the input size.</p>
+
+<p>The aptly-named linear search algorithm runs in linear time.</p>
+
+<p>The code shows its simplicity compared to binary search:</p>
+
+<pre><code>def search_list(nums, target_num):
+    &quot;&quot;&quot; Returns the index of TARGET_NUM in an unsorted list NUMS or &#x2d;1 if not found.
+    &gt;&gt;&gt; search_list([3, 2, 1, 4], 3)
+    2
+    &gt;&gt;&gt; search_list([14, 59, 99, 23, 37, 22], 23)
+    3
+    &gt;&gt;&gt; search_list([14, 59, 99, 23, 37, 22], 47)
+    &#x2d;1
+    &quot;&quot;&quot;
+    index = 1
+    while index &lt; len(nums):
+        if nums[index] == target_num:
+            return index
+        index += 1
+    return &#x2d;1</code></pre>
+
+
+
+<p>This time, the loop looks at <em>every</em> item in the list. This exhaustive search is necessary to search for items in an unsorted list, since there's no way to narrow down where a particular item might be. This algorithm will always require at least as many steps as items in the list.</p>
+
+<p>We can see that in table form:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <th>List size</th>
+    <th>Steps</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>10</td>
+  </tr>
+  <tr>
+    <td>100</td>
+    <td>100</td>
+  </tr>
+  <tr>
+    <td>1000</td>
+    <td>1000</td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+
+
+<p>Or as a graph:</p>
+
+<p><img class="img-responsive center-block" src="https://cs61a.org/study-guide/orders-of-growth/nl9Cvez.png" alt="Linear graph" width="" height=""></p>
+
+
+<h2 id="quadratic-time">Quadratic time</h2>
+
+
+<p>When an algorithm has a quadratic order of growth, its steps increase in proportion to the input size squared.</p>
+
+<p>Several list sorting algorithms run in quadratic time, like selection sort. That algorithm starts from the front of the list, then keeps finding the next smallest value in the list and swapping it with the current value.</p>
+
+<p>Here's pseudocode for selection sort:</p>
+
+<pre><code>def linear_sort(nums):
+    &quot;&quot;&quot;Performs an in&#x2d;place sorting of NUMS.
+    &gt;&gt;&gt; l = [2, 3, 1, 4]
+    &gt;&gt;&gt; linear_sort(l)
+    &gt;&gt;&gt; l
+    [1, 2, 3, 4]
+    &quot;&quot;&quot;
+    i = 0
+    while i &lt; len(nums):
+        min_index = i
+        j = i + 1
+        # Find next smallest value
+        while j &lt; len(nums):
+            if nums[j] &lt; nums[min_index]:
+                min_index = j
+            j += 1
+        # Swap if new minimum found
+        if min_index != i:
+            nums[i], nums[min_index] = nums[min_index], nums[i]
+        i += 1</code></pre>
+
+
+
+<p>The important thing to notice about the algorithm is the nested loop: it loops through each items in the list, and loops <em>again</em> through the remaining items for each of those items. In this case, the algorithm ends up looking at <code>1/2 * (n^2 &#x2d; n)</code> values, where <code>n</code> is the number of items in the list.</p>
+
+<p>This table shows how many items it'd examine for lists of increasing sizes:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <th>List size</th>
+    <th>Steps</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>45</td>
+  </tr>
+  <tr>
+    <td>100</td>
+    <td>4950</td>
+  </tr>
+  <tr>
+    <td>1000</td>
+    <td>499500</td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+
+
+<p>Here's what that looks like in graph form:</p>
+
+<p><img class="img-responsive center-block" src="https://cs61a.org/study-guide/orders-of-growth/S46rX16.png" alt="Quadratic graph" width="" height=""></p>
+
+<p>Both the table and the graph show that the number of steps for this algorithm increases at a <em>much</em> faster rate than the previous ones.</p>
+
+
+<h2 id="exponential-time">Exponential time</h2>
+
+
+<p>When an algorithm has a superpolynomial order of growth, its number of steps increases faster than a polynomial function of the input size.</p>
+
+<p>An algorithm often requires superpolynomial time when it must look at every permutation of values. For example, consider an algorithm that generates all possible numerical passwords for a given password length.</p>
+
+<p>For a password length of 2, it generates 100 passwords:</p>
+
+<pre><code>00 01 02 03 04 05 06 07 08 09
+10 11 12 13 14 15 16 17 18 19
+20 21 22 23 24 25 26 27 28 29
+30 31 32 33 34 35 36 37 38 39
+40 41 42 43 44 45 46 47 48 49
+50 51 52 53 54 55 56 57 58 59
+60 61 62 63 64 65 66 67 68 69
+70 71 72 73 74 75 76 77 78 79
+80 81 82 83 84 85 86 87 88 89
+90 91 92 93 94 95 96 97 98 99</code></pre>
+
+
+
+<p>That algorithm requires at least 10^2 steps, since there are 10 possibilities for each digit (0-9) and it must try out every possibility for each of the 2 digits.</p>
+
+<p>For any given password length of n, the algorithm requires 10^n steps. That run time increases incredibly quickly, since each additional digit requires 10 times the number of steps.</p>
+
+<p>This table shows how fast that grows for just the first 5 digits:</p>
+
+
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+          
+  <tr>
+    <th>Digits</th>
+    <th>Steps</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>10</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>100</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>1000</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>10000</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>100000</td>
+  </tr>
+
+          </table>
+        </div>
+        
+
+
+
+<p>Here's what that looks like as a graph:</p>
+
+<p><img class="img-responsive center-block" src="https://cs61a.org/study-guide/orders-of-growth/JRkAQRN.png" alt="Exponential graph" width="" height=""></p>
+
+
+<h2 id="all-together-now">All together now</h2>
+
+
+<p>Now that  we've seen examples of possible run times for algorithms, let's compare them on a graph:</p>
+
+<p><img class="img-responsive center-block" src="https://cs61a.org/study-guide/orders-of-growth/8psl4kk.png" alt="All graphs overlaid" width="" height=""></p>
+
+<p>That graph makes it even more clear that there's a definite difference in these run times, especially as input size increases.  Since modern computer programs increasingly deal with large data sets (like from millions of users or sensors), the run time efficiency matters quite a bit.</p>
+
+
+<h1 id="practice-problems">Practice Problems</h1>
+
+
+
+<h3 id="q1-is-prime">Q1: Is Prime</h3>
+
+
+<p>What is the order of growth of <code>is_prime</code> in terms of <code>n</code>?</p>
+
+<pre><code>def is_prime(n):
+    for i in range(2, n):
+        if n % i == 0:
+            return False
+    return True</code></pre>
+
+<p>Choose one of:</p>
+
+<ul>
+  <li>Constant</li>
+  <li>Logarithmic</li>
+  <li>Linear</li>
+  <li>Quadratic</li>
+  <li>Exponential</li>
+  <li>None of these</li>
+</ul>
+
+
+            <label class="sr-only" for="is_prime-input">Your Answer:</label>
+            <input class="form-control storable" id="is_prime-input" type="text">
+            <div class="storable-status"></div>
+        
+
+<div class="solution solution-1">
+
+<p>Linear.</p>
+
+<p><em>Explanation</em>: In the worst case, <em>n</em> is prime, and we have to execute the
+loop <em>n</em> - 2 times. Each iteration takes constant time (one conditional check
+and one return statement). Therefore, the total time is (<em>n</em> - 2) x constant,
+or simply linear.</p>
+
+</div>
+        <button id='solution-1' class='btn btn-outline btn-lg solutiontoggle solution'>
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+        
+
+
+<h3 id="q2-growth-bar">Q2: Growth: Bar</h3>
+
+
+<p>What is the order of growth of <code>bar</code> in terms of <code>n</code>?</p>
+
+<pre><code>def bar(n):
+    i, sum = 1, 0
+    while i &lt;= n:
+        sum += biz(n)
+        i += 1
+    return sum
+
+def biz(n):
+    i, sum = 1, 0
+    while i &lt;= n:
+        sum += i**3
+        i += 1
+    return sum</code></pre>
+
+<p>Choose one of:</p>
+
+<ul>
+  <li>Constant</li>
+  <li>Logarithmic</li>
+  <li>Linear</li>
+  <li>Quadratic</li>
+  <li>Exponential</li>
+  <li>None of these</li>
+</ul>
+
+
+            <label class="sr-only" for="bar-input">Your Answer:</label>
+            <input class="form-control storable" id="bar-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="solution solution-2">
+
+<p>Quadratic.</p>
+
+<p><em>Explanation</em>:
+The body of the while loop in <code>bar</code> is executed <em>n</em> times.
+Each iteration, one call to <code>biz(n)</code> is made. Note that <em>n</em> never changes,
+so this call takes the same time to run each iteration.
+Taking a look at <code>biz</code>, we see that there is another while loop. Be careful
+to note that although the term being added to <code>sum</code> is cubed (<code>i**3</code>),
+<code>i</code> itself is only incremented by 1 in each iteration.
+This tells us that this while loop also executes <em>n</em> times, with each iteration
+taking constant time, so the total time of <code>biz(n)</code> is <em>n</em> x constant, or linear.
+Knowing that each call to <code>biz(n)</code> takes linear time,
+we can conclude that each iteration of the while loop in <code>bar</code> is linear.
+Therefore, the total runtime of <code>bar(n)</code> is quadratic.</p>
+
+</div>
+        <button id='solution-2' class='btn btn-outline btn-lg solutiontoggle solution'>
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+        
+
+<explanation>
+What is the order of growth of <code>foo</code> in terms of <code>n</code>, where <code>n</code> is the length
+of <code>lst</code>? Assume that slicing a list and calling <code>len</code> on a list can both be
+done in constant time.
+
+<pre><code>def foo(lst, i):
+    mid = len(lst) // 2
+    if mid == 0:
+        return lst
+    elif i &gt; 0:
+        return foo(lst[mid:], &#x2d;1)
+    else:
+        return foo(lst[:mid], 1)</code></pre>
+
+<p>Logarithmic Θ(log(<em>n</em>)).</p>
+
+<p><em>Explanation</em>: A single recursive call is made in the body of <code>foo</code> on half the
+input list (either the first half or the second half depending on the input
+flag <code>i</code>). The base case is executed when the list either is empty or has only
+one element. We start with an <em>n</em> element list and halve the list until there
+is at most 1 element, which means there will be log(<em>n</em>) total calls. Each
+call, constant work is done if we ignore the recursive call. The total runtime
+is then log(<em>n</em>) * &theta;(1).</p>
+
+<p><em>Note</em>: We simplified this problem by assuming that slicing a list takes
+constant time. In reality, this operation is a bit more nuanced and may take
+linear time. As an additional exercise, try determining the order of growth
+of this function if we assuming slicing takes linear time.
+</explanation></p>
+
+
+<h3 id="q3-bonk">Q3: Bonk</h3>
+
+
+<p>Describe the order of growth of the function below.</p>
+
+<pre><code>def bonk(n):
+    sum = 0
+    while n &gt;= 2:
+        sum += n
+        n = n / 2
+    return sum</code></pre>
+
+<p>Choose one of:</p>
+
+<ul>
+  <li>Constant</li>
+  <li>Logarithmic</li>
+  <li>Linear</li>
+  <li>Quadratic</li>
+  <li>Exponential</li>
+  <li>None of these</li>
+</ul>
+
+
+            <label class="sr-only" for="bonk-input">Your Answer:</label>
+            <input class="form-control storable" id="bonk-input" type="text">
+            <div class="storable-status"></div>
+        
+
+<div class="solution solution-3">
+
+<p>Logarithmic.</p>
+
+<p><em>Explanation</em>: As we increase the value of <code>n</code>, the amount of time needed to evaluate a call to <code>bonk</code> scales logarithmically. Let's use the number of iterations of our while loop to illustrate an example. When <code>n = 1</code>, our loop iterates 0 times. When <code>n = 2</code>, our loop iterates 1 time. When <code>n = 4</code>, we have 2 iterations. And when <code>n = 8</code>, a call to <code>bonk(8)</code> results in 3 iterations of this while loop. As the value of the input scales by a factor of 2, the number of iterations increases by 1. This indicates that this function runtime has a logarithmic order of growth.</p>
+
+</div>
+        <button id='solution-3' class='btn btn-outline btn-lg solutiontoggle solution'>
+        Toggle Solution<noscript> (enable JavaScript)</noscript>
+        </button>
+        
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="orders-of-growth.html#orders-of-growth">Orders of growth</a></li>
+  <ul>
+    <li><a href="orders-of-growth.html#constant-time">Constant time</a></li>
+    <li><a href="orders-of-growth.html#logarithmic-time">Logarithmic time</a></li>
+    <li><a href="orders-of-growth.html#linear-time">Linear time</a></li>
+    <li><a href="orders-of-growth.html#quadratic-time">Quadratic time</a></li>
+    <li><a href="orders-of-growth.html#exponential-time">Exponential time</a></li>
+    <li><a href="orders-of-growth.html#all-together-now">All together now</a></li>
+  </ul>
+  <li><a href="orders-of-growth.html#practice-problems">Practice Problems</a></li>
+  <ul>
+    <li><a href="orders-of-growth.html#q1-is-prime">Q1: Is Prime</a></li>
+    <li><a href="orders-of-growth.html#q2-growth-bar">Q2: Growth: Bar</a></li>
+    <li><a href="orders-of-growth.html#q3-bonk">Q3: Bonk</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <!-- <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="/">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/weekly">Weekly Schedule</a></li>
+            <li><a href="/office-hours">Office Hours</a></li>
+            <li><a href="/staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/studying">Studying Guide</a></li>
+            <li><a href="/articles/debugging">Debugging Guide</a></li>
+            <li><a href="/articles/composition">Composition Guide</a></li>
+            <li><a href="/articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="/articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="/articles/about#assignments">Assignments</a></li>
+            <li><a href="/articles/about#exams">Exams</a></li>
+            <li><a href="/articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer> -->
+
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../assets/js/network_storage.js"></script>
+    <script src="../assets/js/code_tabindex.js"></script>
+    <script src="../assets/js/storable.js"></script>
+    <script src="../assets/js/editor.js"></script>
+    <script src="../assets/js/copy-button.js"></script>
+    <script src="../assets/js/env-diagram.js"></script>
+    
+<!-- <script src="/assets/js/sketchy.js"></script> -->
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+<script type="text/javascript" src="../assets/js/config.js"></script>
+<script>
+$(function() {
+    $('.solutiontoggle').css('display', 'inline-block');
+      $('.solutiontoggle').click(function() {
+        var solution_id = $(this).attr('id');
+        $('div.' + solution_id).slideToggle(600);
+    });
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+});
+</script>
+
+  </body>
+</html>
